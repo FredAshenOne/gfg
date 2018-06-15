@@ -1,0 +1,73 @@
+tabla gfg
+
+Tipos_de_Credito
+Pk Id tinyInt uns
+Descripcion varchar
+
+1.-13 Semanas
+2.-14 Semanas
+3.-Interes Mensual
+
+casa
+id pk tinyint uns
+descripcion varchar 10
+1-Propia
+2-Familiar
+3-Rentada
+4-Hipotecada
+5-otra
+
+Estado Civil
+id pk tinyInt uns
+descripcion varchar
+1.-Soltero
+2.-Casado
+3.-Viudo
+4.-Divorciado
+5.-Otro
+
+Clientes_Personal
+pk Id int uns 
+Nombre varchar 50
+Apellido_Paterno varchar 50
+Apellido_Materno varchar 50
+Telefono_Cel varchar 12
+Telefono_Fijo varchar 12
+Direccion varchar
+No_Interior varchar
+No_Exterior varchar
+Colonia varchar
+Fecha_Nacimiento date
+Tiempo_Residencia tinyInt
+Casa tinyInt uns
+Estado_Civil tinyInt uns
+Ocupacion varchar 40
+Sueldo_Mensual int
+
+Clientes_Empleo
+Direccion varchar
+No_Interior int
+No_Exterior int
+Telefono varchar
+
+Avales
+pk id int uns 
+fk idCliente int uns
+Nombre varchar
+Apellido_Paterno varchar
+Apellido_Materno varchar
+Direccion 
+No_Interior varchar
+No_Exterior varchar
+Colonia varchar
+Telefono varchar
+
+Credito
+pk Id int uns
+fk id_Cliente int uns
+Cantidad_Inicial int
+Cantidad_Actual int
+Tipo_de_Credito tinyInt uns
+
+
+Usuarios
