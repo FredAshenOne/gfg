@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 public class Style {
 	
@@ -96,10 +97,20 @@ public class Style {
 		
 	}
 	
-	public void mdCombo(JComboBox cb) {
-		cb.setBackground(Color.WHITE);
+	public void mdCombo(JComboBox cb,Color background,Color border) {
 		cb.setOpaque(true);
-		cb.setBorder(null);
+		cb.setUI(new BasicComboBoxUI() {
+		    @Override
+		    protected JButton createArrowButton() {
+		        JButton b = super.createArrowButton();
+		        b.setBackground(background);
+		        b.setBorder(BorderFactory.createMatteBorder(0, 0,0, 0,background));
+		        return b; 
+		   }
+		    
+		});
+		cb.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, border));
+		cb.setBackground(background);
 	}
 	
 	public void placeholder(JTextField txt,JLabel lbl,String str) {
@@ -113,6 +124,7 @@ public class Style {
 				}
 			}
 		});
+		lbl.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 	}
 	
 	public void myTextPrompt(JTextField txt,String str,Color c) {
