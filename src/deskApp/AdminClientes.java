@@ -114,7 +114,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		s.mdButton(button_2, Color.WHITE);
 		
 		JPanel pnHeader = new JPanel();
-		pnHeader.setBounds(10, 0, 593, 100);
+		pnHeader.setBounds(0, 0, 603, 100);
 		mainPanel.add(pnHeader);
 		pnHeader.setLayout(null);
 		s.mdPanel(pnHeader, s.blue);
@@ -132,6 +132,9 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
+		
+		nc.btnBack.addActionListener(this);
+		
 	}
 
 	@Override
@@ -183,6 +186,9 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		if(e.getSource()==btnNewClient) {
 			nc.setVisible(true);
 			this.setVisible(false);
+		}else if(e.getSource() == nc.btnBack) {
+			this.setVisible(true);
+			nc.setVisible(false);
 		}
 	}
 }

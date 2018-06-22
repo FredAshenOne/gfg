@@ -6,11 +6,14 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -113,6 +116,10 @@ public class Style {
 		cb.setBackground(background);
 	}
 	
+	public void hoverBorder(JComponent c, Color col) {
+		c.setBorder(new LineBorder(col,1,true));
+	}
+	
 	public void placeholder(JTextField txt,JLabel lbl,String str) {
 		txt.addKeyListener(new KeyAdapter() {
 			@Override
@@ -131,5 +138,19 @@ public class Style {
 		TextPrompt tp = new TextPrompt(str, txt);
 		tp.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 13));
 		tp.setForeground(c);
+	}
+	
+	
+	public boolean dateChecker(String text) {
+	    if (text == null || !text.matches("\\d{4}-[01]\\d-[0-3]\\d"))
+	        return false;
+	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	    df.setLenient(false);
+	    try {
+	        df.parse(text);
+	        return true;
+	    } catch (ParseException ex) {
+	        return false;
+	    }
 	}
 }

@@ -7,25 +7,36 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 
-public class NewClient extends JFrame {
+public class NewClient extends JFrame implements ActionListener,MouseListener {
 
 	private JPanel contentPane;
 	private JTextField txtNombre,txtAp1,txtAp2;
 	JButton btnBack,btnSave;
 	Style s = new Style();
 	private JTextField txtNacimiento,txtOcupacion,txtDomicilio,txtExterior,txtInterior,txtColonia,txtTiempo,txtNumCel,txtNumFijo,txtSueldo;
-	private JLabel lblDomicilio,lblExterior,lblInterior,lblNacimiento,lblSueldo,lblNumCel;
-	
+	private JLabel lblDomicilio,lblExterior,lblInterior,lblNacimiento,lblSueldo,lblNumCel,lblWarning;
+	private JComboBox cbEstadoCivil,cbTipoDom;
+	Conexion c = new Conexion();
+	ResultSet rs ;
 	public NewClient() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -49,8 +60,8 @@ public class NewClient extends JFrame {
 		btnBack.setBorder(null);
 		btnBack.setBounds(10, 11, 32, 32);
 		pnHeader.add(btnBack);
-		s.btnTransparent(btnBack);
 		s.btnIcon(btnBack, "views/back.png");
+		btnBack.addMouseListener(this);		
 		
 		JLabel lblHeader = new JLabel("");
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -145,7 +156,7 @@ public class NewClient extends JFrame {
 		mainPanel.add(lblTiempoDeResidencia);
 		s.placeholder(txtTiempo, lblTiempoDeResidencia, "Tiempo de Residencia");
 		
-		JComboBox cbTipoDom = new JComboBox();
+		cbTipoDom = new JComboBox();
 		cbTipoDom.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbTipoDom.setModel(new DefaultComboBoxModel(new String[] {"", "Propia", "Familiar", "Renta", "Hipoteca", "Otra"}));
 		cbTipoDom.setBounds(330, 186, 115, 25);
@@ -153,7 +164,7 @@ public class NewClient extends JFrame {
 		s.mdCombo(cbTipoDom,Color.WHITE,s.blue);
 		
 		
-		JComboBox cbEstadoCivil = new JComboBox();
+		cbEstadoCivil = new JComboBox();
 		cbEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbEstadoCivil.setModel(new DefaultComboBoxModel(new String[] {"", "Soltero", "Casado", "Viudo", "Divorciado", "Union Libre", "Otro"}));
 		cbEstadoCivil.setBounds(456, 186, 115, 25);
@@ -247,5 +258,102 @@ public class NewClient extends JFrame {
 		mainPanel.add(btnSave);
 		s.btnIcon(btnSave, "views/saveblue.png");
 		
+		lblWarning = new JLabel("");
+		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblWarning.setBounds(312, 325, 222, 32);
+		mainPanel.add(lblWarning);
+		btnSave.addActionListener(this);
+		btnSave.addMouseListener(this);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		if(e.getSource()==btnSave) {
+			s.hoverBorder(btnSave, s.blue);
+			s.btnPointer(btnSave);
+			
+		}else if(e.getSource() == btnBack) {
+			s.hoverBorder(btnBack,Color.WHITE);
+			s.btnPointer(btnBack);
+			btnBack.setBorder(new LineBorder(Color.white,1,true));
+		}
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		if(e.getSource() == btnSave) {
+			btnSave.setBorder(null);
+		}else if(e.getSource() == btnBack ) {
+			btnBack.setBorder(null);
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==btnSave) {
+			rs = clientByName(txtNombre.getText(),txtAp1.getText(),txtAp2.getText());
+			if(fullFields()) {
+				try {
+					if(!rs.next()) {
+						addClient();
+					}else {
+						lblWarning.setText("Cliente ya registrado en la base de datos");
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public boolean fullFields() {
+		if(txtNombre.getText().length() > 0 && txtAp1.getText().length() > 0 && txtAp2.getText().length() > 0 && cbEstadoCivil.getSelectedIndex()>0 && cbTipoDom.getSelectedIndex()>0 && txtNacimiento.getText().length() > 0 && txtOcupacion.getText().length()>0 && txtDomicilio.getText().length() > 0 && txtExterior.getText().length() > 0 && txtColonia.getText().length() > 0 && txtTiempo.getText().length() > 0 && txtNumCel.getText().length() > 0 && txtNumFijo.getText().length() > 0 && txtSueldo.getText().length() > 0){
+				if(s.dateChecker(txtNacimiento.getText())) {
+					return true;	
+				}else{
+					lblWarning.setText("La fecha introducida no es correcta");
+					return false;
+				}									
+		}else{
+			lblWarning.setText("Algunos campos estan Vacíos");
+			lblWarning.setForeground(Color.RED);
+			return false;
+		}
+	}
+	
+	public void addClient() {
+		try{			
+			c.update("INSERT INTO clientes_personal(Nombre,Apellido_Paterno,Apellido_Materno,Telefono_Cel,Telefono_Fijo,Direccion,Num_Exterior,Num_Interior,Colonia,Fecha_Nacimiento,Tiempo_Residencia,Tipo_Casa,Estado_Civil,Ocupacion,Sueldo_Mensual) VALUES("
+					+ "'"+txtNombre.getText()+"','"+txtAp1.getText()+"','"+txtAp2.getText()+"','"+txtNumCel.getText()+"','"+txtNumFijo.getText()+"','"+txtDomicilio.getText()+"','"+txtExterior.getText()+"','"+txtInterior.getText()+"','"+txtColonia.getText()+"','"+txtNacimiento.getText()+"','"+txtTiempo.getText()+"',"+cbTipoDom.getSelectedIndex()+","+cbEstadoCivil.getSelectedIndex()+",'"+txtOcupacion.getText()+"',"+Integer.parseInt(txtSueldo.getText())+");");
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+	
+	public ResultSet clientByName(String nombre,String ap1,String ap2) {
+	
+		try{
+			return c.query("SELECT * FROM clientes_personal WHERE Nombre = '"+nombre+"' AND apellido_Paterno = '"+ap1+"' AND apellido_Materno = '"+ap2+"';");
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 }
