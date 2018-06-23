@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 
 public class NewClient extends JFrame implements ActionListener,MouseListener {
 
@@ -35,6 +36,8 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 	private JComboBox cbEstadoCivil,cbTipoDom;
 	Conexion c = new Conexion();
 	ResultSet rs ;
+	Alert alSave = new Alert();
+	Alert alAval = new Alert();
 	public NewClient() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -264,6 +267,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		mainPanel.add(lblWarning);
 		btnSave.addActionListener(this);
 		btnSave.addMouseListener(this);
+		alSave.btnOk.addActionListener(this);
 	}
 
 	@Override
@@ -312,7 +316,10 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 			if(fullFields()) {
 				try {
 					if(!rs.next()) {
-						addClient();
+						alSave.setVisible(true);
+						alSave.lblMessage.setText("Desea continuar y guardar ?");
+						alSave.lblAlertIcon.setIcon(new ImageIcon("views/alert.png"));
+						
 					}else {
 						lblWarning.setText("Cliente ya registrado en la base de datos");
 					}
@@ -320,6 +327,9 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 					e1.printStackTrace();
 				}
 			}
+			
+		}else if(e.getSource() == alSave.btnOk) {
+			addClient();
 		}
 	}
 	
@@ -329,6 +339,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 					return true;	
 				}else{
 					lblWarning.setText("La fecha introducida no es correcta");
+					lblWarning.setForeground(Color.RED);
 					return false;
 				}									
 		}else{
@@ -340,10 +351,18 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 	
 	public void addClient() {
 		try{			
-			c.update("INSERT INTO clientes_personal(Nombre,Apellido_Paterno,Apellido_Materno,Telefono_Cel,Telefono_Fijo,Direccion,Num_Exterior,Num_Interior,Colonia,Fecha_Nacimiento,Tiempo_Residencia,Tipo_Casa,Estado_Civil,Ocupacion,Sueldo_Mensual) VALUES("
-					+ "'"+txtNombre.getText()+"','"+txtAp1.getText()+"','"+txtAp2.getText()+"','"+txtNumCel.getText()+"','"+txtNumFijo.getText()+"','"+txtDomicilio.getText()+"','"+txtExterior.getText()+"','"+txtInterior.getText()+"','"+txtColonia.getText()+"','"+txtNacimiento.getText()+"','"+txtTiempo.getText()+"',"+cbTipoDom.getSelectedIndex()+","+cbEstadoCivil.getSelectedIndex()+",'"+txtOcupacion.getText()+"',"+Integer.parseInt(txtSueldo.getText())+");");
-		}catch(Exception ex){
-			ex.printStackTrace();
+			if(txtTiempo.getText().length()>2||txtNumCel.getText().length()>12||txtNumFijo.getText().length()>12) {
+			lblWarning.setText("Algunos campos exceden el limite de caracteres");
+			lblWarning.setForeground(Color.RED);
+			
+			}else {
+				c.update("INSERT INTO clientes_personal(Nombre,Apellido_Paterno,Apellido_Materno,Telefono_Cel,Telefono_Fijo,Direccion,Num_Exterior,Num_Interior,Colonia,Fecha_Nacimiento,Tiempo_Residencia,Tipo_Casa,Estado_Civil,Ocupacion,Sueldo_Mensual) VALUES("
+						+ "'"+txtNombre.getText()+"','"+txtAp1.getText()+"','"+txtAp2.getText()+"','"+txtNumCel.getText()+"','"+txtNumFijo.getText()+"','"+txtDomicilio.getText()+"','"+txtExterior.getText()+"','"+txtInterior.getText()+"','"+txtColonia.getText()+"','"+txtNacimiento.getText()+"','"+txtTiempo.getText()+"',"+cbTipoDom.getSelectedIndex()+","+cbEstadoCivil.getSelectedIndex()+",'"+txtOcupacion.getText()+"',"+Integer.parseInt(txtSueldo.getText())+");");
+			}
+			
+		}catch(NumberFormatException nfe){
+			lblWarning.setText("Algunos campos deben ser numericos");
+			lblWarning.setForeground(Color.RED);
 		}
 	}
 	
