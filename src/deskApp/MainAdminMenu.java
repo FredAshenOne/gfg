@@ -120,10 +120,8 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 		btnBack = new JButton("");
 		btnBack.setBounds(10, 11, 32, 32);
 		pnHeader.add(btnBack);
-		s.btnTransparent(btnBack);
 		btnBack.addMouseListener(this);
 		s.btnIcon(btnBack, "views/back.png");
-		btnBack.setBorder(null);
 		
 		btnSettings = new JButton("");
 		btnSettings.setBounds(551, 11, 32, 32);
@@ -131,10 +129,19 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 		s.btnTransparent(btnSettings);
 		btnSettings.setIcon(new ImageIcon("views/settings.png"));
 		
-		JLabel lblHeader = new JLabel("");
+		JLabel lblHeader = new JLabel("Bienvenido ");
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		
+		JLabel lblTitle = new JLabel("Selecciona una opci\u00F3n");
+		lblTitle.setForeground(Color.WHITE);
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblTitle.setBounds(52, 54, 489, 32);
+		pnHeader.add(lblTitle);
 		btnSettings.addActionListener(this);
 		btnSettings.addMouseListener(this);
 		ac.btnBack.addActionListener(this);
@@ -156,8 +163,8 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 			s.panelPointer(pnMovimientos);
 			s.imgBtnHover(s.blue,pnMovimientos);
 		}else if(e.getSource() == btnBack) {
-			btnBack.setBorder(new LineBorder(s.blue,2,true));
 			s.btnPointer(btnBack);
+			s.hoverBorder(btnBack, Color.white);
 		}
 		
 	}
@@ -188,12 +195,9 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 		if(e.getSource() == btnClient) {
 			ac.setVisible(true);
 			this.setVisible(false);
-		}else if(e.getSource() == btnBack) {
+		}else if(e.getSource() == ac.btnBack) {
 			this.setVisible(true);
 			ac.setVisible(false);
 		}		
 	}
-	
-	
-	
 }

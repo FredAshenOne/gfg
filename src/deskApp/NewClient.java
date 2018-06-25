@@ -24,12 +24,13 @@ import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 public class NewClient extends JFrame implements ActionListener,MouseListener {
 
 	private JPanel contentPane;
 	private JTextField txtNombre,txtAp1,txtAp2;
-	JButton btnBack,btnSave;
+	JButton btnBack;
 	Style s = new Style();
 	private JTextField txtNacimiento,txtOcupacion,txtDomicilio,txtExterior,txtInterior,txtColonia,txtTiempo,txtNumCel,txtNumFijo,txtSueldo;
 	private JLabel lblDomicilio,lblExterior,lblInterior,lblNacimiento,lblSueldo,lblNumCel,lblWarning;
@@ -37,7 +38,11 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 	Conexion c = new Conexion();
 	ResultSet rs ;
 	Alert alSave = new Alert();
-	Alert alAval = new Alert();
+	Alert alOk = new Alert();
+	private JButton btnNext;
+	private JLabel lblNombre;
+	private JLabel lblAp1;
+	private JLabel lblAp2;
 	public NewClient() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,8 +71,10 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		s.btnIcon(btnBack, "views/back.png");
 		btnBack.addMouseListener(this);		
 		
-		JLabel lblHeader = new JLabel("");
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		JLabel lblHeader = new JLabel("Nuevo Cliente: Datos Personales");
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
 		
@@ -101,6 +108,31 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		txtAp2.setForeground(Color.WHITE);
 		s.mdTextField(txtAp2, Color.white,s.blue);
 		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);
+		
+		
+		btnNext = new JButton("");
+		btnNext.setBorder(null);
+		btnNext.setBounds(551, 11, 32, 32);
+		pnHeader.add(btnNext);
+		s.btnIcon(btnNext, "views/next.png");
+		
+		lblNombre = new JLabel("");
+		lblNombre.setForeground(Color.WHITE);
+		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblNombre.setBounds(7, 54, 197, 14);
+		pnHeader.add(lblNombre);
+		
+		lblAp1 = new JLabel("");
+		lblAp1.setForeground(Color.WHITE);
+		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblAp1.setBounds(214, 54, 140, 14);
+		pnHeader.add(lblAp1);
+		
+		lblAp2 = new JLabel("");
+		lblAp2.setForeground(Color.WHITE);
+		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblAp2.setBounds(364, 54, 140, 14);
+		pnHeader.add(lblAp2);
 		
 		txtNacimiento = new JTextField();
 		txtNacimiento.setBounds(446, 122, 137, 25);
@@ -256,18 +288,20 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		mainPanel.add(lblNumCel);
 		s.placeholder(txtNumCel, lblNumCel, "Num Celular");
 		
-		btnSave = new JButton("");
-		btnSave.setBounds(539, 325, 32, 32);
-		mainPanel.add(btnSave);
-		s.btnIcon(btnSave, "views/saveblue.png");
 		
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblWarning.setBounds(312, 325, 222, 32);
 		mainPanel.add(lblWarning);
-		btnSave.addActionListener(this);
-		btnSave.addMouseListener(this);
+		btnNext.addActionListener(this);
+		btnNext.addMouseListener(this);
 		alSave.btnOk.addActionListener(this);
+		s.placeholder(txtNombre, lblNombre, "Nombre");
+		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
+		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
+
+		
+		
 	}
 
 	@Override
@@ -277,21 +311,20 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource()==btnSave) {
-			s.hoverBorder(btnSave, s.blue);
-			s.btnPointer(btnSave);
+		if(e.getSource()==btnNext) {
+			s.hoverBorder(btnNext, Color.white);
+			s.btnPointer(btnNext);
 			
 		}else if(e.getSource() == btnBack) {
 			s.hoverBorder(btnBack,Color.WHITE);
 			s.btnPointer(btnBack);
-			btnBack.setBorder(new LineBorder(Color.white,1,true));
 		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if(e.getSource() == btnSave) {
-			btnSave.setBorder(null);
+		if(e.getSource() == btnNext) {
+			btnNext.setBorder(null);
 		}else if(e.getSource() == btnBack ) {
 			btnBack.setBorder(null);
 		}
@@ -311,7 +344,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==btnSave) {
+		if(e.getSource()==btnNext) {
 			rs = clientByName(txtNombre.getText(),txtAp1.getText(),txtAp2.getText());
 			if(fullFields()) {
 				try {
@@ -330,6 +363,12 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 			
 		}else if(e.getSource() == alSave.btnOk) {
 			addClient();
+			alOk.lblMessage.setText("Datos registrados con exito");
+			alOk.btnCancel.setVisible(false);
+			alOk.btnOk.setBounds(95, 67, alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+			alOk.btnOk.setText("Ok");
+			alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+			alOk.setVisible(true);
 		}
 	}
 	

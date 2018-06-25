@@ -120,13 +120,11 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		s.mdPanel(pnHeader, s.blue);
 		
 		btnBack = new JButton("");
-		btnBack.setBorder(null);
 		btnBack.setBounds(10, 11, 32, 32);
 		pnHeader.add(btnBack);
 		btnBack.addActionListener(this);
 		btnBack.addMouseListener(this);
 		
-		s.btnTransparent(btnBack);
 		s.btnIcon(btnBack, "views/back.png");
 		JLabel lblHeader = new JLabel("");
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -145,16 +143,14 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (e.getSource()==btnBack) {
-			
+			s.btnPointer(btnBack);
+			s.hoverBorder(btnBack, Color.WHITE);
 		}else if(e.getSource() == btnNewClient) {
 			s.imgBtnHover(s.blue,pnNewClient);
 			s.panelPointer(pnNewClient);
 		}else if(e.getSource() == btnQuery) {
 			s.imgBtnHover(s.blue,pnQuery);
 			s.panelPointer(pnQuery);
-		}else if(e.getSource() == btnBack) {
-			btnBack.setBorder(new LineBorder(Color.white,2,true));
-			s.btnPointer(btnBack);
 		}
 	}
 
