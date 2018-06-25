@@ -31,7 +31,11 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 	private JPanel contentPane;
 	private JTextField txtNombre,txtAp1,txtAp2;
 	JButton btnBack;
+	CreateAval ca = new CreateAval();
 	Style s = new Style();
+	UploadFiles uf = new UploadFiles();
+	JobData jd = new JobData();
+	Alert alCreated  = new Alert();
 	private JTextField txtNacimiento,txtOcupacion,txtDomicilio,txtExterior,txtInterior,txtColonia,txtTiempo,txtNumCel,txtNumFijo,txtSueldo;
 	private JLabel lblDomicilio,lblExterior,lblInterior,lblNacimiento,lblSueldo,lblNumCel,lblWarning;
 	private JComboBox cbEstadoCivil,cbTipoDom;
@@ -40,9 +44,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 	Alert alSave = new Alert();
 	Alert alOk = new Alert();
 	private JButton btnNext;
-	private JLabel lblNombre;
-	private JLabel lblAp1;
-	private JLabel lblAp2;
+	JLabel lblNombre,lblAp1,lblAp2;
 	public NewClient() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,8 +109,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		pnHeader.add(txtAp2);
 		txtAp2.setForeground(Color.WHITE);
 		s.mdTextField(txtAp2, Color.white,s.blue);
-		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);
-		
+		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);		
 		
 		btnNext = new JButton("");
 		btnNext.setBorder(null);
@@ -146,8 +147,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		txtOcupacion.setBounds(370, 248, 170, 25);
 		mainPanel.add(txtOcupacion);
 		s.mdTextField(txtOcupacion, s.blue, Color.white);
-		s.myTextPrompt(txtOcupacion, "Ocupacion", Color.GRAY);
-		
+		s.myTextPrompt(txtOcupacion, "Ocupacion", Color.GRAY);		
 		
 		txtDomicilio = new JTextField();
 		txtDomicilio.setBounds(10, 122, 197, 25);
@@ -286,8 +286,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		lblNumCel = new JLabel("");
 		lblNumCel.setBounds(10, 232, 170, 14);
 		mainPanel.add(lblNumCel);
-		s.placeholder(txtNumCel, lblNumCel, "Num Celular");
-		
+		s.placeholder(txtNumCel, lblNumCel, "Num Celular");		
 		
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -299,9 +298,10 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 		s.placeholder(txtNombre, lblNombre, "Nombre");
 		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
 		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
-
-		
-		
+		jd.btnNext.addActionListener(this);
+		jd.btnOmit.addActionListener(this);
+		ca.btnNext.addActionListener(this);
+		ca.btnOmit.addActionListener(this);
 	}
 
 	@Override
@@ -332,13 +332,11 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -351,8 +349,7 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 					if(!rs.next()) {
 						alSave.setVisible(true);
 						alSave.lblMessage.setText("Desea continuar y guardar ?");
-						alSave.lblAlertIcon.setIcon(new ImageIcon("views/alert.png"));
-						
+						alSave.lblAlertIcon.setIcon(new ImageIcon("views/alert.png"));						
 					}else {
 						lblWarning.setText("Cliente ya registrado en la base de datos");
 					}
@@ -369,7 +366,25 @@ public class NewClient extends JFrame implements ActionListener,MouseListener {
 			alOk.btnOk.setText("Ok");
 			alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
 			alOk.setVisible(true);
+		}else if(e.getSource() == jd.btnNext){
+			if(jd.fullFields()) {
+				jd.addDatosEmpleo(txtNombre.getText(),txtAp1.getText(),txtAp2.getText());
+			}
+		}else if(e.getSource() == jd.btnOmit) {
+			ca.setVisible(true);
+			jd.setVisible(false);
+		}else if(e.getSource() == ca.btnNext) {
+			if(ca.fullFields()) {
+				ca.addAval(txtNombre.getText(),txtAp1.getText(),txtAp2.getText());
+			}
+				
+		}else if(e.getSource() == ca.btnOmit) {
+			uf.setVisible(true);
+			ca.setVisible(false);
+		}else if(e.getSource() == uf.btnOmit) {
+			alCreated.setVisible(true);
 		}
+		
 	}
 	
 	public boolean fullFields() {

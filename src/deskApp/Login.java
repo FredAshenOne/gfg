@@ -34,6 +34,8 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 	JLabel lblHeader,lblLook;
 	JButton btnIniciar;
 	JPasswordField txtPassword;
+	JobData jd = new JobData();
+	CreateAval ca = new CreateAval();
 	MainAdminMenu mam = new MainAdminMenu();
 	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,6 +127,8 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		lblLook.addMouseListener(this);
 		btnIniciar.addMouseListener(this);
 		mam.btnBack.addActionListener(this);
+		
+		jd.btnOmit.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent a) {
@@ -164,10 +168,13 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 			if(priv == 1) {
 				mam.setVisible(true);
 				this.setVisible(false);
+				jd.setVisible(true);
 			}
 		}else if(e.getSource() == mam.btnBack){
 			mam.setVisible(false);
 			this.setVisible(true);
+		}else if(e.getSource() == jd.btnOmit) {
+			ca.setVisible(true);
 		}
 	}
 }
