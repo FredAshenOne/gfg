@@ -28,6 +28,9 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	JButton btnQuery,btnNewClient,btnBack;
 	JLabel lblIconNewClient,lblIconQuery;
 	Style s = new Style();
+	int idUser;
+	SearchClient sc = new SearchClient();
+	Alert alNewAval = new Alert();
 	NewClient nc = new NewClient();
 	public AdminClientes() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,6 +135,9 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		pnHeader.add(lblHeader);
 		
 		nc.btnBack.addActionListener(this);
+		nc.alNewAval.btnCancel.addActionListener(this);
+		btnQuery.addActionListener(this);
+		sc.btnBack.addActionListener(this);
 		
 	}
 
@@ -167,13 +173,12 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -181,10 +186,20 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnNewClient) {
 			nc.setVisible(true);
-			this.setVisible(false);
+			nc.idUser = idUser;
 		}else if(e.getSource() == nc.btnBack) {
 			this.setVisible(true);
 			nc.setVisible(false);
+		}else if(e.getSource() == nc.alNewAval.btnCancel) {
+			this.setVisible(true);
+			nc.alNewAval.setVisible(false);
+			nc.setVisible(false);
+		}else if(e.getSource() == btnQuery) {
+			sc.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == sc.btnBack) {
+			this.setVisible(true);
+			sc.setVisible(false);
 		}
 	}
 }

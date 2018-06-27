@@ -25,6 +25,7 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 	JPanel pnClientes,pnMovimientos,pnCreditos,pnHeader;
 	JLabel lblBack;
 	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings;
+	int idUser;
 	AdminClientes ac = new AdminClientes();
 	public MainAdminMenu() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -182,18 +183,19 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 	}
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnClient) {
 			ac.setVisible(true);
+			ac.idUser = idUser;
 			this.setVisible(false);
 		}else if(e.getSource() == ac.btnBack) {
 			this.setVisible(true);

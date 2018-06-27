@@ -1,22 +1,17 @@
 package deskApp;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import deskApp.TextPrompt;
-
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+import java.sql.ResultSet;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
@@ -27,16 +22,16 @@ import javax.swing.JPasswordField;
 public class Login extends JFrame implements ActionListener,MouseListener{
 	
 	
-	private int priv = 1;
 	private JPanel contentPane;
 	Style s =  new Style();
 	private JTextField txtUser;
-	JLabel lblHeader,lblLook;
+	Usuario u = new Usuario();
+	Conexion c = new Conexion();
+	JLabel lblHeader,lblLook,lblWarning;
 	JButton btnIniciar;
 	JPasswordField txtPassword;
-	JobData jd = new JobData();
-	CreateAval ca = new CreateAval();
 	MainAdminMenu mam = new MainAdminMenu();
+	int userType,idUser;
 	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 625, 494);
@@ -111,6 +106,14 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		lblLogHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblLogHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		
+		
+		lblWarning = new JLabel("");
+		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWarning.setForeground(Color.RED);
+		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
+		lblWarning.setBounds(10, 135, 194, 20);
+		logPanel.add(lblWarning);
+		
 		JPanel pnHeader = new JPanel();
 		pnHeader.setBounds(0, 0, 609, 100);
 		mainPanel.add(pnHeader);
@@ -128,7 +131,6 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		btnIniciar.addMouseListener(this);
 		mam.btnBack.addActionListener(this);
 		
-		jd.btnOmit.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent a) {
@@ -165,17 +167,36 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnIniciar) {
-			if(priv == 1) {
-				mam.setVisible(true);
-				this.setVisible(false);
-				jd.setVisible(true);
+			if(userExists()) {
+				if(userType == 1) {
+					mam.setVisible(true);
+					this.setVisible(false);
+					lblWarning.setText("");
+				}				
 			}
 		}else if(e.getSource() == mam.btnBack){
 			mam.setVisible(false);
 			this.setVisible(true);
-		}else if(e.getSource() == jd.btnOmit) {
-			ca.setVisible(true);
 		}
+	}
+	
+	public Boolean userExists() {
+		String pass = new String(txtPassword.getPassword());
+		try {
+			ResultSet rs = c.query("SELECT * FROM usuarios WHERE usuario = '"+txtUser.getText()+"' AND contraseña = '"+pass+"'; ");
+			if(rs.next()){
+				userType = rs.getInt("tipo_usuario");
+				mam.idUser = rs.getInt("id");
+				return true;
+				
+			}
+		}catch(Exception ex) {
+		
+		}	
+		lblWarning.setText("Usuario o contraseña invalidos");
+		return false;
+		
+		
 	}
 }
 	

@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -25,11 +26,11 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 	JLabel lblWarning;
 	Conexion c = new Conexion();
 	private JPanel contentPane;
-	JTextField txtName,txtAp1,txtAp2,txtDireccion,txtNumInt,txtNumExt,txtTelefono;
-	private JLabel lblColonia;
-	private JTextField txtColonia;
+	JTextField txtName,txtAp1,txtAp2,txtDireccion,txtNumInt,txtNumExt,txtTelefono,txtColonia;
+	JLabel lblColonia,lblNombre,lblAp1,lblAp2,lblDireccion,lblNumInt,lblNumExt,lblTelefono;
 	JButton btnOmit,btnBack;
-
+	Alert alSave = new Alert(); 
+	Alert alNewAaval = new Alert();
 	public CreateAval() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -50,12 +51,12 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		pnHeader.setLayout(null);
 		s.mdPanel(pnHeader, s.blue);
 		
-		JLabel label = new JLabel("Nuevo Cliente: Datos de Empleo");
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		label.setBounds(87, 10, 447, 32);
-		pnHeader.add(label);
+		JLabel lblNuevoClienteAgregar = new JLabel("Nuevo Cliente: Agregar Aval");
+		lblNuevoClienteAgregar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNuevoClienteAgregar.setForeground(Color.WHITE);
+		lblNuevoClienteAgregar.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblNuevoClienteAgregar.setBounds(87, 10, 447, 32);
+		pnHeader.add(lblNuevoClienteAgregar);
 		
 		btnNext = new JButton("");
 		btnNext.setBounds(551, 11, 32, 32);
@@ -86,19 +87,19 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtAp2, Color.white, s.blue);
 		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);
 		
-		JLabel lblNombre = new JLabel("");
+		lblNombre = new JLabel("");
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNombre.setBounds(10, 54, 168, 14);
 		pnHeader.add(lblNombre);
 		
-		JLabel lblAp1 = new JLabel("");
+		lblAp1 = new JLabel("");
 		lblAp1.setForeground(Color.WHITE);
 		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp1.setBounds(188, 54, 160, 14);
 		pnHeader.add(lblAp1);
 		
-		JLabel lblAp2 = new JLabel("");
+		lblAp2 = new JLabel("");
 		lblAp2.setForeground(Color.WHITE);
 		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp2.setBounds(358, 54, 160, 14);
@@ -111,7 +112,7 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtDireccion, s.blue, Color.WHITE);
 		s.myTextPrompt(txtDireccion, "Direccion", Color.GRAY);
 		
-		JLabel lblDireccion = new JLabel("");
+		lblDireccion = new JLabel("");
 		lblDireccion.setForeground(Color.BLACK);
 		lblDireccion.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblDireccion.setBounds(27, 126, 200, 14);
@@ -124,7 +125,7 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtNumInt, s.blue, Color.white);
 		s.myTextPrompt(txtNumInt, "Numero Interior", Color.gray);
 		
-		JLabel lblNumInt = new JLabel("");
+		lblNumInt = new JLabel("");
 		lblNumInt.setForeground(Color.BLACK);
 		lblNumInt.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNumInt.setBounds(336, 202, 200, 14);
@@ -137,7 +138,7 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtNumExt, s.blue, Color.white);
 		s.myTextPrompt(txtNumExt, "Numero Exterior", Color.GRAY);
 		
-		JLabel lblNumExt = new JLabel("");
+		lblNumExt = new JLabel("");
 		lblNumExt.setForeground(Color.BLACK);
 		lblNumExt.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNumExt.setBounds(27, 202, 200, 14);
@@ -150,7 +151,7 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtTelefono, s.blue, Color.WHITE);
 		s.myTextPrompt(txtTelefono, "Teléfono", Color.GRAY);
 		
-		JLabel lblTelefono = new JLabel("");
+		lblTelefono = new JLabel("");
 		lblTelefono.setForeground(Color.BLACK);
 		lblTelefono.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTelefono.setBounds(27, 281, 200, 14);
@@ -162,11 +163,7 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
 		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
 		
-		btnBack = new JButton("");
-		btnBack.setBounds(10, 10, 32, 32);
-		pnHeader.add(btnBack);
-		s.btnIcon(btnBack, "views/btnBack.png");
-		
+	
 		s.placeholder(txtDireccion, lblDireccion, "Direccion");
 		s.placeholder(txtNumExt, lblNumExt, "Numero Exterior");
 		s.placeholder(txtNumInt, lblNumInt, "Numero Interior");
@@ -175,7 +172,7 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		lblWarning = new JLabel("");
 		lblWarning.setForeground(Color.RED);
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblWarning.setBounds(129, 326, 341, 21);
+		lblWarning.setBounds(134, 348, 341, 21);
 		mainPanel.add(lblWarning);
 		
 		lblColonia = new JLabel("");
@@ -193,11 +190,20 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		s.myTextPrompt(txtColonia, "Colonia", Color.gray);
 		
 		btnOmit = new JButton("Omitir");
-		btnOmit.setForeground(Color.WHITE);
 		btnOmit.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		btnOmit.setBounds(516, 337, 67, 32);
 		mainPanel.add(btnOmit);
+		s.mdButton(btnOmit, s.blue);
+		btnOmit.setBackground(null);
+		btnOmit.setBorder(null);
+		btnOmit.addMouseListener(this);
+		btnNext.addActionListener(this);
 		
+		alSave.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
+		alSave.lblMessage.setText("Desea guardar los datos y continuar ?");
+		alSave.lblMessage.setForeground(Color.black);
+		alSave.btnOk.addActionListener(this);
+		alSave.btnCancel.addActionListener(this);
 	}
 
 	@Override
@@ -210,8 +216,9 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 		if(e.getSource() == btnNext) {
 			s.hoverBorder(btnNext, Color.white);
 			s.btnPointer(btnNext);
+			
 		}else if(e.getSource() == btnOmit) {
-			s.hoverBorder(btnOmit, Color.white);
+			s.hoverBorder(btnOmit, s.blue);
 			s.btnPointer(btnOmit);
 		}
 	}
@@ -222,7 +229,9 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 			btnNext.setBorder(null);
 		}else if(e.getSource() == btnOmit) {
 			btnOmit.setBorder(null);
-		}		
+		}else if(e.getSource() == btnBack) {
+			btnBack.setBorder(null);
+		}	
 	}
 
 	@Override
@@ -239,7 +248,13 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		if(e.getSource() == btnNext) {
+			if(fullFields()) {
+				alSave.setVisible(true);
+			}
+		}else if(e.getSource() == alSave.btnCancel) {
+			alSave.setVisible(false);
+		}
 		
 	}
 	
@@ -271,6 +286,15 @@ public class CreateAval extends JFrame implements ActionListener,MouseListener{
 			ex.printStackTrace();
 		}
 		return (Integer) null;
+	}
+	
+	public void clearFields() {
+		txtName.setText("");txtAp1.setText("");txtAp2.setText("");
+		txtDireccion.setText("");txtNumInt.setText("");txtNumExt.setText("");
+		txtTelefono.setText("");txtColonia.setText("");
+		lblColonia.setText("");lblDireccion.setText("");lblTelefono.setText("");
+		lblNumExt.setText("");lblNumInt.setText("");lblNombre.setText("");
+		lblAp1.setText("");lblAp2.setText("");
 	}
 		
 	

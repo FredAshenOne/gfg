@@ -26,7 +26,7 @@ public class Style {
 	
 	public Color blue = Color.decode("#039BE5");
 	public Color green = Color.decode("#26A69A");
-	
+	public Color red = Color.decode("#C62828");
 	public void btnPointer(JButton btn) {
 		btn.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
 		new ImageIcon("views/cursor.png").getImage(),
@@ -136,7 +136,7 @@ public class Style {
 	
 	public void myTextPrompt(JTextField txt,String str,Color c) {
 		TextPrompt tp = new TextPrompt(str, txt);
-		tp.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 13));
+		tp.setFont(txt.getFont());
 		tp.setForeground(c);
 	}
 	

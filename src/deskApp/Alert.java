@@ -25,7 +25,7 @@ public class Alert extends JFrame implements ActionListener,MouseListener{
 	Style s = new Style();
 
 	public Alert() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 335, 146);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -37,12 +37,16 @@ public class Alert extends JFrame implements ActionListener,MouseListener{
 		s.mdPanel(mainPanel, Color.white);
 		
 		
-		btnCancel = new JButton("");
+		btnCancel = new JButton("Cancelar");
+		btnCancel.setForeground(Color.WHITE);
+		btnCancel.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
 		btnCancel.setBounds(10, 67, 128, 29);
 		mainPanel.add(btnCancel);
 		s.mdButton(btnCancel, Color.decode("#D32F2F"));
 		
-		btnOk = new JButton("");
+		btnOk = new JButton("Guardar");
+		btnOk.setForeground(Color.WHITE);
+		btnOk.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
 		btnOk.setBounds(181, 67, 128, 29);
 		mainPanel.add(btnOk);
 		s.mdButton(btnOk, s.blue);
@@ -56,6 +60,9 @@ public class Alert extends JFrame implements ActionListener,MouseListener{
 		lblAlertIcon = new JLabel("");
 		lblAlertIcon.setBounds(10, 23, 32, 32);
 		mainPanel.add(lblAlertIcon);
+		
+		btnOk.addMouseListener(this);
+		btnCancel.addMouseListener(this);
 	}
 
 	@Override
@@ -72,14 +79,21 @@ public class Alert extends JFrame implements ActionListener,MouseListener{
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if(e.getSource() == btnOk) {
-			
+			s.btnHover(btnOk, s.blue, Color.WHITE, s.blue);
+			s.btnPointer(btnOk);
+		}else if(e.getSource() == btnCancel) {
+			s.btnHover(btnCancel, s.red, Color.WHITE, s.red);
+			s.btnPointer(btnCancel);
 		}
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseExited(MouseEvent e) {
+		if(e.getSource() == btnOk) {
+			s.mdButton(btnOk, s.blue);
+		}else if(e.getSource() == btnCancel) {
+			s.mdButton(btnCancel, s.red);
+		}
 	}
 
 	@Override
