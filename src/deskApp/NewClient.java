@@ -29,7 +29,7 @@ public class NewClient extends JFrame implements ActionListener, MouseListener {
 	int idUser;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2;
-	JButton btnBack, btnNext;
+	JButton btnBack, btnNext,btnInfoCliente,btnInfoJob,btnInfoAvales;
 	Usuario u = new Usuario();
 	CreateAval ca = new CreateAval();
 	Style s = new Style();
@@ -285,7 +285,7 @@ public class NewClient extends JFrame implements ActionListener, MouseListener {
 
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblWarning.setBounds(312, 325, 222, 32);
+		lblWarning.setBounds(135, 317, 222, 32);
 		mainPanel.add(lblWarning);
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
@@ -293,6 +293,9 @@ public class NewClient extends JFrame implements ActionListener, MouseListener {
 		s.placeholder(txtNombre, lblNombre, "Nombre");
 		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
 		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
+		
+		
+		
 		jd.btnNext.addActionListener(this);
 		jd.btnOmit.addActionListener(this);
 		
@@ -458,5 +461,4 @@ public class NewClient extends JFrame implements ActionListener, MouseListener {
 		}
 		return null;
 	}
-
 }

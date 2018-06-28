@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -31,14 +32,15 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 	int idUser;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2;
-	JButton btnBack, btnNext,btnSave;
+	JButton btnBack, btnNext,btnSave,btnInfoCliente,btnInfoEmpleo,btnInfoAvales;
 	CreateAval ca = new CreateAval();
 	Style s = new Style();
 	JobData jd = new JobData();
 	Conexion c = new Conexion();
 	ResultSet rs;
-	
-
+	Alert alUpdate = new Alert();
+	ShowJobData sjd = new ShowJobData();
+	ShowAvalData sad = new ShowAvalData();
 	public ShowClient() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -282,7 +284,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblWarning.setBounds(312, 325, 222, 32);
+		lblWarning.setBounds(135, 310, 222, 32);
 		mainPanel.add(lblWarning);
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
@@ -301,13 +303,53 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		jd.btnNext.addActionListener(this);
 		jd.btnOmit.addActionListener(this);
  
+		
+		JPanel menuPane = new JPanel();
+		menuPane.setBounds(475, 317, 96, 32);
+		mainPanel.add(menuPane);
+		menuPane.setLayout(null);
+		s.mdPanel(menuPane, Color.white);		
+		
+		btnInfoCliente = new JButton("");
+		btnInfoCliente.setBounds(0, 0, 32, 32);
+		menuPane.add(btnInfoCliente);
+		btnInfoCliente.addMouseListener(this);
+		s.btnIcon(btnInfoCliente, "views/userWhite.png");
+		btnInfoCliente.setOpaque(true);
+		btnInfoCliente.setBackground(s.blue);
+		
+		btnInfoEmpleo = new JButton("");
+		btnInfoEmpleo.setBounds(32, 0, 32, 32);
+		menuPane.add(btnInfoEmpleo);
+		btnInfoEmpleo.addMouseListener(this);
+		s.btnIcon(btnInfoEmpleo, "views/job.png");	
+		btnInfoEmpleo.addActionListener(this);
+		
+		btnInfoAvales = new JButton("");
+		btnInfoAvales.setBounds(64, 0, 32, 32);
+		menuPane.add(btnInfoAvales);
+		btnInfoAvales.addMouseListener(this);
+		s.btnIcon(btnInfoAvales, "views/avales.png");
+		
 		ca.btnNext.addActionListener(this);
 		ca.btnOmit.addActionListener(this);
 
 		jd.alSave.btnOk.addActionListener(this);
 		btnNext.addActionListener(this);
 		ca.alSave.btnOk.addActionListener(this);
-
+		btnInfoAvales.addActionListener(this);
+		alUpdate.btnCancel.addActionListener(this);
+		alUpdate.lblMessage.setText("<html><body>Se actualizaran los datos del cliente<br>desea continuar?</body></html>");
+		
+		
+		sad.btnInfoCliente.addActionListener(this);
+		sad.btnInfoEmpleo.addActionListener(this);
+		sjd.btnInfoCliente.addActionListener(this);
+		sjd.btnInfoAvales.addActionListener(this);
+		//
+		
+		
+		
 	}
 
 	@Override
@@ -327,6 +369,16 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		}else if(e.getSource() == btnSave) {
 			s.hoverBorder(btnSave, Color.white);
 			s.btnPointer(btnSave);
+		}else if(e.getSource() == btnInfoEmpleo) {
+			s.btnPointer(btnInfoEmpleo);
+			s.hoverBorder(btnInfoEmpleo, s.blue);
+		}else if(e.getSource() == btnInfoAvales) {
+			s.btnPointer(btnInfoAvales);
+			s.hoverBorder(btnInfoAvales, s.blue);
+		}else if(e.getSource() == btnInfoCliente) {
+			s.btnPointer(btnInfoCliente);
+		}else if(e.getSource() == btnInfoEmpleo) {
+			
 		}
 	}
 
@@ -338,6 +390,10 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			btnBack.setBorder(null);
 		}else if(e.getSource() == btnSave) {
 			btnSave.setBorder(null);
+		}else if(e.getSource() == btnInfoEmpleo) {
+			btnInfoEmpleo.setBorder(null);
+		}else if(e.getSource() == btnInfoAvales) {
+			btnInfoAvales.setBorder(null);
 		}
 	}
 
@@ -359,11 +415,36 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			setEnabledFields(true);
 			btnNext.setVisible(false);
 			btnSave.setVisible(true);
+
+		}else if(e.getSource() == btnSave) {
+			alUpdate.setVisible(true);
+		}else if(e.getSource() == alUpdate.btnCancel) {
+			alUpdate.setVisible(false);
+		}else if(e.getSource() == btnInfoEmpleo) {
+			sjd.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == btnInfoAvales) {
+			sad.setVisible(true);
+			this.setVisible(false);
+			sad.fillTableAvales(searchAvalesByIdCliente());
+		}else if(e.getSource() == sad.btnInfoCliente) {
+			this.setVisible(true);
+			sad.setVisible(false);
+		}else if(e.getSource() == sad.btnInfoEmpleo) {
+			sad.setVisible(false);
+			sjd.setVisible(true);
+		}else if(e.getSource() == sjd.btnInfoAvales) {
+			sad.setVisible(true);
+			sjd.setVisible(false);
+		}else if(e.getSource() == sjd.btnInfoCliente) {
+			this.setVisible(true);
+			sjd.setVisible(false);
+		}else if(e.getSource() == sjd.alSave.btnOk) {
+			
 		}
 	}
 
 	public void fillFields() {
-
 		try {
 			if (rs.next()) {
 				txtNombre.setText(rs.getString("Nombre"));
@@ -385,7 +466,26 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateCliente() {
 
+		try {
+			c.update("UPDATE clientes_personal SET Nombre = '" + txtNombre.getText() + "',Apellido_Paterno = '"
+					+ txtAp1.getText() + "',Apellido_Materno = '" + txtAp2.getText() + "' ,Telefono_Cel = '"
+					+ txtNumCel.getText() + "'," + "Telefono_Fijo = '" + txtNumFijo.getText() + "',Direccion = '"
+					+ txtDomicilio.getText() + "',Num_Exterior = '" + txtExterior.getText() + "',Num_Interior = '"
+					+ txtInterior.getText() + "',Colonia = '" + txtColonia.getText() + "',Fecha_Nacimiento = '"
+					+ txtNacimiento.getText() + "',Tiempo_Residencia = '" + txtTiempo.getText() + "'," + "Tipo_Casa = "
+					+ cbTipoDom.getSelectedIndex() + ",Estado_Civil = " + cbEstadoCivil.getSelectedIndex()
+					+ ",Ocupacion = '" + txtOcupacion.getText() + "',Sueldo_Mensual = "
+					+ Integer.parseInt(txtSueldo.getText()) + ",Editado = " + idUser + " WHERE id ="+rs.getInt("id")+" ;");
+		} catch (NumberFormatException nfe) {
+			lblWarning.setText("Algunos campos deben ser numericos");
+			lblWarning.setForeground(Color.RED);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void setEnabledFields(Boolean b) {
@@ -404,6 +504,59 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		txtSueldo.setEditable(b);
 		cbEstadoCivil.setEnabled(b);
 		cbTipoDom.setEnabled(b);
+	}
+	
+	public boolean fullFields() {
+		if (txtNombre.getText().length() > 0 && txtAp1.getText().length() > 0 && txtAp2.getText().length() > 0
+				&& cbEstadoCivil.getSelectedIndex() > 0 && cbTipoDom.getSelectedIndex() > 0
+				&& txtNacimiento.getText().length() > 0 && txtOcupacion.getText().length() > 0
+				&& txtDomicilio.getText().length() > 0 && txtExterior.getText().length() > 0
+				&& txtColonia.getText().length() > 0 && txtTiempo.getText().length() > 0
+				&& txtNumCel.getText().length() > 0 && txtNumFijo.getText().length() > 0
+				&& txtSueldo.getText().length() > 0) {
+			if (s.dateChecker(txtNacimiento.getText())) {
+
+				if (txtTiempo.getText().length() > 2 || txtNumCel.getText().length() > 12
+						|| txtNumFijo.getText().length() > 12) {
+					lblWarning.setText("Algunos campos exceden el limite de caracteres");
+					lblWarning.setForeground(Color.RED);
+					return false;
+				} else {
+					return true;
+				}
+
+			} else {
+				lblWarning.setText("La fecha introducida no es correcta");
+				lblWarning.setForeground(Color.RED);
+				return false;
+			}
+		} else {
+			lblWarning.setText("Algunos campos estan Vacíos");
+			lblWarning.setForeground(Color.RED);
+			return false;
+		}
+	}
+	
+	public ResultSet clientByName(String nombre, String ap1, String ap2) {
+
+		try {
+			return c.query("SELECT * FROM clientes_personal WHERE Nombre = '" + nombre + "' AND apellido_Paterno = '"
+					+ ap1 + "' AND apellido_Materno = '" + ap2 + "';");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ResultSet searchAvalesByIdCliente() {
+		try {
+			return c.query("SELECT * FROM avales WHERE id_Cliente = "+rs.getInt("id")+";");
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			lblWarning.setText("No se encontraron resultados");
+			return null;
+		}
 	}
 
 }

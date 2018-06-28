@@ -172,8 +172,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		
+	public void mousePressed(MouseEvent e) {		
 		
 	}
 
@@ -196,6 +195,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 			nc.setVisible(false);
 		}else if(e.getSource() == btnQuery) {
 			sc.setVisible(true);
+			sc.idUser = idUser;
 			this.setVisible(false);
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);

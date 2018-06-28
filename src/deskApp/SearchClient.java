@@ -18,9 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -32,6 +35,7 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 	private JTextField txtSearch;
 	private JTable table;
 	JScrollPane scrollPane;
+	int idUser;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
 	ShowClient sc = new ShowClient();
@@ -105,12 +109,13 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setEnabled(false);
-		scrollPane.setBounds(54, 179, 494, 174);
+		scrollPane.setBounds(54, 179, 494, 159);
 		mainPanel.add(scrollPane);
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		txtSearch.addKeyListener(this);
 		table = new JTable();
+		
 		DefaultTableModel model = new DefaultTableModel(
 				new Object[][] {
 				},
@@ -138,6 +143,22 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
 		table.setDefaultRenderer(String.class, centerRenderer);
+		btnNext.setEnabled(false);
+		
+		ListSelectionModel listSelectionModel = table.getSelectionModel();
+		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+		        public void valueChanged(ListSelectionEvent e) { 
+		            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+		            btnNext.setEnabled(!lsm.isSelectionEmpty());
+		        }
+		});
+
+		
+		sc.alUpdate.btnOk.addActionListener(this);
+		sc.btnBack.addActionListener(this);
+		sc.sad.btnBack.addActionListener(this);
+		sc.sjd.btnBack.addActionListener(this);
+		
 	}
 
 	@Override
@@ -148,8 +169,10 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (e.getSource() == btnNext) {
-			s.hoverBorder(btnNext, Color.white);
-			s.btnPointer(btnNext);
+			if(btnNext.isEnabled()) {
+				s.hoverBorder(btnNext, Color.white);
+				s.btnPointer(btnNext);
+			}
 		} else if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
 			s.btnPointer(btnBack);
@@ -162,7 +185,7 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 			btnNext.setBorder(null);
 		} else if (e.getSource() == btnBack) {
 			btnBack.setBorder(null);
-		}
+		} 
 	}
 
 	@Override
@@ -183,12 +206,27 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 			sc.fillFields();
 			sc.setEnabledFields(false);
 			sc.setVisible(true);
+			sc.idUser = idUser;
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);
 			sc.setVisible(false);
 			sc.btnNext.setVisible(true);
 			sc.btnSave.setVisible(false);
+		}else if(e.getSource() == sc.alUpdate.btnOk) {
+			sc.updateCliente();
+			sc.alUpdate.setVisible(false);
+		}else if(e.getSource() == sc.btnBack) {
+			this.setVisible(true);
+			sc.setVisible(false);
+		}else if(e.getSource() == sc.sjd.btnBack) {
+			this.setVisible(true);
+			sc.sjd.setVisible(false);
+		}else if(e.getSource() == sc.sad.btnBack) {
+			this.setVisible(true);
+			sc.sad.setVisible(false);
+			
 		}
+		
 	}
 
 	public ResultSet searchClient() {
@@ -206,7 +244,7 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 					int id = Integer.parseInt(data);
 					return c.query("SELECT * FROM clientes_personal WHERE id = " + id + ";");
 				} catch (NumberFormatException nfe) {					
-					return c.query("SELECT * FROM clientes_personal WHERE nombre = '" + nombre[0] + "' OR apellido_Paterno = '"+nombre[0]+"' OR apellido_Materno = '"+nombre[0]+"';");
+					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0] + "%' OR apellido_Paterno LIKE '%"+nombre[0]+"%' OR apellido_Materno LIKE '%"+nombre[0]+"%';");
 				}
 			} else {
 				lblWarning.setText("No se encontraron resultados");
