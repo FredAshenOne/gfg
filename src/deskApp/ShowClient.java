@@ -422,6 +422,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			alUpdate.setVisible(false);
 		}else if(e.getSource() == btnInfoEmpleo) {
 			sjd.setVisible(true);
+			sjd.fillJobData();
 			this.setVisible(false);
 		}else if(e.getSource() == btnInfoAvales) {
 			sad.setVisible(true);
@@ -433,14 +434,18 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		}else if(e.getSource() == sad.btnInfoEmpleo) {
 			sad.setVisible(false);
 			sjd.setVisible(true);
+			sjd.fillJobData();
 		}else if(e.getSource() == sjd.btnInfoAvales) {
 			sad.setVisible(true);
+			sad.fillTableAvales(searchAvalesByIdCliente());
 			sjd.setVisible(false);
 		}else if(e.getSource() == sjd.btnInfoCliente) {
 			this.setVisible(true);
 			sjd.setVisible(false);
 		}else if(e.getSource() == sjd.alSave.btnOk) {
-			
+			if(sjd.fullFields()){
+				
+			}
 		}
 	}
 
@@ -462,6 +467,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 				txtNumFijo.setText(rs.getString("Telefono_Fijo"));
 				txtOcupacion.setText(rs.getString("Ocupacion"));
 				txtSueldo.setText(rs.getString("sueldo_Mensual"));
+				sjd.idUser = rs.getInt("id");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -480,6 +486,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 					+ cbTipoDom.getSelectedIndex() + ",Estado_Civil = " + cbEstadoCivil.getSelectedIndex()
 					+ ",Ocupacion = '" + txtOcupacion.getText() + "',Sueldo_Mensual = "
 					+ Integer.parseInt(txtSueldo.getText()) + ",Editado = " + idUser + " WHERE id ="+rs.getInt("id")+" ;");
+			
 		} catch (NumberFormatException nfe) {
 			lblWarning.setText("Algunos campos deben ser numericos");
 			lblWarning.setForeground(Color.RED);

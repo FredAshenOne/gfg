@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 
 public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 	Style s = new Style();
+	int idUser;
 	private JPanel contentPane;
 	JButton btnNext,btnSave;
 	JLabel lblNumExt, lblDesc, lblTel, lblDom, lblNumInt, lblHeader, lblWarning;
@@ -26,7 +27,7 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 	Conexion c = new Conexion();
 	JButton btnBack,btnInfoEmpleo,btnInfoCliente,btnInfoAvales;
 	Alert alSave = new Alert();
-
+	ResultSet res;
 	private JPanel menuPane;
 	
 	
@@ -237,6 +238,14 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 		}
 		
 	}
+	
+	public void clearFields() {
+		txtDom.setText("");
+		txtDesc.setText("");
+		txtTelefono.setText("");
+		txtNumExterior.setText("");
+		txtNumInter.setText("");
+	}
 
 	public int getIdClienteByName(String name, String ap1, String ap2) {
 		ResultSet rs = c.query("SELECT * FROM clientes_personal WHERE Nombre = '" + name + "' AND Apellido_Paterno = '"
@@ -263,15 +272,29 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 
 	public void actulizarDatosEmpleo(String name, String ap1, String ap2) {
 		try {
-			c.update("UPDATE clientes_empleo id_cliente = " + getIdClienteByName(name, ap1, ap2) + ",Descripcion = '"
+			c.update("UPDATE clientes_empleo SET id_cliente = " + getIdClienteByName(name, ap1, ap2) + ",Descripcion = '"
 					+ txtDesc.getText() + "',Domicilio = '" + txtDom.getText() + "',Num_Exterior = '"
 					+ txtNumExterior.getText() + "',Num_Interior = '" + txtNumInter.getText() + "',Telefono = '"
 					+ txtTelefono.getText() + "' WHERE id_cliente = "+getIdClienteByName(name, ap1, ap2)+";");
 		} catch (NumberFormatException nfe) {
 			lblWarning.setText("Algunos campos deben ser numericos");
 		}
-
 	}	
+	
+	public void fillJobData() {
+		ResultSet rs = c.query("SELECT * FROM clientes_Empleo WHERE id_cliente = "+idUser+";");
+		try {
+			if(rs.next()) {
+				txtDom.setText(rs.getString("Domicilio"));
+				txtDesc.setText(rs.getString("Descripcion"));
+				txtNumInter.setText(rs.getString("Num_Interior"));
+				txtNumExterior.setText(rs.getString("Num_Exterior"));
+				txtTelefono.setText(rs.getString("Telefono"));
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	
 
 }

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,17 +18,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 public class ShowAvalData extends JFrame implements ActionListener,MouseListener{
 
 	ResultSet rs;
 	private JPanel contentPane;
-	JButton btnBack,btnInfoAvales,btnInfoEmpleo,btnInfoCliente;
+	JButton btnBack,btnInfoAvales,btnInfoEmpleo,btnInfoCliente,btnNext;
 	Style s = new Style();
 	private JTable table;
+	ShowAval sa = new ShowAval();
 	public ShowAvalData() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -54,7 +59,7 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		pnHeader.add(btnBack);
 		s.btnIcon(btnBack, "views/back.png");
 		btnBack.addMouseListener(this);
-
+		
 		JLabel lblHeader = new JLabel("Avales Registrados");
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setForeground(Color.WHITE);
@@ -62,10 +67,15 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
 		
+		btnNext = new JButton("");
+		btnNext.setBorder(null);
+		btnNext.setBounds(551, 11, 32, 32);
+		pnHeader.add(btnNext);
+		btnNext.setEnabled(false);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(82, 119, 432, 187);
 		mainPanel.add(scrollPane);
-		
+		btnNext.addActionListener(this);
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -107,6 +117,16 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		btnInfoAvales.addMouseListener(this);
 		btnInfoEmpleo.addMouseListener(this);
 		btnInfoCliente.addMouseListener(this);
+		
+		ListSelectionModel listSelectionModel = table.getSelectionModel();
+		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+		        public void valueChanged(ListSelectionEvent e) { 
+		            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+		            btnNext.setEnabled(!lsm.isSelectionEmpty());
+		        }
+		});
+		
+		btnNext.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -127,6 +147,8 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		}else if(e.getSource() == btnBack) {
 			s.btnPointer(btnBack);
 			s.hoverBorder(btnBack, s.blue);
+		}else if(e.getSource() == btnNext) {
+			
 		}
 	}
 	
@@ -153,9 +175,13 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent e) {
+		int index = table.getSelectedRow();
+		if(e.getSource() == btnNext) {
+			sa.fillAvalData(table.getValueAt(index,0).toString(),table.getValueAt(index, 1).toString(),table.getValueAt(index, 2).toString());
+			sa.setVisible(true);
+			this.setVisible(false);
+		}
 	}
 	
 	
@@ -173,5 +199,4 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			ex.printStackTrace();
 		}
 	}
-	
 }

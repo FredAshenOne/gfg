@@ -210,21 +210,20 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);
 			sc.setVisible(false);
+			sc.sjd.clearFields();
 			sc.btnNext.setVisible(true);
 			sc.btnSave.setVisible(false);
 		}else if(e.getSource() == sc.alUpdate.btnOk) {
 			sc.updateCliente();
 			sc.alUpdate.setVisible(false);
-		}else if(e.getSource() == sc.btnBack) {
-			this.setVisible(true);
-			sc.setVisible(false);
 		}else if(e.getSource() == sc.sjd.btnBack) {
+			sc.sjd.clearFields();
 			this.setVisible(true);
 			sc.sjd.setVisible(false);
 		}else if(e.getSource() == sc.sad.btnBack) {
+			sc.sjd.clearFields();
 			this.setVisible(true);
-			sc.sad.setVisible(false);
-			
+			sc.sad.setVisible(false);			
 		}
 		
 	}
