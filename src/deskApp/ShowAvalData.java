@@ -29,10 +29,12 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 
 	ResultSet rs;
 	private JPanel contentPane;
-	JButton btnBack,btnInfoAvales,btnInfoEmpleo,btnInfoCliente,btnNext;
+	JButton btnBack,btnInfoAvales,btnInfoEmpleo,btnInfoCliente,btnNext,btnAddAval;
 	Style s = new Style();
 	private JTable table;
+	CreateAval ca = new CreateAval();
 	ShowAval sa = new ShowAval();
+	Alert alAnother = new Alert();
 	public ShowAvalData() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -71,11 +73,22 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		btnNext.setBorder(null);
 		btnNext.setBounds(551, 11, 32, 32);
 		pnHeader.add(btnNext);
-		btnNext.setEnabled(false);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(82, 119, 432, 187);
 		mainPanel.add(scrollPane);
 		btnNext.addActionListener(this);
+		btnNext.setEnabled(false);
+		s.btnIcon(btnNext, "views/next.png");
+		
+		btnAddAval = new JButton("");
+		btnAddAval.setBorder(null);
+		btnAddAval.setBounds(551, 54, 32, 32);
+		pnHeader.add(btnAddAval);
+		s.btnIcon(btnAddAval, "views/addAvalWhite.png");
+		btnAddAval.addMouseListener(this);
+		btnAddAval.addActionListener(this);
+		
+		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -126,11 +139,21 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		        }
 		});
 		
-		btnNext.addActionListener(this);
+		ca.alSave.btnOk.addActionListener(this);
+		btnNext.addMouseListener(this);
+		
+		alAnother.lblMessage.setText("<html><body>Datos guardados correctamente<br> desea campturar mas avales?</body></html>");
+		alAnother.btnOk.setText("Si");
+		alAnother.btnCancel.setText("No");
+		alAnother.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alAnother.btnCancel.addActionListener(this);
+		alAnother.btnOk.addActionListener(this);
+		
+		
+		ca.btnBack.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	@Override
@@ -148,42 +171,71 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			s.btnPointer(btnBack);
 			s.hoverBorder(btnBack, s.blue);
 		}else if(e.getSource() == btnNext) {
-			
+			if(btnNext.isEnabled()) {
+				s.hoverBorder(btnNext, Color.WHITE);
+				s.btnPointer(btnNext);
+			} 
+		}else if(e.getSource() == btnAddAval) {
+			s.hoverBorder(btnAddAval, Color.WHITE);
+			s.btnPointer(btnAddAval);
 		}
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent e) {
 		if(e.getSource() == btnInfoCliente) {
-			btnInfoCliente.setBorder(null);
-			
+			btnInfoCliente.setBorder(null);			
 		}else if(e.getSource() == btnInfoEmpleo) {
 			btnInfoEmpleo.setBorder(null);
+		}else if(e.getSource() == btnNext) {
+			btnNext.setBorder(null);
+		}else if(e.getSource() == btnAddAval) {
+			btnAddAval.setBorder(null);
 		}
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int index = table.getSelectedRow();
+		
 		if(e.getSource() == btnNext) {
+			int index = table.getSelectedRow();
 			sa.fillAvalData(table.getValueAt(index,0).toString(),table.getValueAt(index, 1).toString(),table.getValueAt(index, 2).toString());
 			sa.setVisible(true);
 			this.setVisible(false);
+		}else if(e.getSource() == btnAddAval) {
+			try {
+				ca.lblHeader.setText(rs.getString("nombre")+" "+rs.getString("Apellido_Paterno")+" "+rs.getString("Apellido_Materno")+" : Agregar Aval");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			ca.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == ca.alSave.btnOk) {
+			try {
+				ca.addAval(rs.getString("nombre"), rs.getString("Apellido_Paterno"),rs.getString("Apellido_materno"));
+				alAnother.setVisible(true);
+				ca.alSave.setVisible(false);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}else if(e.getSource() == ca.btnBack) {
+			this.setVisible(true);
+			ca.setVisible(false);
+		}else if(e.getSource() == alAnother.btnOk) {
+			ca.clearFields();
+			alAnother.setVisible(false);
 		}
-	}
-	
+	}	
 	
 	public void fillTableAvales(ResultSet rs) {
 		DefaultTableModel mod = (DefaultTableModel) table.getModel();
@@ -192,9 +244,7 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			while(rs.next()) {
 				mod.addRow(new Object[] {rs.getString("nombre"),rs.getString("Apellido_Paterno"),rs.getString("Apellido_Materno"),rs.getString("Direccion"),rs.getString("Num_Exterior")
 				});
-			}
-		
-			
+			}					
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}

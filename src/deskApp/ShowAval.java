@@ -27,7 +27,7 @@ public class ShowAval extends JFrame implements ActionListener,MouseListener{
 	Conexion c = new Conexion();
 	private JPanel contentPane;
 	JTextField txtName,txtAp1,txtAp2,txtDireccion,txtNumInt,txtNumExt,txtTelefono,txtColonia;
-	JLabel lblColonia,lblNombre,lblAp1,lblAp2,lblDireccion,lblNumInt,lblNumExt,lblTelefono;
+	JLabel lblColonia,lblNombre,lblAp1,lblAp2,lblDireccion,lblNumInt,lblNumExt,lblTelefono,lblHeader;
 	JButton btnBack;
 	Alert alSave = new Alert(); 
 	Alert alNewAaval = new Alert();
@@ -51,12 +51,12 @@ public class ShowAval extends JFrame implements ActionListener,MouseListener{
 		pnHeader.setLayout(null);
 		s.mdPanel(pnHeader, s.blue);
 		
-		JLabel lblNuevoClienteAgregar = new JLabel("Nuevo Cliente: Agregar Aval");
-		lblNuevoClienteAgregar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNuevoClienteAgregar.setForeground(Color.WHITE);
-		lblNuevoClienteAgregar.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblNuevoClienteAgregar.setBounds(87, 10, 447, 32);
-		pnHeader.add(lblNuevoClienteAgregar);
+		lblHeader = new JLabel("Aval");
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblHeader.setBounds(87, 10, 447, 32);
+		pnHeader.add(lblHeader);
 		
 		btnNext = new JButton("");
 		btnNext.setBounds(551, 11, 32, 32);
@@ -300,6 +300,4 @@ public class ShowAval extends JFrame implements ActionListener,MouseListener{
 		lblNumExt.setText("");lblNumInt.setText("");lblNombre.setText("");
 		lblAp1.setText("");lblAp2.setText("");
 	}
-		
-	
 }

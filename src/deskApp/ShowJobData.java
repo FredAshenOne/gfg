@@ -27,6 +27,7 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 	Conexion c = new Conexion();
 	JButton btnBack,btnInfoEmpleo,btnInfoCliente,btnInfoAvales;
 	Alert alSave = new Alert();
+	
 	ResultSet res;
 	private JPanel menuPane;
 	
@@ -234,7 +235,17 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNext) {
-			alSave.setVisible(true);
+			fieldsEditable(true);
+			btnNext.setVisible(false);
+			btnSave.setVisible(true);
+		}else if(e.getSource() == btnSave) {
+			if(fullFields()) {
+				lblWarning.setText("");
+				
+				alSave.setVisible(true);
+			}else {
+				lblWarning.setForeground(Color.red);
+			}
 		}
 		
 	}
@@ -245,6 +256,19 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 		txtTelefono.setText("");
 		txtNumExterior.setText("");
 		txtNumInter.setText("");
+	}
+	
+	public void addDatosEmpleo(String name, String ap1, String ap2) {
+		try {
+			c.update(
+					"INSERT INTO clientes_empleo (id_cliente,Descripcion,Domicilio,Num_Exterior,Num_Interior,Telefono) VALUES ("
+							+ getIdClienteByName(name, ap1, ap2) + ",'" + txtDesc.getText() + "','" + txtDom.getText()
+							+ "','" + txtNumExterior.getText() + "','" + txtNumInter.getText() + "','"
+							+ txtTelefono.getText() + "');");
+		} catch (NumberFormatException nfe) {
+			lblWarning.setText("Algunos campos deben ser numericos");
+		}
+
 	}
 
 	public int getIdClienteByName(String name, String ap1, String ap2) {
@@ -293,6 +317,30 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	public void fieldsEditable(Boolean b) {
+		txtDom.setEditable(b);
+		txtNumExterior.setEditable(b);
+		txtTelefono.setEditable(b);
+		txtDesc.setEditable(b);
+		txtNumInter.setEditable(b);
+	}
+	
+	public ResultSet isJobDataRegistered(int id){
+		try{
+			ResultSet rs = c.query("SELECT * FROM clientes_empleo where id_Cliente = "+id+";");
+			System.out.println("result listo");
+			if(rs.next()) {
+			return rs;
+			}else {
+				return null;
+			}
+		}catch(Exception ex) {
+			System.out.println("aqui si llega pero no hay result");
+			ex.printStackTrace();
+			return null;
 		}
 	}
 	

@@ -30,7 +30,7 @@ public class NewClient extends JFrame implements ActionListener, MouseListener {
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2;
 	JButton btnBack, btnNext,btnInfoCliente,btnInfoJob,btnInfoAvales;
-	Usuario u = new Usuario();
+	
 	CreateAval ca = new CreateAval();
 	Style s = new Style();
 	UploadFiles uf = new UploadFiles();

@@ -346,8 +346,9 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		sad.btnInfoEmpleo.addActionListener(this);
 		sjd.btnInfoCliente.addActionListener(this);
 		sjd.btnInfoAvales.addActionListener(this);
-		//
-		
+		sjd.alSave.btnOk.addActionListener(this);
+		sad.alAnother.btnOk.addActionListener(this);
+		sad.alAnother.btnCancel.addActionListener(this);
 		
 		
 	}
@@ -421,8 +422,11 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		}else if(e.getSource() == alUpdate.btnCancel) {
 			alUpdate.setVisible(false);
 		}else if(e.getSource() == btnInfoEmpleo) {
+			sjd.btnNext.setVisible(true);
+			sjd.btnSave.setVisible(false);
 			sjd.setVisible(true);
 			sjd.fillJobData();
+			sjd.fieldsEditable(false);
 			this.setVisible(false);
 		}else if(e.getSource() == btnInfoAvales) {
 			sad.setVisible(true);
@@ -430,8 +434,12 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			sad.fillTableAvales(searchAvalesByIdCliente());
 		}else if(e.getSource() == sad.btnInfoCliente) {
 			this.setVisible(true);
+			sjd.fieldsEditable(false);
 			sad.setVisible(false);
 		}else if(e.getSource() == sad.btnInfoEmpleo) {
+			sjd.fieldsEditable(false);
+			sjd.btnNext.setVisible(true);
+			sjd.btnSave.setVisible(false);
 			sad.setVisible(false);
 			sjd.setVisible(true);
 			sjd.fillJobData();
@@ -443,9 +451,22 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			this.setVisible(true);
 			sjd.setVisible(false);
 		}else if(e.getSource() == sjd.alSave.btnOk) {
-			if(sjd.fullFields()){
-				
-			}
+				try {
+					if(sjd.isJobDataRegistered(rs.getInt("id"))== null){						
+						sjd.addDatosEmpleo(rs.getString("Nombre"),rs.getString("Apellido_Paterno"),rs.getString("Apellido_Materno"));
+						sjd.alSave.setVisible(false);
+					}else {
+						sjd.actulizarDatosEmpleo(rs.getString("Nombre"),rs.getString("Apellido_Paterno"),rs.getString("Apellido_Materno"));
+						sjd.setVisible(false);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			
+		}else if(e.getSource() == sad.alAnother.btnCancel) {
+			sad.fillTableAvales(searchAvalesByIdCliente());
+			sad.setVisible(true);
+			sad.alAnother.setVisible(false);
 		}
 	}
 

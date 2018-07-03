@@ -25,7 +25,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 	private JPanel contentPane;
 	Style s =  new Style();
 	private JTextField txtUser;
-	Usuario u = new Usuario();
+	
 	Conexion c = new Conexion();
 	JLabel lblHeader,lblLook,lblWarning;
 	JButton btnIniciar;

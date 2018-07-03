@@ -1,6 +1,8 @@
 package deskApp;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,24 +12,26 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
-public class SearchClient extends JFrame implements ActionListener, MouseListener,KeyListener {
+public class BuscarCliente extends JFrame implements ActionListener,MouseListener,KeyListener{
+
 	Style s = new Style();
 	JButton btnBack,btnNext;
 	JLabel lblHeader;
@@ -38,8 +42,9 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 	int idUser;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
-	ShowClient sc = new ShowClient();
-	public SearchClient() {
+	NuevoCredito nc = new NuevoCredito();
+	
+	public BuscarCliente() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -137,7 +142,6 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
 		scrollPane.setVisible(false);
 		
-		sc.btnBack.addActionListener(this);
 		table.addMouseListener(this);
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -154,10 +158,7 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 		});
 
 		
-		sc.alUpdate.btnOk.addActionListener(this);
-		sc.btnBack.addActionListener(this);
-		sc.sad.btnBack.addActionListener(this);
-		sc.sjd.btnBack.addActionListener(this);
+		
 		
 	}
 
@@ -202,29 +203,8 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnNext) {
 			int index = table.getSelectedRow();
-			sc.rs = getClientById(Integer.parseInt(table.getModel().getValueAt(index,0).toString()));
-			sc.sad.rs = sc.rs;
-			sc.fillFields();
-			sc.setEnabledFields(false);
-			sc.setVisible(true);
-			sc.idUser = idUser;
-		}else if(e.getSource() == sc.btnBack) {
-			this.setVisible(true);
-			sc.setVisible(false);
-			sc.sjd.clearFields();
-			sc.btnNext.setVisible(true);
-			sc.btnSave.setVisible(false);
-		}else if(e.getSource() == sc.alUpdate.btnOk) {
-			sc.updateCliente();
-			sc.alUpdate.setVisible(false);
-		}else if(e.getSource() == sc.sjd.btnBack) {
-			sc.sjd.clearFields();
-			this.setVisible(true);
-			sc.sjd.setVisible(false);
-		}else if(e.getSource() == sc.sad.btnBack) {
-			sc.sjd.clearFields();
-			this.setVisible(true);
-			sc.sad.setVisible(false);			
+			nc.rs = getClientById(Integer.parseInt(table.getModel().getValueAt(index,0).toString()));
+				
 		}
 		
 	}
@@ -305,5 +285,7 @@ public class SearchClient extends JFrame implements ActionListener, MouseListene
 	@Override
 	public void keyTyped(KeyEvent e) {
 		
+
 	}
+	
 }
