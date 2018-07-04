@@ -18,14 +18,17 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class NuevoCredito extends JFrame implements MouseListener,ActionListener{
 	Style s = new Style();
 	private JPanel contentPane;
 	JButton btnBack,btnNext;
+	JLabel lblHeader,lblWarning;
 	ResultSet rs;
-	private JTextField txtFecha;
-	private JTextField txtCantidad;
+	Conexion c = new Conexion();
+	JComboBox cbTipo;
+	JTextField txtFecha,txtCantidad;
 	public NuevoCredito() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -53,7 +56,7 @@ public class NuevoCredito extends JFrame implements MouseListener,ActionListener
 		s.btnIcon(btnBack, "views/back.png");
 		btnBack.addMouseListener(this);
 
-		JLabel lblHeader = new JLabel("");
+		lblHeader = new JLabel("");
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setForeground(Color.WHITE);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
@@ -66,34 +69,51 @@ public class NuevoCredito extends JFrame implements MouseListener,ActionListener
 		pnHeader.add(btnNext);
 		s.btnIcon(btnNext, "views/next.png");
 		
+		lblWarning = new JLabel("");
+		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
+		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWarning.setBounds(52, 54, 489, 22);
+		pnHeader.add(lblWarning);
+		
 		txtFecha = new JTextField();
+		txtFecha.setHorizontalAlignment(SwingConstants.CENTER);
+		txtFecha.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		txtFecha.setBounds(202, 135, 185, 35);
 		mainPanel.add(txtFecha);
 		txtFecha.setColumns(10);
 		
 		txtCantidad = new JTextField();
+		txtCantidad.setHorizontalAlignment(SwingConstants.CENTER);
+		txtCantidad.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		txtCantidad.setColumns(10);
 		txtCantidad.setBounds(202, 216, 185, 35);
 		mainPanel.add(txtCantidad);
 		
-		JComboBox cbTipo = new JComboBox();
+		cbTipo = new JComboBox();
+		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"", "13 Semanas", "14 Semanas", "Interes Mensual"}));
+		cbTipo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbTipo.setBounds(202, 296, 185, 35);
 		mainPanel.add(cbTipo);
 		
-		JLabel lblFecha = new JLabel("");
+		JLabel lblFecha = new JLabel("Fecha inicio");
+		lblFecha.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblFecha.setBounds(202, 111, 185, 22);
 		mainPanel.add(lblFecha);
 		
-		JLabel lblCantidad = new JLabel("");
+		JLabel lblCantidad = new JLabel("Cantidad");
+		lblCantidad.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblCantidad.setBounds(202, 194, 185, 22);
 		mainPanel.add(lblCantidad);
 		
-		JLabel lblTipo = new JLabel("");
+		JLabel lblTipo = new JLabel("Tipo de Credito");
+		lblTipo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblTipo.setBounds(202, 272, 185, 22);
 		mainPanel.add(lblTipo);
 		
+		s.mdTextField(txtCantidad, s.blue, Color.white);
+		s.mdTextField(txtFecha, s.blue, Color.white);
+		s.mdCombo(cbTipo, Color.white, s.blue);
 		
-
 	}
 
 	@Override
@@ -130,5 +150,22 @@ public class NuevoCredito extends JFrame implements MouseListener,ActionListener
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Boolean fullFields() {
+		if(txtCantidad.getText().length()>0 && cbTipo.getSelectedIndex()>0) {
+			return true;			
+		}
+		return false;
+	}
+	
+	public void createCredito(int id) {
+		int cantidad = Integer.parseInt(txtCantidad.getText());
+		
+		try {
+			c.update("INSERT INTO credito (id_Cliente,Cantidad_Inicial,Cantidad_Actual,Tipo_Credito,Fecha_inicio,Status) VALUES ("+id+","+cantidad+","+cantidad+","+cbTipo.getSelectedIndex()+",'"+txtFecha.getText()+"',1);");
+		}catch(Exception ex) {
+			
+		}
 	}
 }

@@ -43,9 +43,10 @@ public class BuscarCliente extends JFrame implements ActionListener,MouseListene
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
 	NuevoCredito nc = new NuevoCredito();
-	
+	Alert alCreate = new Alert();
+	Alert alOk = new Alert();
 	public BuscarCliente() {
-
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -157,9 +158,11 @@ public class BuscarCliente extends JFrame implements ActionListener,MouseListene
 		        }
 		});
 
-		
-		
-		
+		nc.btnBack.addActionListener(this);
+		nc.btnNext.addActionListener(this);
+		alCreate.btnOk.addActionListener(this);
+		alCreate.lblMessage.setText("<html><body>Se guardaran los datos del credito<br>desea continuar?</body></html>");
+		alCreate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
 	}
 
 	@Override
@@ -173,6 +176,7 @@ public class BuscarCliente extends JFrame implements ActionListener,MouseListene
 			if(btnNext.isEnabled()) {
 				s.hoverBorder(btnNext, Color.white);
 				s.btnPointer(btnNext);
+				
 			}
 		} else if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
@@ -204,7 +208,32 @@ public class BuscarCliente extends JFrame implements ActionListener,MouseListene
 		if(e.getSource() == btnNext) {
 			int index = table.getSelectedRow();
 			nc.rs = getClientById(Integer.parseInt(table.getModel().getValueAt(index,0).toString()));
-				
+			try {
+				nc.rs.next();
+				nc.lblHeader.setText("Nuevo credito para "+nc.rs.getString("nombre") + " "+nc.rs.getString("Apellido_Paterno")+" "+nc.rs.getString("Apellido_materno"));
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			nc.setVisible(true);
+		}else if(e.getSource() == nc.btnBack) {
+			this.setVisible(true);
+			nc.setVisible(false);
+			
+		}else if(e.getSource() == nc.btnNext) {
+			if(s.dateChecker(nc.txtFecha.getText())) {
+				if(nc.fullFields()) {
+					alCreate.setVisible(true);
+				}else {
+					nc.lblWarning.setText("Algunos Campos estan vacíos");
+				}				
+			}else {
+				nc.lblWarning.setText("La fecha ingresada no es valida");
+			}			
+		}else if(e.getSource() == alCreate.btnOk){
+			int index = table.getSelectedRow();
+			nc.createCredito(Integer.parseInt(table.getModel().getValueAt(index,0).toString()));
+			alCreate.setVisible(false);
 		}
 		
 	}
@@ -270,6 +299,7 @@ public class BuscarCliente extends JFrame implements ActionListener,MouseListene
 		return null;
 	}
 
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == e.VK_ENTER) {

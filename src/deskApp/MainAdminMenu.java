@@ -147,6 +147,7 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 		btnSettings.addActionListener(this);
 		btnSettings.addMouseListener(this);
 		ac.btnBack.addActionListener(this);
+		acre.btnBack.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -203,6 +204,9 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 			ac.setVisible(false);
 		}else if(e.getSource() == btnCredits) {
 			acre.setVisible(true);
+		}else if(e.getSource() == acre.btnBack) {
+			this.setVisible(true);
+			acre.setVisible(false);
 		}
 	}
 }
