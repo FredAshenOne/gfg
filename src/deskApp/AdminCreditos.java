@@ -26,6 +26,7 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 	Style s = new Style();
 	int idUser;
 	BuscarCliente bc = new BuscarCliente();
+	BuscarCredito buscarCred = new BuscarCredito();
 	Alert alNewAval = new Alert();
 	NewClient nc = new NewClient(); 
 	public AdminCreditos() {
@@ -184,6 +185,8 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == bc.btnBack) {
 			this.setVisible(true);
 			bc.setVisible(false);
+		}else if(e.getSource() == btnQuery) {
+			buscarCred.setVisible(true);
 		}
 	}
 }

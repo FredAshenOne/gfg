@@ -30,7 +30,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class BuscarCliente extends JFrame implements ActionListener, MouseListener, KeyListener {
+public class BuscarCredito extends JFrame implements ActionListener, MouseListener, KeyListener {
 
 	Style s = new Style();
 	JButton btnBack, btnNext;
@@ -42,10 +42,11 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 	int idUser;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
+	NuevoCredito nc = new NuevoCredito();
 	Alert alCreate = new Alert();
 	Alert alOk = new Alert();
 
-	public BuscarCliente() {
+	public BuscarCredito() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -123,7 +124,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		table = new JTable();
 
 		DefaultTableModel model = new DefaultTableModel(new Object[][] {},
-				new String[] { "id", "Nombre", "Apellido Paterno", "Apellido Materno", "Direccion" }) {
+				new String[] { "id Cliente","id Credito", "Nombre", "Apellido Paterno", "Apellido Materno", "Cantidad" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -152,18 +153,8 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 				btnNext.setEnabled(!lsm.isSelectionEmpty());
 			}
 		});
-  
-		alCreate.btnOk.addActionListener(this);
-		alCreate.lblMessage.setText("<html><body>Se guardaran los datos del credito<br>desea continuar?</body></html>");
-		alCreate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
 
-		alOk.btnCancel.setVisible(false);
-		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
-		alOk.lblMessage.setText("Datos guardados con exito");
-		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
-		alOk.btnOk.setText("Ok");
-
-		alOk.btnOk.addActionListener(this);
+		
 	}
 
 	@Override
@@ -207,27 +198,29 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNext) {
+			
 		}
+
 	}
 
-	public ResultSet searchClient() {
+	public ResultSet searchCredito() {
 		try {
 			String data = txtSearch.getText();
 			String[] nombre = data.split(" ");
 			if (nombre.length > 2) {
-				return c.query("SELECT * FROM clientes_personal WHERE nombre = '" + nombre[0]
-						+ "' AND apellido_paterno = '" + nombre[1] + "' AND apellido_materno = '" + nombre[2] + "';");
+				return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente WHERE cp.nombre = '" + nombre[0]
+						+ "' AND cp.apellido_paterno = '" + nombre[1] + "' AND cp.apellido_materno = '" + nombre[2] + "';");
 			} else if (nombre.length == 2) {
-				return c.query("SELECT * FROM clientes_personal WHERE  nombre = '" + nombre[0]
-						+ "' AND apellido_Paterno = '" + nombre[1] + "' OR (apellido_Paterno = '" + nombre[0]
-						+ "' AND apellido_Materno = '" + nombre[1] + "');");
+				return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente credito c WHERE  cp.nombre = '" + nombre[0]
+						+ "' AND cp.apellido_Paterno = '" + nombre[1] + "' OR (cp.apellido_Paterno = '" + nombre[0]
+						+ "' AND cp.apellido_Materno = '" + nombre[1] + "');");
 			} else if (nombre.length == 1) {
 				try {
 					int id = Integer.parseInt(data);
-					return c.query("SELECT * FROM clientes_personal WHERE id = " + id + ";");
+					return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente WHERE cp.id = " + id + " OR c.id = "+id+";");
 				} catch (NumberFormatException nfe) {
-					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0]
-							+ "%' OR apellido_Paterno LIKE '%" + nombre[0] + "%' OR apellido_Materno LIKE '%"
+					return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente WHERE cp.nombre LIKE '%" + nombre[0]
+							+ "%' OR cp.apellido_Paterno LIKE '%" + nombre[0] + "%' OR cp.apellido_Materno LIKE '%"
 							+ nombre[0] + "%';");
 				}
 			} else {
@@ -243,14 +236,14 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 	public void fillTable() {
 		DefaultTableModel mod = (DefaultTableModel) table.getModel();
 		mod.setRowCount(0);
-		ResultSet res = searchClient();
-		ResultSet resv = searchClient();
+		ResultSet res = searchCredito();
+		ResultSet resv = searchCredito();
 		try {
 			if (resv.next()) {
 				while (res.next()) {
-					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"),
+					mod.addRow(new Object[] { res.getString("id"),res.getString("c.id"), res.getString("nombre"),
 							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
-							res.getString("Direccion") });
+							res.getString("c.Cantidad_inicial") });
 					scrollPane.setVisible(true);
 					lblWarning.setText("");
 				}

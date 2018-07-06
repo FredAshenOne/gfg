@@ -228,7 +228,7 @@ public class ShowJobData extends JFrame implements ActionListener,MouseListener{
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 
 	}
 

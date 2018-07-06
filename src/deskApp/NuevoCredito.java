@@ -168,4 +168,10 @@ public class NuevoCredito extends JFrame implements MouseListener,ActionListener
 			
 		}
 	}
+	
+	public void clearFields() {
+		txtFecha.setText("");
+		txtCantidad.setText("");
+		cbTipo.setSelectedIndex(0);
+	}
 }
