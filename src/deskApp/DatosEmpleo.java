@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
-public class JobData extends JFrame implements ActionListener, MouseListener {
+public class DatosEmpleo extends JFrame implements ActionListener, MouseListener {
 	Style s = new Style();
 	private JPanel contentPane;
 	JButton btnNext;
@@ -26,7 +26,7 @@ public class JobData extends JFrame implements ActionListener, MouseListener {
 	JButton btnOmit, btnBack;
 	Alert alSave = new Alert();
 
-	public JobData() {
+	public DatosEmpleo() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

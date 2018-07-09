@@ -42,7 +42,6 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 	int idUser;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
-	NuevoCredito nc = new NuevoCredito();
 	Alert alCreate = new Alert();
 	Alert alOk = new Alert();
 
@@ -153,6 +152,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 				btnNext.setEnabled(!lsm.isSelectionEmpty());
 			}
 		});
+		
 
 		
 	}

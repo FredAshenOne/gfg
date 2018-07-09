@@ -19,7 +19,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-public class NewClient extends JFrame implements ActionListener, MouseListener {
+public class NuevoCliente extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,15 +31,15 @@ public class NewClient extends JFrame implements ActionListener, MouseListener {
 			lblAp2;
 	JButton btnBack, btnNext,btnInfoCliente,btnInfoJob,btnInfoAvales;
 	
-	CreateAval ca = new CreateAval();
+	NuevoAval ca = new NuevoAval();
 	Style s = new Style();
 	UploadFiles uf = new UploadFiles();
-	JobData jd = new JobData();
+	DatosEmpleo jd = new DatosEmpleo();
 	Conexion c = new Conexion();
 	ResultSet rs;
 	Alert alSave = new Alert();
 	Alert alNewAval = new Alert();
-	public NewClient() {
+	public NuevoCliente() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);

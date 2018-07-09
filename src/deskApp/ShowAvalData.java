@@ -32,8 +32,8 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 	JButton btnBack,btnInfoAvales,btnInfoEmpleo,btnInfoCliente,btnNext,btnAddAval;
 	Style s = new Style();
 	private JTable table;
-	CreateAval ca = new CreateAval();
-	ShowAval sa = new ShowAval();
+	NuevoAval ca = new NuevoAval();
+	MostarAval sa = new MostarAval();
 	Alert alAnother = new Alert();
 	public ShowAvalData() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

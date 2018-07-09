@@ -1,6 +1,6 @@
 /*
-SQLyog Community v13.0.0 (64 bit)
-MySQL - 10.1.30-MariaDB : Database - gfg
+SQLyog Community v13.0.1 (64 bit)
+MySQL - 10.1.33-MariaDB : Database - gfg
 *********************************************************************
 */
 
@@ -15,28 +15,6 @@ MySQL - 10.1.30-MariaDB : Database - gfg
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`gfg` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `gfg`;
-
-/*Table structure for table `abonos` */
-
-DROP TABLE IF EXISTS `abonos`;
-
-CREATE TABLE `abonos` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_Credito` int(10) unsigned NOT NULL,
-  `id_Cliente` int(10) unsigned NOT NULL,
-  `Cantidad` int(11) NOT NULL,
-  `fecha` date NOT NULL,
-  `id_Cargo` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_Credito` (`id_Credito`),
-  KEY `id_Cliente` (`id_Cliente`),
-  KEY `id_Cargo` (`id_Cargo`),
-  CONSTRAINT `abonos_ibfk_1` FOREIGN KEY (`id_Credito`) REFERENCES `credito` (`id`),
-  CONSTRAINT `abonos_ibfk_2` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
-  CONSTRAINT `abonos_ibfk_3` FOREIGN KEY (`id_Cargo`) REFERENCES `cargos` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
-/*Data for the table `abonos` */
 
 /*Table structure for table `avales` */
 
@@ -55,29 +33,24 @@ CREATE TABLE `avales` (
   `Telefono` varchar(12) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_Cliente` (`id_Cliente`),
-  CONSTRAINT `avales_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  CONSTRAINT `avales_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `avales` */
 
-/*Table structure for table `cargos` */
-
-DROP TABLE IF EXISTS `cargos`;
-
-CREATE TABLE `cargos` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_Credito` int(10) unsigned NOT NULL,
-  `id_Cliente` int(10) unsigned NOT NULL,
-  `Cantidad` int(11) NOT NULL,
-  `Fecha` date NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_Credito` (`id_Credito`),
-  KEY `id_Cliente` (`id_Cliente`),
-  CONSTRAINT `cargos_ibfk_1` FOREIGN KEY (`id_Credito`) REFERENCES `credito` (`id`),
-  CONSTRAINT `cargos_ibfk_2` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
-/*Data for the table `cargos` */
+insert  into `avales`(`id`,`id_Cliente`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Telefono`) values 
+(7,33,'asd','asd','asd','asd','123','123','asd','123'),
+(8,33,'123','123','123','123','123','123','123','123'),
+(9,32,'zxc','asd','asd','qwe','qwe','qwe','qwe','qwe'),
+(10,32,'qweqw','465','654','654','654','654','654654','654'),
+(11,32,'qweqwe','498','49846','6548','84','984','684','847'),
+(12,32,'asd','asdasdas','ads','asd','654','654','465','654'),
+(13,32,'8708','9847','987','987','98','79','987','87'),
+(14,32,'1271zxczxc','984849','849','849','984','984','84','984'),
+(15,32,'gus','98409','8409','840','984','9840','9840','984'),
+(16,32,'gustav','8490','9840','9840','9840','9840','9804','8740'),
+(17,32,'chris','88409','098','098','090','980','098','980'),
+(18,32,'qwewe','987','987','987','79','87','98','987');
 
 /*Table structure for table `clientes_empleo` */
 
@@ -86,16 +59,39 @@ DROP TABLE IF EXISTS `clientes_empleo`;
 CREATE TABLE `clientes_empleo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_Cliente` int(10) unsigned NOT NULL,
-  `Num_Exterior` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
+  `Descripcion` varchar(200) COLLATE utf8_spanish_ci DEFAULT NULL,
   `Domicilio` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
+  `Num_Exterior` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `Num_Interior` varchar(5) COLLATE utf8_spanish_ci DEFAULT NULL,
   `Telefono` varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_Cliente` (`id_Cliente`),
   CONSTRAINT `clientes_empleo_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `clientes_empleo` */
+
+insert  into `clientes_empleo`(`id`,`id_Cliente`,`Descripcion`,`Domicilio`,`Num_Exterior`,`Num_Interior`,`Telefono`) values 
+(1,33,'123','asd','123','123','123'),
+(2,32,'123','qweqwe','132','123','123');
+
+/*Table structure for table `clientes_grupo` */
+
+DROP TABLE IF EXISTS `clientes_grupo`;
+
+CREATE TABLE `clientes_grupo` (
+  `id_Grupo` int(10) unsigned DEFAULT NULL,
+  `id_Cliente` int(10) unsigned DEFAULT NULL,
+  KEY `fk_clientesgrupo_grupo` (`id_Grupo`),
+  KEY `fk_clientesgrupo_clientes` (`id_Cliente`),
+  CONSTRAINT `fk_clientesgrupo_clientes` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
+  CONSTRAINT `fk_clientesgrupo_grupo` FOREIGN KEY (`id_Grupo`) REFERENCES `grupos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+/*Data for the table `clientes_grupo` */
+
+insert  into `clientes_grupo`(`id_Grupo`,`id_Cliente`) values 
+(1,33);
 
 /*Table structure for table `clientes_personal` */
 
@@ -118,19 +114,21 @@ CREATE TABLE `clientes_personal` (
   `Estado_Civil` tinyint(1) unsigned NOT NULL,
   `Ocupacion` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
   `Sueldo_Mensual` int(11) NOT NULL,
+  `Editado` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_Tipo_Casa` (`Tipo_Casa`),
   KEY `fk_estado_civil` (`Estado_Civil`),
+  KEY `fk_Editado_usuario` (`Editado`),
+  CONSTRAINT `fk_Editado_usuario` FOREIGN KEY (`Editado`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_Tipo_Casa` FOREIGN KEY (`Tipo_Casa`) REFERENCES `tipo_domicilio` (`id`),
   CONSTRAINT `fk_estado_civil` FOREIGN KEY (`Estado_Civil`) REFERENCES `estado_civil` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `clientes_personal` */
 
-insert  into `clientes_personal`(`id`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Telefono_Cel`,`Telefono_Fijo`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Fecha_Nacimiento`,`Tiempo_Residencia`,`Tipo_Casa`,`Estado_Civil`,`Ocupacion`,`Sueldo_Mensual`) values 
-(1,'Alfredo','Lara','Meza','3315176137','3123123','Puerto Melaque','1523','','el mirador','1994-05-12','24',1,1,' ingeniero',5000),
-(2,'Alfredo','Lara','Meza','123','123','1123','123','123','123','1994-05-12','24',1,1,'123',123),
-(3,'Fred','Lara','Meza','123','123','Puerto Melaque','1523','12','asdas','1994-05-12','as',1,1,'123',123);
+insert  into `clientes_personal`(`id`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Telefono_Cel`,`Telefono_Fijo`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Fecha_Nacimiento`,`Tiempo_Residencia`,`Tipo_Casa`,`Estado_Civil`,`Ocupacion`,`Sueldo_Mensual`,`Editado`) values 
+(32,'Alfredo','Lara','Meza','123','123','123','123','123','123','1194-05-12','12',1,1,'123',123,1),
+(33,'fred','123','123','123','123123','123','123','123','123','1234-04-04','12',1,1,'123',123,1);
 
 /*Table structure for table `credito` */
 
@@ -146,10 +144,18 @@ CREATE TABLE `credito` (
   `Status` tinyint(1) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_Cliente` (`id_Cliente`),
-  CONSTRAINT `credito_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  KEY `Tipo_Credito` (`Tipo_Credito`),
+  KEY `Status` (`Status`),
+  CONSTRAINT `credito_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
+  CONSTRAINT `credito_ibfk_2` FOREIGN KEY (`Tipo_Credito`) REFERENCES `tipos_credito` (`id`),
+  CONSTRAINT `credito_ibfk_3` FOREIGN KEY (`Status`) REFERENCES `status_pagos` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `credito` */
+
+insert  into `credito`(`id`,`id_Cliente`,`Cantidad_Inicial`,`Cantidad_Actual`,`Tipo_Credito`,`Fecha_inicio`,`Status`) values 
+(20,33,7000,7000,1,'2018-07-10',1),
+(21,33,8000,8000,1,'2018-07-09',1);
 
 /*Table structure for table `estado_civil` */
 
@@ -170,6 +176,22 @@ insert  into `estado_civil`(`id`,`Descripcion`) values
 (4,'Divorciado'),
 (5,'Union Libre'),
 (6,'Otro');
+
+/*Table structure for table `grupos` */
+
+DROP TABLE IF EXISTS `grupos`;
+
+CREATE TABLE `grupos` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `fecha_Creacion` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+/*Data for the table `grupos` */
+
+insert  into `grupos`(`id`,`nombre`,`fecha_Creacion`) values 
+(1,'PRUEBA','2018-07-09');
 
 /*Table structure for table `status_credito` */
 
@@ -205,6 +227,29 @@ CREATE TABLE `status_pagos` (
 insert  into `status_pagos`(`id`,`Descripcion`) values 
 (1,'Pagado'),
 (2,'Por Pagar');
+
+/*Table structure for table `tarjetones` */
+
+DROP TABLE IF EXISTS `tarjetones`;
+
+CREATE TABLE `tarjetones` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_Cliente` int(10) unsigned NOT NULL,
+  `id_Credito` int(10) unsigned NOT NULL,
+  `numero_Pago` tinyint(4) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `fecha_Asignada` date NOT NULL,
+  `status` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `fecha_Pago` date DEFAULT NULL,
+  `observaciones` varchar(50) COLLATE utf8_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_tarjetones_credito` (`id_Credito`),
+  KEY `fk_tarjetones_cliente` (`id_Cliente`),
+  CONSTRAINT `fk_tarjetones_cliente` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
+  CONSTRAINT `fk_tarjetones_credito` FOREIGN KEY (`id_Credito`) REFERENCES `credito` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+/*Data for the table `tarjetones` */
 
 /*Table structure for table `tipo_domicilio` */
 
@@ -273,9 +318,12 @@ CREATE TABLE `usuarios` (
   PRIMARY KEY (`id`),
   KEY `tipo_usuario` (`tipo_usuario`),
   CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`tipo_usuario`) REFERENCES `tipos_usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `usuarios` */
+
+insert  into `usuarios`(`id`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`usuario`,`contraseña`,`tipo_usuario`) values 
+(1,'Alfredo','Lara','Meza','fred','123',1);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

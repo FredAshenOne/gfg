@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-public class MainAdminMenu extends JFrame implements ActionListener,MouseListener {
+public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseListener {
 	Style s = new Style();
 	private JPanel contentPane;
 	JPanel pnClientes,pnMovimientos,pnCreditos,pnHeader;
@@ -28,7 +28,7 @@ public class MainAdminMenu extends JFrame implements ActionListener,MouseListene
 	int idUser;
 	AdminCreditos acre = new AdminCreditos();
 	AdminClientes ac = new AdminClientes();
-	public MainAdminMenu() {
+	public AdminMenuPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

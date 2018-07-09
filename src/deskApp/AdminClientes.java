@@ -24,14 +24,15 @@ import java.awt.event.KeyEvent;
 public class AdminClientes extends JFrame implements ActionListener,MouseListener{
 
 	private JPanel contentPane;
-	JPanel pnNewClient,pnQuery,mainPanel;
-	JButton btnQuery,btnNewClient,btnBack;
+	JPanel pnNewClient,pnQuery,mainPanel,pnHeader,pnGrupos;
+	JButton btnQuery,btnNewClient,btnBack,btnGrupo;
 	JLabel lblIconNewClient,lblIconQuery;
 	Style s = new Style();
 	int idUser;
-	SearchClient sc = new SearchClient();
+	BuscarCliente sc = new BuscarCliente();
 	Alert alNewAval = new Alert();
-	NewClient nc = new NewClient();
+	NuevoCliente nc = new NuevoCliente();
+	NuevoGrupo ng = new NuevoGrupo();
 	public AdminClientes() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -95,28 +96,31 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		btnQuery.addActionListener(this);
 		btnQuery.addMouseListener(this);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBounds(414, 147, 155, 180);
-		mainPanel.add(panel_3);
-		s.mdPanel(panel_3, Color.white);
+		pnGrupos = new JPanel();
+		pnGrupos.setLayout(null);
+		pnGrupos.setBounds(414, 147, 155, 180);
+		mainPanel.add(pnGrupos);
+		s.mdPanel(pnGrupos, Color.white);
+		pnGrupos.addMouseListener(this);
 		
-		JLabel label_4 = new JLabel("");
-		label_4.setBounds(10, 11, 135, 135);
-		panel_3.add(label_4);
+		JLabel lblIconGrupo = new JLabel("");
+		lblIconGrupo.setBounds(10, 11, 135, 135);
+		pnGrupos.add(lblIconGrupo);
 		
-		JLabel label_5 = new JLabel("Clientes");
-		label_5.setHorizontalAlignment(SwingConstants.CENTER);
-		label_5.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		label_5.setBounds(10, 157, 135, 23);
-		panel_3.add(label_5);
+		JLabel lblGrupo = new JLabel("Nuevo Grupo");
+		lblGrupo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGrupo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblGrupo.setBounds(10, 157, 135, 23);
+		pnGrupos.add(lblGrupo);
 		
-		JButton button_2 = new JButton("");
-		button_2.setBounds(0, 0, 155, 180);
-		panel_3.add(button_2);
-		s.mdButton(button_2, Color.WHITE);
+		btnGrupo = new JButton("");
+		btnGrupo.setBounds(0, 0, 155, 180);
+		pnGrupos.add(btnGrupo);
+		s.mdButton(btnGrupo, Color.WHITE);
+		btnGrupo.addMouseListener(this);
+		s.btnIcon(btnGrupo, "views/group.png");
 		
-		JPanel pnHeader = new JPanel();
+		pnHeader = new JPanel();
 		pnHeader.setBounds(0, 0, 603, 100);
 		mainPanel.add(pnHeader);
 		pnHeader.setLayout(null);
@@ -138,6 +142,8 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		nc.alNewAval.btnCancel.addActionListener(this);
 		btnQuery.addActionListener(this);
 		sc.btnBack.addActionListener(this);
+		btnGrupo.addActionListener(this);
+		
 		
 	}
 
@@ -157,6 +163,10 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == btnQuery) {
 			s.imgBtnHover(s.blue,pnQuery);
 			s.panelPointer(pnQuery);
+		}else if(e.getSource() == btnGrupo){
+			btnGrupo.setBorder(null);
+			s.imgBtnHover(s.blue, pnGrupos);
+			s.panelPointer(pnGrupos);
 		}
 	}
 
@@ -168,6 +178,8 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 			pnQuery.setBorder(null);
 		}else if(e.getSource() == btnBack){
 			btnBack.setBorder(null);
+		}else if(e.getSource() == btnGrupo){
+			pnGrupos.setBorder(null);
 		}
 	}
 
@@ -200,6 +212,10 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);
 			sc.setVisible(false);
+		}else if(e.getSource() == btnGrupo) {
+			ng.setVisible(true);
+			this.setVisible(false);
+			ng.mostrarClientesExistentes();
 		}
 	}
 }

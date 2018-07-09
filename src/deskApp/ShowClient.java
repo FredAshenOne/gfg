@@ -33,13 +33,13 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2;
 	JButton btnBack, btnNext,btnSave,btnInfoCliente,btnInfoEmpleo,btnInfoAvales;
-	CreateAval ca = new CreateAval();
+	NuevoAval ca = new NuevoAval();
 	Style s = new Style();
-	JobData jd = new JobData();
+	DatosEmpleo jd = new DatosEmpleo();
 	Conexion c = new Conexion();
 	ResultSet rs;
 	Alert alUpdate = new Alert();
-	ShowJobData sjd = new ShowJobData();
+	MostarDatosEmpleo sjd = new MostarDatosEmpleo();
 	ShowAvalData sad = new ShowAvalData();
 	public ShowClient() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

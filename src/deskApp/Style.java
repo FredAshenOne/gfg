@@ -18,9 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class Style {
 	
@@ -152,5 +155,16 @@ public class Style {
 	    } catch (ParseException ex) {
 	        return false;
 	    }
+	}
+	
+	public void mdTable(JTable table,Color colBackView,Color colHeader) {
+		table.setBorder(null);
+		table.getTableHeader().setBackground(colHeader);
+		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
+		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
+		table.setBackground(colBackView);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		table.setDefaultRenderer(String.class, centerRenderer);
 	}
 }

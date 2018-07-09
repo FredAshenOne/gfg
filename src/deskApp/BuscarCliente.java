@@ -1,8 +1,6 @@
 package deskApp;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,28 +10,26 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
-public class BuscarCliente extends JFrame implements ActionListener, MouseListener, KeyListener {
-
+public class BuscarCliente extends JFrame implements ActionListener, MouseListener,KeyListener {
 	Style s = new Style();
-	JButton btnBack, btnNext;
+	JButton btnBack,btnNext;
 	JLabel lblHeader;
 	private JPanel contentPane;
 	private JTextField txtSearch;
@@ -42,9 +38,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 	int idUser;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
-	Alert alCreate = new Alert();
-	Alert alOk = new Alert();
-
+	ShowClient sc = new ShowClient();
 	public BuscarCliente() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,7 +98,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
 		lblWarning.setBounds(52, 54, 495, 24);
 		pnHeader.add(lblWarning);
-
+		
 		btnNext = new JButton("");
 		btnNext.setBorder(null);
 		btnNext.setBounds(551, 11, 32, 32);
@@ -112,7 +106,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		s.btnIcon(btnNext, "views/next.png");
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
-
+		
 		scrollPane = new JScrollPane();
 		scrollPane.setEnabled(false);
 		scrollPane.setBounds(54, 179, 494, 159);
@@ -121,14 +115,19 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		txtSearch.addKeyListener(this);
 		table = new JTable();
-
-		DefaultTableModel model = new DefaultTableModel(new Object[][] {},
-				new String[] { "id", "Nombre", "Apellido Paterno", "Apellido Materno", "Direccion" }) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-
+		
+		DefaultTableModel model = new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"id", "Nombre", "Apellido Paterno", "Apellido Materno", "Direccion"
+				}
+			) {
+			 @Override
+			   public boolean isCellEditable(int row, int column) {
+			       return false;
+			   }
+			
 		};
 		table.setModel(model);
 		scrollPane.setViewportView(table);
@@ -137,47 +136,42 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
 		scrollPane.setVisible(false);
-
+		
+		sc.btnBack.addActionListener(this);
 		table.addMouseListener(this);
-
+		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
 		table.setDefaultRenderer(String.class, centerRenderer);
 		btnNext.setEnabled(false);
-
+		
 		ListSelectionModel listSelectionModel = table.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-				btnNext.setEnabled(!lsm.isSelectionEmpty());
-			}
+		        public void valueChanged(ListSelectionEvent e) { 
+		            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+		            btnNext.setEnabled(!lsm.isSelectionEmpty());
+		        }
 		});
-  
-		alCreate.btnOk.addActionListener(this);
-		alCreate.lblMessage.setText("<html><body>Se guardaran los datos del credito<br>desea continuar?</body></html>");
-		alCreate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
 
-		alOk.btnCancel.setVisible(false);
-		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
-		alOk.lblMessage.setText("Datos guardados con exito");
-		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
-		alOk.btnOk.setText("Ok");
-
-		alOk.btnOk.addActionListener(this);
+		
+		sc.alUpdate.btnOk.addActionListener(this);
+		sc.btnBack.addActionListener(this);
+		sc.sad.btnBack.addActionListener(this);
+		sc.sjd.btnBack.addActionListener(this);
+		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (e.getSource() == btnNext) {
-			if (btnNext.isEnabled()) {
+			if(btnNext.isEnabled()) {
 				s.hoverBorder(btnNext, Color.white);
 				s.btnPointer(btnNext);
-
 			}
 		} else if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
@@ -191,44 +185,66 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			btnNext.setBorder(null);
 		} else if (e.getSource() == btnBack) {
 			btnBack.setBorder(null);
-		}
+		} 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnNext) {
+		if(e.getSource() == btnNext) {
+			int index = table.getSelectedRow();
+			sc.rs = getClientById(Integer.parseInt(table.getModel().getValueAt(index,0).toString()));
+			sc.sad.rs = sc.rs;
+			sc.fillFields();
+			sc.setEnabledFields(false);
+			sc.setVisible(true);
+			sc.idUser = idUser;
+		}else if(e.getSource() == sc.btnBack) {
+			this.setVisible(true);
+			sc.setVisible(false);
+			sc.sjd.clearFields();
+			sc.btnNext.setVisible(true);
+			sc.btnSave.setVisible(false);
+		}else if(e.getSource() == sc.alUpdate.btnOk) {
+			sc.updateCliente();
+			sc.alUpdate.setVisible(false);
+		}else if(e.getSource() == sc.sjd.btnBack) {
+			sc.sjd.clearFields();
+			this.setVisible(true);
+			sc.sjd.setVisible(false);
+		}else if(e.getSource() == sc.sad.btnBack) {
+			sc.sjd.clearFields();
+			this.setVisible(true);
+			sc.sad.setVisible(false);			
 		}
+		
 	}
 
 	public ResultSet searchClient() {
 		try {
 			String data = txtSearch.getText();
 			String[] nombre = data.split(" ");
-			if (nombre.length > 2) {
+			if (nombre.length > 2) { 
 				return c.query("SELECT * FROM clientes_personal WHERE nombre = '" + nombre[0]
 						+ "' AND apellido_paterno = '" + nombre[1] + "' AND apellido_materno = '" + nombre[2] + "';");
 			} else if (nombre.length == 2) {
 				return c.query("SELECT * FROM clientes_personal WHERE  nombre = '" + nombre[0]
-						+ "' AND apellido_Paterno = '" + nombre[1] + "' OR (apellido_Paterno = '" + nombre[0]
-						+ "' AND apellido_Materno = '" + nombre[1] + "');");
+						+ "' AND apellido_Paterno = '" + nombre[1] + "' OR (apellido_Paterno = '"+nombre[0]+"' AND apellido_Materno = '"+nombre[1]+"');");
 			} else if (nombre.length == 1) {
 				try {
 					int id = Integer.parseInt(data);
 					return c.query("SELECT * FROM clientes_personal WHERE id = " + id + ";");
-				} catch (NumberFormatException nfe) {
-					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0]
-							+ "%' OR apellido_Paterno LIKE '%" + nombre[0] + "%' OR apellido_Materno LIKE '%"
-							+ nombre[0] + "%';");
+				} catch (NumberFormatException nfe) {					
+					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0] + "%' OR apellido_Paterno LIKE '%"+nombre[0]+"%' OR apellido_Materno LIKE '%"+nombre[0]+"%';");
 				}
 			} else {
 				lblWarning.setText("No se encontraron resultados");
@@ -246,15 +262,15 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		ResultSet res = searchClient();
 		ResultSet resv = searchClient();
 		try {
-			if (resv.next()) {
-				while (res.next()) {
-					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"),
-							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
-							res.getString("Direccion") });
+			if(resv.next()) {
+				while (res.next()) {	
+					mod.addRow(
+							new Object[] { res.getString("id"), res.getString("nombre"), res.getString("apellido_Paterno"),
+									res.getString("apellido_Materno"), res.getString("Direccion") });
 					scrollPane.setVisible(true);
 					lblWarning.setText("");
 				}
-			} else {
+			}else {
 				lblWarning.setText("No se encontraron resultados");
 				scrollPane.setVisible(false);
 			}
@@ -263,11 +279,11 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			scrollPane.setVisible(false);
 		}
 	}
-
+	
 	public ResultSet getClientById(int id) {
 		try {
-			return c.query("SELECT * FROM clientes_Personal WHERE id = " + id + ";");
-		} catch (Exception ex) {
+			return c.query("SELECT * FROM clientes_Personal WHERE id = "+id+";");			
+		}catch(Exception ex) {
 			ex.printStackTrace();
 			lblWarning.setText("No se ha seleccionado algun elemento");
 		}
@@ -276,19 +292,18 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == e.VK_ENTER) {
+		if(e.getKeyCode() == e.VK_ENTER) {
 			fillTable();
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
+		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-
+		
 	}
-
 }

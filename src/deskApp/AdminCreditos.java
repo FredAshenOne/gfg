@@ -25,10 +25,8 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 	JLabel lblIconNewCredit,lblIconQuery;
 	Style s = new Style();
 	int idUser;
-	BuscarCliente bc = new BuscarCliente();
+	BuscarClienteCreditos bcc = new BuscarClienteCreditos();
 	BuscarCredito buscarCred = new BuscarCredito();
-	Alert alNewAval = new Alert();
-	NewClient nc = new NewClient(); 
 	public AdminCreditos() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -132,8 +130,8 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		pnHeader.add(lblHeader);
 		
 		btnQuery.addActionListener(this);
-		bc.btnBack.addActionListener(this);
-		bc.btnNext.addActionListener(this);
+		bcc.btnBack.addActionListener(this);
+		bcc.btnNext.addActionListener(this);
 		
 	}
 
@@ -180,11 +178,11 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnNuevoCredito) {
-			bc.setVisible(true);
+			bcc.setVisible(true);
 			this.setVisible(false);
-		}else if(e.getSource() == bc.btnBack) {
+		}else if(e.getSource() == bcc.btnBack) {
 			this.setVisible(true);
-			bc.setVisible(false);
+			bcc.setVisible(false);
 		}else if(e.getSource() == btnQuery) {
 			buscarCred.setVisible(true);
 		}

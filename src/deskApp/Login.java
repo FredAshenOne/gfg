@@ -30,7 +30,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 	JLabel lblHeader,lblLook,lblWarning;
 	JButton btnIniciar;
 	JPasswordField txtPassword;
-	MainAdminMenu mam = new MainAdminMenu();
+	AdminMenuPrincipal mam = new AdminMenuPrincipal();
 	int userType,idUser;
 	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
