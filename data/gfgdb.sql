@@ -144,33 +144,6 @@ insert  into `clientes_personal`(`id`,`Nombre`,`Apellido_Paterno`,`Apellido_Mate
 (33,'Leo','Gallardo','Hernandez','123','123123','123','123','123','123','1234-04-04','12',1,1,'123',123,1,1),
 (34,'athziri','naxieli','puga','333213','321321','654','654','654','654','1994-05-01','11',1,1,'321321',8000,1,1);
 
-/*Table structure for table `credito` */
-
-DROP TABLE IF EXISTS `credito`;
-
-CREATE TABLE `credito` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_Cliente` int(10) unsigned NOT NULL,
-  `Cantidad_Inicial` int(10) unsigned NOT NULL,
-  `Cantidad_Actual` int(11) NOT NULL,
-  `Tipo_Credito` tinyint(1) unsigned NOT NULL,
-  `Fecha_inicio` date NOT NULL,
-  `Status` tinyint(1) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_Cliente` (`id_Cliente`),
-  KEY `Tipo_Credito` (`Tipo_Credito`),
-  KEY `Status` (`Status`),
-  CONSTRAINT `credito_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
-  CONSTRAINT `credito_ibfk_2` FOREIGN KEY (`Tipo_Credito`) REFERENCES `tipos_credito` (`id`),
-  CONSTRAINT `credito_ibfk_3` FOREIGN KEY (`Status`) REFERENCES `status_pagos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
-/*Data for the table `credito` */
-
-insert  into `credito`(`id`,`id_Cliente`,`Cantidad_Inicial`,`Cantidad_Actual`,`Tipo_Credito`,`Fecha_inicio`,`Status`) values 
-(20,33,7000,7000,1,'2018-07-10',1),
-(21,33,8000,8000,1,'2018-07-09',1);
-
 /*Table structure for table `credito_grupal` */
 
 DROP TABLE IF EXISTS `credito_grupal`;
@@ -193,6 +166,33 @@ CREATE TABLE `credito_grupal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `credito_grupal` */
+
+/*Table structure for table `credito_personal` */
+
+DROP TABLE IF EXISTS `credito_personal`;
+
+CREATE TABLE `credito_personal` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_Cliente` int(10) unsigned NOT NULL,
+  `Cantidad_Inicial` int(10) unsigned NOT NULL,
+  `Cantidad_Actual` int(11) NOT NULL,
+  `Tipo_Credito` tinyint(1) unsigned NOT NULL,
+  `Fecha_inicio` date NOT NULL,
+  `Status` tinyint(1) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_Cliente` (`id_Cliente`),
+  KEY `Tipo_Credito` (`Tipo_Credito`),
+  KEY `Status` (`Status`),
+  CONSTRAINT `credito_personal_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
+  CONSTRAINT `credito_personal_ibfk_2` FOREIGN KEY (`Tipo_Credito`) REFERENCES `tipos_credito` (`id`),
+  CONSTRAINT `credito_personal_ibfk_3` FOREIGN KEY (`Status`) REFERENCES `status_pagos` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+/*Data for the table `credito_personal` */
+
+insert  into `credito_personal`(`id`,`id_Cliente`,`Cantidad_Inicial`,`Cantidad_Actual`,`Tipo_Credito`,`Fecha_inicio`,`Status`) values 
+(20,33,7000,7000,1,'2018-07-10',1),
+(21,33,8000,8000,1,'2018-07-09',1);
 
 /*Table structure for table `estado_civil` */
 
@@ -301,7 +301,7 @@ CREATE TABLE `tarjetones` (
   KEY `fk_tarjetones_credito` (`id_Credito`),
   KEY `fk_tarjetones_cliente` (`id_Cliente`),
   CONSTRAINT `fk_tarjetones_cliente` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
-  CONSTRAINT `fk_tarjetones_credito` FOREIGN KEY (`id_Credito`) REFERENCES `credito` (`id`)
+  CONSTRAINT `fk_tarjetones_credito` FOREIGN KEY (`id_Credito`) REFERENCES `credito_personal` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 /*Data for the table `tarjetones` */
