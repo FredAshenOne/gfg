@@ -143,7 +143,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		btnQuery.addActionListener(this);
 		sc.btnBack.addActionListener(this);
 		btnGrupo.addActionListener(this);
-		
+		ng.btnBack.addActionListener(this);
 		
 	}
 
@@ -208,6 +208,8 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == btnQuery) {
 			sc.setVisible(true);
 			sc.idUser = idUser;
+			sc.fillTable();
+			
 			this.setVisible(false);
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);
@@ -216,6 +218,9 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 			ng.setVisible(true);
 			this.setVisible(false);
 			ng.mostrarClientesExistentes();
+		}else if(e.getSource() == ng.btnBack) {
+			this.setVisible(true);
+			ng.setVisible(false);
 		}
 	}
 }

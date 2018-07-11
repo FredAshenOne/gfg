@@ -123,14 +123,14 @@ public class Style {
 		c.setBorder(new LineBorder(col,1,true));
 	}
 	
-	public void placeholder(JTextField txt,JLabel lbl,String str) {
+	public void placeholder(JTextField txt,JLabel lbl) {
 		txt.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if(txt.getText().length()>0) {
-					lbl.setText(str);
+					lbl.setVisible(true);
 				}else {
-					lbl.setText("");
+					lbl.setVisible(false);
 				}
 			}
 		});

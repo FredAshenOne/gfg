@@ -26,8 +26,9 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.event.KeyAdapter;
 
-public class BuscarCliente extends JFrame implements ActionListener, MouseListener,KeyListener {
+public class BuscarCliente extends JFrame implements ActionListener, MouseListener{
 	Style s = new Style();
 	JButton btnBack,btnNext;
 	JLabel lblHeader;
@@ -38,7 +39,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 	int idUser;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
-	ShowClient sc = new ShowClient();
+	MostrarCliente sc = new MostrarCliente();
 	public BuscarCliente() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,6 +76,12 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		pnHeader.add(lblHeader);
 
 		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				fillTable();
+			}
+		});
 		txtSearch.setForeground(Color.WHITE);
 		txtSearch.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 20));
 		txtSearch.setBounds(100, 79, 447, 60);
@@ -113,7 +120,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		mainPanel.add(scrollPane);
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setBackground(Color.WHITE);
-		txtSearch.addKeyListener(this);
+		
 		table = new JTable();
 		
 		DefaultTableModel model = new DefaultTableModel(
@@ -206,6 +213,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			sc.sad.rs = sc.rs;
 			sc.fillFields();
 			sc.setEnabledFields(false);
+			sc.etiquetasVisibles(true);
 			sc.setVisible(true);
 			sc.idUser = idUser;
 		}else if(e.getSource() == sc.btnBack) {
@@ -214,17 +222,23 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			sc.sjd.clearFields();
 			sc.btnNext.setVisible(true);
 			sc.btnSave.setVisible(false);
+			fillTable();
 		}else if(e.getSource() == sc.alUpdate.btnOk) {
 			sc.updateCliente();
 			sc.alUpdate.setVisible(false);
+			sc.alOk.setVisible(true);
+			sc.btnSave.setVisible(false);
+			sc.btnNext.setVisible(true);
+			sc.setEnabledFields(false);
 		}else if(e.getSource() == sc.sjd.btnBack) {
 			sc.sjd.clearFields();
 			this.setVisible(true);
 			sc.sjd.setVisible(false);
+		
 		}else if(e.getSource() == sc.sad.btnBack) {
 			sc.sjd.clearFields();
 			this.setVisible(true);
-			sc.sad.setVisible(false);			
+			sc.sad.setVisible(false);
 		}
 		
 	}
@@ -289,21 +303,5 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		}
 		return null;
 	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == e.VK_ENTER) {
-			fillTable();
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		
-	}
+	
 }

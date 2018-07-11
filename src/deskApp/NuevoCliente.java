@@ -111,19 +111,19 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		pnHeader.add(btnNext);
 		s.btnIcon(btnNext, "views/next.png");
 
-		lblNombre = new JLabel("");
+		lblNombre = new JLabel("Nombre");
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNombre.setBounds(7, 54, 197, 14);
 		pnHeader.add(lblNombre);
 
-		lblAp1 = new JLabel("");
+		lblAp1 = new JLabel("Apellido Paterno");
 		lblAp1.setForeground(Color.WHITE);
 		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp1.setBounds(214, 54, 140, 14);
 		pnHeader.add(lblAp1);
 
-		lblAp2 = new JLabel("");
+		lblAp2 = new JLabel("Apellido Materno");
 		lblAp2.setForeground(Color.WHITE);
 		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp2.setBounds(364, 54, 140, 14);
@@ -178,11 +178,11 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		s.mdTextField(txtTiempo, s.blue, Color.white);
 		s.myTextPrompt(txtTiempo, "Tiempo de Residencia", Color.gray);
 
-		JLabel lblTiempoDeResidencia = new JLabel("");
+		JLabel lblTiempoDeResidencia = new JLabel("Tiempo Residencia");
 		lblTiempoDeResidencia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTiempoDeResidencia.setBounds(197, 167, 115, 14);
 		mainPanel.add(lblTiempoDeResidencia);
-		s.placeholder(txtTiempo, lblTiempoDeResidencia, "Tiempo de Residencia");
+		s.placeholder(txtTiempo, lblTiempoDeResidencia);
 
 		cbTipoDom = new JComboBox();
 		cbTipoDom.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
@@ -233,55 +233,55 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		s.mdTextField(txtSueldo, s.blue, Color.white);
 		s.myTextPrompt(txtSueldo, "Sueldo Mensual", Color.gray);
 
-		lblDomicilio = new JLabel("");
+		lblDomicilio = new JLabel("Domicilio");
 		lblDomicilio.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblDomicilio.setBounds(10, 107, 197, 14);
 		mainPanel.add(lblDomicilio);
-		s.placeholder(txtDomicilio, lblDomicilio, "Domicilio");
+		s.placeholder(txtDomicilio, lblDomicilio);
 
-		lblExterior = new JLabel("");
+		lblExterior = new JLabel("No. Exterior");
 		lblExterior.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblExterior.setBounds(217, 108, 95, 14);
 		mainPanel.add(lblExterior);
-		s.placeholder(txtExterior, lblExterior, "Num. Exterior");
+		s.placeholder(txtExterior, lblExterior);
 
-		lblInterior = new JLabel("");
+		lblInterior = new JLabel("No. Interior");
 		lblInterior.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblInterior.setBounds(330, 107, 95, 14);
 		mainPanel.add(lblInterior);
-		s.placeholder(txtInterior, lblInterior, "Num. Interior");
+		s.placeholder(txtInterior, lblInterior);
 
-		lblNacimiento = new JLabel("");
+		lblNacimiento = new JLabel("Fecha Nacimiento");
 		lblNacimiento.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNacimiento.setBounds(446, 108, 137, 14);
 		mainPanel.add(lblNacimiento);
-		s.placeholder(txtNacimiento, lblNacimiento, "Fecha Nacimiento");
+		s.placeholder(txtNacimiento, lblNacimiento);
 
-		JLabel lblColonia = new JLabel("");
+		JLabel lblColonia = new JLabel("Colonia");
 		lblColonia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblColonia.setBounds(10, 167, 170, 14);
 		mainPanel.add(lblColonia);
-		s.placeholder(txtColonia, lblColonia, "Colonia");
+		s.placeholder(txtColonia, lblColonia);
 
-		JLabel lblNumFijo = new JLabel("");
+		JLabel lblNumFijo = new JLabel("Telefono Fijo");
 		lblNumFijo.setBounds(190, 232, 170, 14);
 		mainPanel.add(lblNumFijo);
-		s.placeholder(txtNumFijo, lblNumFijo, "Tel Casa");
+		s.placeholder(txtNumFijo, lblNumFijo);
 
-		JLabel lblOcupacion = new JLabel("");
+		JLabel lblOcupacion = new JLabel("Ocupacion");
 		lblOcupacion.setBounds(370, 232, 170, 14);
 		mainPanel.add(lblOcupacion);
-		s.placeholder(txtOcupacion, lblOcupacion, "Ocupacion");
+		s.placeholder(txtOcupacion, lblOcupacion);
 
-		lblSueldo = new JLabel("");
+		lblSueldo = new JLabel("Sueldo Mensual");
 		lblSueldo.setBounds(10, 302, 115, 14);
 		mainPanel.add(lblSueldo);
-		s.placeholder(txtSueldo, lblSueldo, "Sueldo Mensual");
+		s.placeholder(txtSueldo, lblSueldo);
 
-		lblNumCel = new JLabel("");
+		lblNumCel = new JLabel("Celular");
 		lblNumCel.setBounds(10, 232, 170, 14);
 		mainPanel.add(lblNumCel);
-		s.placeholder(txtNumCel, lblNumCel, "Num Celular");
+		s.placeholder(txtNumCel, lblNumCel);
 
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -290,9 +290,9 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
 		alSave.btnOk.addActionListener(this);
-		s.placeholder(txtNombre, lblNombre, "Nombre");
-		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
-		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
+		s.placeholder(txtNombre, lblNombre);
+		s.placeholder(txtAp1, lblAp1);
+		s.placeholder(txtAp2, lblAp2);
 		
 		
 		

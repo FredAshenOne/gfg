@@ -31,26 +31,32 @@ CREATE TABLE `avales` (
   `Num_Interior` varchar(5) COLLATE utf8_spanish_ci DEFAULT NULL,
   `Colonia` varchar(70) COLLATE utf8_spanish_ci NOT NULL,
   `Telefono` varchar(12) COLLATE utf8_spanish_ci NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `id_Cliente` (`id_Cliente`),
-  CONSTRAINT `avales_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  KEY `status` (`status`),
+  CONSTRAINT `avales_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `avales_ibfk_2` FOREIGN KEY (`status`) REFERENCES `status_personas` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `avales` */
 
-insert  into `avales`(`id`,`id_Cliente`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Telefono`) values 
-(7,33,'asd','asd','asd','asd','123','123','asd','123'),
-(8,33,'123','123','123','123','123','123','123','123'),
-(9,32,'zxc','asd','asd','qwe','qwe','qwe','qwe','qwe'),
-(10,32,'qweqw','465','654','654','654','654','654654','654'),
-(11,32,'qweqwe','498','49846','6548','84','984','684','847'),
-(12,32,'asd','asdasdas','ads','asd','654','654','465','654'),
-(13,32,'8708','9847','987','987','98','79','987','87'),
-(14,32,'1271zxczxc','984849','849','849','984','984','84','984'),
-(15,32,'gus','98409','8409','840','984','9840','9840','984'),
-(16,32,'gustav','8490','9840','9840','9840','9840','9804','8740'),
-(17,32,'chris','88409','098','098','090','980','098','980'),
-(18,32,'qwewe','987','987','987','79','87','98','987');
+insert  into `avales`(`id`,`id_Cliente`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Telefono`,`status`) values 
+(7,33,'asd','asd','asd','asd','123','123','asd','123',1),
+(8,33,'123','123','123','123','123','123','123','123',1),
+(9,32,'valiendo','barriga','uno','qwe','qwe','qwe','qwe','qwe',1),
+(10,32,'vale','vergara','as','654','654','654','654654','654',1),
+(11,32,'tercer','Aval','editado','6548','84','984','684','847',1),
+(12,32,'cuarto','aval','editado','asd','654','654','465','654',1),
+(13,32,'quinto','aval','editado','987','98','79','987','87',1),
+(14,32,'sexto','aval','editado','849','984','984','84','984',1),
+(15,32,'gus','98409','8409','840','984','9840','9840','984',1),
+(16,32,'gustav','8490','9840','9840','9840','9840','9804','8740',1),
+(17,32,'chris','88409','098','098','090','980','098','980',1),
+(18,32,'qwewe','987','987','987','79','87','98','987',1),
+(19,34,'alfredo','lara','meza','456','654','654','654','654',1),
+(20,32,'oscar','lara','meza','12','123','123','132','132',1),
+(21,33,'nuevo','aval','para','leo','132','123','123','123',1);
 
 /*Table structure for table `clientes_empleo` */
 
@@ -67,13 +73,14 @@ CREATE TABLE `clientes_empleo` (
   PRIMARY KEY (`id`),
   KEY `id_Cliente` (`id_Cliente`),
   CONSTRAINT `clientes_empleo_ibfk_1` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `clientes_empleo` */
 
 insert  into `clientes_empleo`(`id`,`id_Cliente`,`Descripcion`,`Domicilio`,`Num_Exterior`,`Num_Interior`,`Telefono`) values 
-(1,33,'123','asd','123','123','123'),
-(2,32,'123','qweqwe','132','123','123');
+(1,33,'123as','fred','123','123','123'),
+(2,32,'123s','fredo','132','123','123'),
+(3,34,'132','lazaro cardenas','321','321','321');
 
 /*Table structure for table `clientes_grupo` */
 
@@ -82,16 +89,19 @@ DROP TABLE IF EXISTS `clientes_grupo`;
 CREATE TABLE `clientes_grupo` (
   `id_Grupo` int(10) unsigned DEFAULT NULL,
   `id_Cliente` int(10) unsigned DEFAULT NULL,
-  KEY `fk_clientesgrupo_grupo` (`id_Grupo`),
   KEY `fk_clientesgrupo_clientes` (`id_Cliente`),
-  CONSTRAINT `fk_clientesgrupo_clientes` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
-  CONSTRAINT `fk_clientesgrupo_grupo` FOREIGN KEY (`id_Grupo`) REFERENCES `grupos` (`id`)
+  KEY `fk_clientesgrupo_grupo` (`id_Grupo`),
+  CONSTRAINT `fk_clientesgrupo_clientes` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `fk_clientesgrupo_grupo` FOREIGN KEY (`id_Grupo`) REFERENCES `grupos` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `clientes_grupo` */
 
 insert  into `clientes_grupo`(`id_Grupo`,`id_Cliente`) values 
-(1,33);
+(18,33),
+(21,34),
+(21,32),
+(22,33);
 
 /*Table structure for table `clientes_personal` */
 
@@ -115,20 +125,24 @@ CREATE TABLE `clientes_personal` (
   `Ocupacion` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
   `Sueldo_Mensual` int(11) NOT NULL,
   `Editado` int(10) unsigned NOT NULL,
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_Tipo_Casa` (`Tipo_Casa`),
   KEY `fk_estado_civil` (`Estado_Civil`),
   KEY `fk_Editado_usuario` (`Editado`),
+  KEY `status` (`status`),
+  CONSTRAINT `clientes_personal_ibfk_1` FOREIGN KEY (`status`) REFERENCES `status_personas` (`id`),
   CONSTRAINT `fk_Editado_usuario` FOREIGN KEY (`Editado`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_Tipo_Casa` FOREIGN KEY (`Tipo_Casa`) REFERENCES `tipo_domicilio` (`id`),
   CONSTRAINT `fk_estado_civil` FOREIGN KEY (`Estado_Civil`) REFERENCES `estado_civil` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `clientes_personal` */
 
-insert  into `clientes_personal`(`id`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Telefono_Cel`,`Telefono_Fijo`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Fecha_Nacimiento`,`Tiempo_Residencia`,`Tipo_Casa`,`Estado_Civil`,`Ocupacion`,`Sueldo_Mensual`,`Editado`) values 
-(32,'Alfredo','Lara','Meza','123','123','123','123','123','123','1194-05-12','12',1,1,'123',123,1),
-(33,'fred','123','123','123','123123','123','123','123','123','1234-04-04','12',1,1,'123',123,1);
+insert  into `clientes_personal`(`id`,`Nombre`,`Apellido_Paterno`,`Apellido_Materno`,`Telefono_Cel`,`Telefono_Fijo`,`Direccion`,`Num_Exterior`,`Num_Interior`,`Colonia`,`Fecha_Nacimiento`,`Tiempo_Residencia`,`Tipo_Casa`,`Estado_Civil`,`Ocupacion`,`Sueldo_Mensual`,`Editado`,`status`) values 
+(32,'alfredo','Lara','Meza','123','123','123','123','123','123','1194-05-12','12',1,1,'123',123,1,1),
+(33,'Leo','Gallardo','Hernandez','123','123123','123','123','123','123','1234-04-04','12',1,1,'123',123,1,1),
+(34,'athziri','naxieli','puga','333213','321321','654','654','654','654','1994-05-01','11',1,1,'321321',8000,1,1);
 
 /*Table structure for table `credito` */
 
@@ -156,6 +170,29 @@ CREATE TABLE `credito` (
 insert  into `credito`(`id`,`id_Cliente`,`Cantidad_Inicial`,`Cantidad_Actual`,`Tipo_Credito`,`Fecha_inicio`,`Status`) values 
 (20,33,7000,7000,1,'2018-07-10',1),
 (21,33,8000,8000,1,'2018-07-09',1);
+
+/*Table structure for table `credito_grupal` */
+
+DROP TABLE IF EXISTS `credito_grupal`;
+
+CREATE TABLE `credito_grupal` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_Grupo` int(10) unsigned NOT NULL,
+  `cantidad_Inicial` int(10) unsigned NOT NULL,
+  `cantidad_Actual` int(11) DEFAULT NULL,
+  `tipo_Credito` tinyint(3) unsigned NOT NULL,
+  `fecha_Inicio` date NOT NULL,
+  `status` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_Grupo` (`id_Grupo`),
+  KEY `tipo_Credito` (`tipo_Credito`),
+  KEY `status` (`status`),
+  CONSTRAINT `credito_grupal_ibfk_1` FOREIGN KEY (`id_Grupo`) REFERENCES `grupos` (`id`),
+  CONSTRAINT `credito_grupal_ibfk_2` FOREIGN KEY (`tipo_Credito`) REFERENCES `tipos_credito` (`id`),
+  CONSTRAINT `credito_grupal_ibfk_3` FOREIGN KEY (`status`) REFERENCES `status_credito` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+/*Data for the table `credito_grupal` */
 
 /*Table structure for table `estado_civil` */
 
@@ -186,12 +223,14 @@ CREATE TABLE `grupos` (
   `nombre` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `fecha_Creacion` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `grupos` */
 
 insert  into `grupos`(`id`,`nombre`,`fecha_Creacion`) values 
-(1,'PRUEBA','2018-07-09');
+(18,'alfred','2018-07-11'),
+(21,'vanguardia','2018-07-11'),
+(22,'fredo','2018-07-11');
 
 /*Table structure for table `status_credito` */
 
@@ -228,6 +267,22 @@ insert  into `status_pagos`(`id`,`Descripcion`) values
 (1,'Pagado'),
 (2,'Por Pagar');
 
+/*Table structure for table `status_personas` */
+
+DROP TABLE IF EXISTS `status_personas`;
+
+CREATE TABLE `status_personas` (
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `Descripcion` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+/*Data for the table `status_personas` */
+
+insert  into `status_personas`(`id`,`Descripcion`) values 
+(1,'Activo'),
+(2,'No Activo');
+
 /*Table structure for table `tarjetones` */
 
 DROP TABLE IF EXISTS `tarjetones`;
@@ -247,7 +302,7 @@ CREATE TABLE `tarjetones` (
   KEY `fk_tarjetones_cliente` (`id_Cliente`),
   CONSTRAINT `fk_tarjetones_cliente` FOREIGN KEY (`id_Cliente`) REFERENCES `clientes_personal` (`id`),
   CONSTRAINT `fk_tarjetones_credito` FOREIGN KEY (`id_Credito`) REFERENCES `credito` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 /*Data for the table `tarjetones` */
 

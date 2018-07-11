@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class ShowClient extends JFrame implements ActionListener, MouseListener {
+public class MostrarCliente extends JFrame implements ActionListener, MouseListener {
 
 	private JPanel contentPane;
 	private JTextField txtNombre, txtAp1, txtAp2, txtNacimiento, txtOcupacion, txtDomicilio, txtExterior, txtInterior,
@@ -32,16 +32,18 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 	int idUser;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2;
-	JButton btnBack, btnNext,btnSave,btnInfoCliente,btnInfoEmpleo,btnInfoAvales;
+	JButton btnBack, btnNext, btnSave, btnInfoCliente, btnInfoEmpleo, btnInfoAvales;
 	NuevoAval ca = new NuevoAval();
 	Style s = new Style();
 	DatosEmpleo jd = new DatosEmpleo();
 	Conexion c = new Conexion();
+	Alert alOk = new Alert();
 	ResultSet rs;
 	Alert alUpdate = new Alert();
 	MostarDatosEmpleo sjd = new MostarDatosEmpleo();
-	ShowAvalData sad = new ShowAvalData();
-	public ShowClient() {
+	BuscarAvales sad = new BuscarAvales();
+
+	public MostrarCliente() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -112,19 +114,19 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		pnHeader.add(btnNext);
 		s.btnIcon(btnNext, "views/edit.png");
 
-		lblNombre = new JLabel("");
+		lblNombre = new JLabel("Nombre(s)");
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNombre.setBounds(7, 54, 197, 14);
 		pnHeader.add(lblNombre);
 
-		lblAp1 = new JLabel("");
+		lblAp1 = new JLabel("Apellido Paterno");
 		lblAp1.setForeground(Color.WHITE);
 		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp1.setBounds(214, 54, 140, 14);
 		pnHeader.add(lblAp1);
 
-		lblAp2 = new JLabel("");
+		lblAp2 = new JLabel("Apellido Materno");
 		lblAp2.setForeground(Color.WHITE);
 		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp2.setBounds(364, 54, 140, 14);
@@ -179,11 +181,11 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		s.mdTextField(txtTiempo, s.blue, Color.white);
 		s.myTextPrompt(txtTiempo, "Tiempo de Residencia", Color.gray);
 
-		JLabel lblTiempoDeResidencia = new JLabel("");
+		JLabel lblTiempoDeResidencia = new JLabel("Tiempo de Residencia");
 		lblTiempoDeResidencia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTiempoDeResidencia.setBounds(197, 167, 115, 14);
 		mainPanel.add(lblTiempoDeResidencia);
-		s.placeholder(txtTiempo, lblTiempoDeResidencia, "Tiempo de Residencia");
+		s.placeholder(txtTiempo, lblTiempoDeResidencia);
 
 		cbTipoDom = new JComboBox();
 		cbTipoDom.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
@@ -232,66 +234,66 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		s.mdTextField(txtSueldo, s.blue, Color.white);
 		s.myTextPrompt(txtSueldo, "Sueldo Mensual", Color.gray);
 
-		lblDomicilio = new JLabel("");
+		lblDomicilio = new JLabel("Domicilio");
 		lblDomicilio.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblDomicilio.setBounds(10, 107, 197, 14);
 		mainPanel.add(lblDomicilio);
-		s.placeholder(txtDomicilio, lblDomicilio, "Domicilio");
+		s.placeholder(txtDomicilio, lblDomicilio);
 
-		lblExterior = new JLabel("");
+		lblExterior = new JLabel("Num. Exterior");
 		lblExterior.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblExterior.setBounds(217, 108, 95, 14);
 		mainPanel.add(lblExterior);
-		s.placeholder(txtExterior, lblExterior, "Num. Exterior");
+		s.placeholder(txtExterior, lblExterior);
 
-		lblInterior = new JLabel("");
+		lblInterior = new JLabel("Num. Interior");
 		lblInterior.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblInterior.setBounds(330, 107, 95, 14);
 		mainPanel.add(lblInterior);
-		s.placeholder(txtInterior, lblInterior, "Num. Interior");
+		s.placeholder(txtInterior, lblInterior);
 
-		lblNacimiento = new JLabel("");
+		lblNacimiento = new JLabel("Fecha Nacimiento");
 		lblNacimiento.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNacimiento.setBounds(446, 108, 137, 14);
 		mainPanel.add(lblNacimiento);
-		s.placeholder(txtNacimiento, lblNacimiento, "Fecha Nacimiento");
+		s.placeholder(txtNacimiento, lblNacimiento);
 
-		JLabel lblColonia = new JLabel("");
+		JLabel lblColonia = new JLabel("Colonia");
 		lblColonia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblColonia.setBounds(10, 167, 170, 14);
 		mainPanel.add(lblColonia);
-		s.placeholder(txtColonia, lblColonia, "Colonia");
+		s.placeholder(txtColonia, lblColonia);
 
-		JLabel lblNumFijo = new JLabel("");
+		JLabel lblNumFijo = new JLabel("Tel Casa");
 		lblNumFijo.setBounds(190, 232, 170, 14);
 		mainPanel.add(lblNumFijo);
-		s.placeholder(txtNumFijo, lblNumFijo, "Tel Casa");
+		s.placeholder(txtNumFijo, lblNumFijo);
 
-		JLabel lblOcupacion = new JLabel("");
+		JLabel lblOcupacion = new JLabel("Ocupacion");
 		lblOcupacion.setBounds(370, 232, 170, 14);
 		mainPanel.add(lblOcupacion);
-		s.placeholder(txtOcupacion, lblOcupacion, "Ocupacion");
+		s.placeholder(txtOcupacion, lblOcupacion);
 
-		lblSueldo = new JLabel("");
+		lblSueldo = new JLabel("Sueldo Mensual");
 		lblSueldo.setBounds(10, 302, 115, 14);
 		mainPanel.add(lblSueldo);
-		s.placeholder(txtSueldo, lblSueldo, "Sueldo Mensual");
+		s.placeholder(txtSueldo, lblSueldo);
 
-		lblNumCel = new JLabel("");
+		lblNumCel = new JLabel("Num Celular");
 		lblNumCel.setBounds(10, 232, 170, 14);
 		mainPanel.add(lblNumCel);
-		s.placeholder(txtNumCel, lblNumCel, "Num Celular");
-		
+		s.placeholder(txtNumCel, lblNumCel);
+
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblWarning.setBounds(135, 310, 222, 32);
 		mainPanel.add(lblWarning);
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
-		s.placeholder(txtNombre, lblNombre, "Nombre");
-		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
-		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
-		
+		s.placeholder(txtNombre, lblNombre);
+		s.placeholder(txtAp1, lblAp1);
+		s.placeholder(txtAp2, lblAp2);
+
 		btnSave = new JButton("");
 		btnSave.setBorder(null);
 		btnSave.setBounds(551, 11, 32, 32);
@@ -302,14 +304,13 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		s.btnIcon(btnSave, "views/saveWhite.png");
 		jd.btnNext.addActionListener(this);
 		jd.btnOmit.addActionListener(this);
- 
-		
+
 		JPanel menuPane = new JPanel();
 		menuPane.setBounds(475, 317, 96, 32);
 		mainPanel.add(menuPane);
 		menuPane.setLayout(null);
-		s.mdPanel(menuPane, Color.white);		
-		
+		s.mdPanel(menuPane, Color.white);
+
 		btnInfoCliente = new JButton("");
 		btnInfoCliente.setBounds(0, 0, 32, 32);
 		menuPane.add(btnInfoCliente);
@@ -317,31 +318,39 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		s.btnIcon(btnInfoCliente, "views/userWhite.png");
 		btnInfoCliente.setOpaque(true);
 		btnInfoCliente.setBackground(s.blue);
-		
+
 		btnInfoEmpleo = new JButton("");
 		btnInfoEmpleo.setBounds(32, 0, 32, 32);
 		menuPane.add(btnInfoEmpleo);
 		btnInfoEmpleo.addMouseListener(this);
-		s.btnIcon(btnInfoEmpleo, "views/job.png");	
+		s.btnIcon(btnInfoEmpleo, "views/job.png");
 		btnInfoEmpleo.addActionListener(this);
-		
+
 		btnInfoAvales = new JButton("");
 		btnInfoAvales.setBounds(64, 0, 32, 32);
 		menuPane.add(btnInfoAvales);
 		btnInfoAvales.addMouseListener(this);
 		s.btnIcon(btnInfoAvales, "views/avales.png");
-		
+
 		ca.btnNext.addActionListener(this);
 		ca.btnOmit.addActionListener(this);
+		
+		alOk.btnCancel.setVisible(false);
+		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alOk.lblMessage.setText("Datos guardados con exito");
+		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alOk.btnOk.setText("Ok");
+		alOk.btnOk.addActionListener(this);
 
 		jd.alSave.btnOk.addActionListener(this);
 		btnNext.addActionListener(this);
 		ca.alSave.btnOk.addActionListener(this);
 		btnInfoAvales.addActionListener(this);
 		alUpdate.btnCancel.addActionListener(this);
-		alUpdate.lblMessage.setText("<html><body>Se actualizaran los datos del cliente<br>desea continuar?</body></html>");
-		
-		
+		alUpdate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
+		alUpdate.lblMessage
+				.setText("<html><body>Se actualizaran los datos del cliente<br>desea continuar?</body></html>");
+
 		sad.btnInfoCliente.addActionListener(this);
 		sad.btnInfoEmpleo.addActionListener(this);
 		sjd.btnInfoCliente.addActionListener(this);
@@ -349,6 +358,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		sjd.alSave.btnOk.addActionListener(this);
 		sad.alAnother.btnOk.addActionListener(this);
 		sad.alAnother.btnCancel.addActionListener(this);
+		
 		
 		
 	}
@@ -367,19 +377,19 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		} else if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
 			s.btnPointer(btnBack);
-		}else if(e.getSource() == btnSave) {
+		} else if (e.getSource() == btnSave) {
 			s.hoverBorder(btnSave, Color.white);
 			s.btnPointer(btnSave);
-		}else if(e.getSource() == btnInfoEmpleo) {
+		} else if (e.getSource() == btnInfoEmpleo) {
 			s.btnPointer(btnInfoEmpleo);
 			s.hoverBorder(btnInfoEmpleo, s.blue);
-		}else if(e.getSource() == btnInfoAvales) {
+		} else if (e.getSource() == btnInfoAvales) {
 			s.btnPointer(btnInfoAvales);
 			s.hoverBorder(btnInfoAvales, s.blue);
-		}else if(e.getSource() == btnInfoCliente) {
+		} else if (e.getSource() == btnInfoCliente) {
 			s.btnPointer(btnInfoCliente);
-		}else if(e.getSource() == btnInfoEmpleo) {
-			
+		} else if (e.getSource() == btnInfoEmpleo) {
+
 		}
 	}
 
@@ -389,11 +399,11 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			btnNext.setBorder(null);
 		} else if (e.getSource() == btnBack) {
 			btnBack.setBorder(null);
-		}else if(e.getSource() == btnSave) {
+		} else if (e.getSource() == btnSave) {
 			btnSave.setBorder(null);
-		}else if(e.getSource() == btnInfoEmpleo) {
+		} else if (e.getSource() == btnInfoEmpleo) {
 			btnInfoEmpleo.setBorder(null);
-		}else if(e.getSource() == btnInfoAvales) {
+		} else if (e.getSource() == btnInfoAvales) {
 			btnInfoAvales.setBorder(null);
 		}
 	}
@@ -412,61 +422,77 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnNext) {
+		if (e.getSource() == btnNext) {
 			setEnabledFields(true);
 			btnNext.setVisible(false);
 			btnSave.setVisible(true);
 
-		}else if(e.getSource() == btnSave) {
-			alUpdate.setVisible(true);
-		}else if(e.getSource() == alUpdate.btnCancel) {
+		} else if (e.getSource() == btnSave) {
+			if (fullFields()) {
+				alUpdate.setVisible(true);
+				lblWarning.setText("");
+			}
+		} else if (e.getSource() == alUpdate.btnCancel) {
 			alUpdate.setVisible(false);
-		}else if(e.getSource() == btnInfoEmpleo) {
+		} else if (e.getSource() == btnInfoEmpleo) {
 			sjd.btnNext.setVisible(true);
 			sjd.btnSave.setVisible(false);
 			sjd.setVisible(true);
 			sjd.fillJobData();
 			sjd.fieldsEditable(false);
 			this.setVisible(false);
-		}else if(e.getSource() == btnInfoAvales) {
+		} else if (e.getSource() == btnInfoAvales) {
 			sad.setVisible(true);
 			this.setVisible(false);
 			sad.fillTableAvales(searchAvalesByIdCliente());
-		}else if(e.getSource() == sad.btnInfoCliente) {
+		} else if (e.getSource() == sad.btnInfoCliente) {
 			this.setVisible(true);
 			sjd.fieldsEditable(false);
 			sad.setVisible(false);
-		}else if(e.getSource() == sad.btnInfoEmpleo) {
+		} else if (e.getSource() == sad.btnInfoEmpleo) {
 			sjd.fieldsEditable(false);
 			sjd.btnNext.setVisible(true);
 			sjd.btnSave.setVisible(false);
 			sad.setVisible(false);
 			sjd.setVisible(true);
 			sjd.fillJobData();
-		}else if(e.getSource() == sjd.btnInfoAvales) {
+		} else if (e.getSource() == sjd.btnInfoAvales) {
 			sad.setVisible(true);
 			sad.fillTableAvales(searchAvalesByIdCliente());
 			sjd.setVisible(false);
-		}else if(e.getSource() == sjd.btnInfoCliente) {
+		} else if (e.getSource() == sjd.btnInfoCliente) {
 			this.setVisible(true);
 			sjd.setVisible(false);
-		}else if(e.getSource() == sjd.alSave.btnOk) {
-				try {
-					if(sjd.isJobDataRegistered(rs.getInt("id"))== null){						
-						sjd.addDatosEmpleo(rs.getString("Nombre"),rs.getString("Apellido_Paterno"),rs.getString("Apellido_Materno"));
-						sjd.alSave.setVisible(false);
-					}else {
-						sjd.actulizarDatosEmpleo(rs.getString("Nombre"),rs.getString("Apellido_Paterno"),rs.getString("Apellido_Materno"));
-						sjd.setVisible(false);
-					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
+		} else if (e.getSource() == sjd.alSave.btnOk) {
+			try {
+				if (sjd.isJobDataRegistered(rs.getInt("id")) == null) {
+					sjd.addDatosEmpleo(rs.getString("Nombre"), rs.getString("Apellido_Paterno"),
+							rs.getString("Apellido_Materno"));
+					sjd.alSave.setVisible(false);
+					alOk.setVisible(true);
+					sjd.btnSave.setVisible(false);
+					sjd.btnNext.setVisible(true);
+					sjd.fieldsEditable(false);
+				} else {
+					sjd.actulizarDatosEmpleo(rs.getString("Nombre"), rs.getString("Apellido_Paterno"),
+							rs.getString("Apellido_Materno"));
+					sjd.alSave.setVisible(false);
+					alOk.setVisible(true);
+					sjd.fieldsEditable(false);
+					sjd.btnSave.setVisible(false);
+					sjd.btnNext.setVisible(true);
 				}
-			
-		}else if(e.getSource() == sad.alAnother.btnCancel) {
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+		} else if (e.getSource() == sad.alAnother.btnCancel) {
 			sad.fillTableAvales(searchAvalesByIdCliente());
 			sad.setVisible(true);
 			sad.alAnother.setVisible(false);
+		}else if (e.getSource() == alOk.btnOk) {
+			alOk.setVisible(false);
+			
 		}
 	}
 
@@ -494,7 +520,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void updateCliente() {
 
 		try {
@@ -506,12 +532,13 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 					+ txtNacimiento.getText() + "',Tiempo_Residencia = '" + txtTiempo.getText() + "'," + "Tipo_Casa = "
 					+ cbTipoDom.getSelectedIndex() + ",Estado_Civil = " + cbEstadoCivil.getSelectedIndex()
 					+ ",Ocupacion = '" + txtOcupacion.getText() + "',Sueldo_Mensual = "
-					+ Integer.parseInt(txtSueldo.getText()) + ",Editado = " + idUser + " WHERE id ="+rs.getInt("id")+" ;");
-			
+					+ Integer.parseInt(txtSueldo.getText()) + ",Editado = " + idUser + " WHERE id =" + rs.getInt("id")
+					+ " ;");
+
 		} catch (NumberFormatException nfe) {
 			lblWarning.setText("Algunos campos deben ser numericos");
 			lblWarning.setForeground(Color.RED);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -533,7 +560,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		cbEstadoCivil.setEnabled(b);
 		cbTipoDom.setEnabled(b);
 	}
-	
+
 	public boolean fullFields() {
 		if (txtNombre.getText().length() > 0 && txtAp1.getText().length() > 0 && txtAp2.getText().length() > 0
 				&& cbEstadoCivil.getSelectedIndex() > 0 && cbTipoDom.getSelectedIndex() > 0
@@ -564,7 +591,7 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 			return false;
 		}
 	}
-	
+
 	public ResultSet clientByName(String nombre, String ap1, String ap2) {
 
 		try {
@@ -575,16 +602,28 @@ public class ShowClient extends JFrame implements ActionListener, MouseListener 
 		}
 		return null;
 	}
-	
+
 	public ResultSet searchAvalesByIdCliente() {
 		try {
-			return c.query("SELECT * FROM avales WHERE id_Cliente = "+rs.getInt("id")+";");
-			
-		}catch(Exception ex) {
+			return c.query("SELECT * FROM avales WHERE id_Cliente = " + rs.getInt("id") + " ;");
+
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			lblWarning.setText("No se encontraron resultados");
 			return null;
 		}
+	}
+
+	public void etiquetasVisibles(Boolean flag) {
+		lblDomicilio.setVisible(flag);
+		lblExterior.setVisible(flag);
+		lblInterior.setVisible(flag);
+		lblNacimiento.setVisible(flag);
+		lblSueldo.setVisible(flag);
+		lblNumCel.setVisible(flag);
+		lblNombre.setVisible(flag);
+		lblAp1.setVisible(flag);
+		lblAp2.setVisible(flag);
 	}
 
 }

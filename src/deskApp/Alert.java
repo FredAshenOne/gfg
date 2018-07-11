@@ -18,8 +18,7 @@ import javax.swing.SwingConstants;
 
 public class Alert extends JFrame implements ActionListener,MouseListener{
 
-	private JPanel contentPane;
-	private JPanel mainPanel = new JPanel();
+	JPanel contentPane, mainPanel = new JPanel();
 	JLabel lblAlertIcon,lblMessage;
 	JButton btnOk,btnCancel;
 	Style s = new Style();

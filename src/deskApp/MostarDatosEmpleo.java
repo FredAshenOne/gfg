@@ -81,11 +81,11 @@ public class MostarDatosEmpleo extends JFrame implements ActionListener,MouseLis
 		mainPanel.add(txtNumExterior);
 		s.mdTextField(txtNumExterior, s.blue, Color.white);
 
-		lblDom = new JLabel("");
+		lblDom = new JLabel("Domicilio");
 		lblDom.setBounds(24, 138, 258, 14);
 		mainPanel.add(lblDom);
 
-		lblNumExt = new JLabel("");
+		lblNumExt = new JLabel("No. Exterior");
 		lblNumExt.setBounds(24, 216, 258, 14);
 		mainPanel.add(lblNumExt);
 
@@ -95,7 +95,7 @@ public class MostarDatosEmpleo extends JFrame implements ActionListener,MouseLis
 		mainPanel.add(txtTelefono);
 		s.mdTextField(txtTelefono, s.blue, Color.white);
 
-		lblTel = new JLabel("");
+		lblTel = new JLabel("Telefono");
 		lblTel.setBounds(24, 305, 258, 14);
 		mainPanel.add(lblTel);
 
@@ -111,30 +111,30 @@ public class MostarDatosEmpleo extends JFrame implements ActionListener,MouseLis
 		mainPanel.add(txtNumInter);
 		s.mdTextField(txtNumInter, s.blue, Color.white);
 
-		lblNumInt = new JLabel("");
+		lblNumInt = new JLabel("No. Interior");
 		lblNumInt.setBounds(310, 216, 258, 14);
 		mainPanel.add(lblNumInt);
 
-		lblDesc = new JLabel("");
+		lblDesc = new JLabel("Descripcion");
 		lblDesc.setBounds(310, 138, 258, 14);
 		mainPanel.add(lblDesc);
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
 
 		s.myTextPrompt(txtNumExterior, "Numero Exterior", Color.gray);
-		s.placeholder(txtNumExterior, lblNumExt, "Numero Exterior");
+		s.placeholder(txtNumExterior, lblNumExt);
 
 		s.myTextPrompt(txtNumInter, "Numero Interior", Color.gray);
-		s.placeholder(txtNumInter, lblNumInt, "Numero Interior");
+		s.placeholder(txtNumInter, lblNumInt);
 
 		s.myTextPrompt(txtDesc, "Descripcion", Color.gray);
-		s.placeholder(txtDesc, lblDesc, "Descripcion");
+		s.placeholder(txtDesc, lblDesc);
 
 		s.myTextPrompt(txtTelefono, "Telefono", Color.gray);
-		s.placeholder(txtTelefono, lblTel, "Telefono");
+		s.placeholder(txtTelefono, lblTel);
 
 		s.myTextPrompt(txtDom, "Domicilio", Color.gray);
-		s.placeholder(txtDom, lblDom, "Domicilio");
+		s.placeholder(txtDom, lblDom);
 
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
@@ -240,8 +240,7 @@ public class MostarDatosEmpleo extends JFrame implements ActionListener,MouseLis
 			btnSave.setVisible(true);
 		}else if(e.getSource() == btnSave) {
 			if(fullFields()) {
-				lblWarning.setText("");
-				
+				lblWarning.setText("");				
 				alSave.setVisible(true);
 			}else {
 				lblWarning.setForeground(Color.red);

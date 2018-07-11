@@ -180,6 +180,7 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		if(e.getSource() == btnNuevoCredito) {
 			bcc.setVisible(true);
 			this.setVisible(false);
+			bcc.llenarTabla();
 		}else if(e.getSource() == bcc.btnBack) {
 			this.setVisible(true);
 			bcc.setVisible(false);

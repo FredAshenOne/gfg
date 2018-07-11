@@ -29,7 +29,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 	Conexion c = new Conexion();
 	JComboBox cbTipo, cbInteres;
 	JTextField txtFecha, txtCantidad;
-	int semanas, interes;
+	int semanas, interes,tipoCredito;
 	private JLabel lblInteresWarning;
 
 	public NuevoCredito() {

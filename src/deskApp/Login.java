@@ -183,7 +183,9 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 	public Boolean userExists() {
 		String pass = new String(txtPassword.getPassword());
 		try {
+			
 			ResultSet rs = c.query("SELECT * FROM usuarios WHERE usuario = '"+txtUser.getText()+"' AND contraseña = '"+pass+"'; ");
+
 			if(rs.next()){
 				userType = rs.getInt("tipo_usuario");
 				mam.idUser = rs.getInt("id");
@@ -191,7 +193,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 				
 			}
 		}catch(Exception ex) {
-		
+			ex.printStackTrace();
 		}	
 		lblWarning.setText("Usuario o contraseña invalidos");
 		return false;

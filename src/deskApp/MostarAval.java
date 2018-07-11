@@ -22,15 +22,18 @@ import javax.swing.JTextField;
 
 public class MostarAval extends JFrame implements ActionListener,MouseListener{
 	Style s = new Style();
-	JButton btnNext;
+	JButton btnNext,btnGuardar,btnBack;
 	JLabel lblWarning;
 	Conexion c = new Conexion();
 	private JPanel contentPane;
 	JTextField txtName,txtAp1,txtAp2,txtDireccion,txtNumInt,txtNumExt,txtTelefono,txtColonia;
-	JLabel lblColonia,lblNombre,lblAp1,lblAp2,lblDireccion,lblNumInt,lblNumExt,lblTelefono,lblHeader;
-	JButton btnBack;
+	JLabel lblColonia,lblNombre,lblAp1,lblAp2,lblDireccion,lblNumInt,lblNumExt,lblTelefono,lblHeader;	
+	String name,ap1,ap2;
+	int idCliente;
 	Alert alSave = new Alert(); 
+	Alert alOk = new Alert();
 	Alert alNewAaval = new Alert();
+	
 	public MostarAval() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -61,7 +64,9 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		btnNext = new JButton("");
 		btnNext.setBounds(551, 11, 32, 32);
 		pnHeader.add(btnNext);
-		s.btnIcon(btnNext, "views/next.png");
+		s.btnIcon(btnNext, "views/edit.png");
+		btnNext.addMouseListener(this);
+		btnNext.addActionListener(this);
 		
 		txtName = new JTextField();
 		txtName.setForeground(Color.WHITE);
@@ -87,19 +92,19 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtAp2, Color.white, s.blue);
 		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);
 		
-		lblNombre = new JLabel("");
+		lblNombre = new JLabel("Nombre(s)");
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNombre.setBounds(10, 54, 168, 14);
 		pnHeader.add(lblNombre);
 		
-		lblAp1 = new JLabel("");
+		lblAp1 = new JLabel("Apellido Paterno");
 		lblAp1.setForeground(Color.WHITE);
 		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp1.setBounds(188, 54, 160, 14);
 		pnHeader.add(lblAp1);
 		
-		lblAp2 = new JLabel("");
+		lblAp2 = new JLabel("Apellido Materno");
 		lblAp2.setForeground(Color.WHITE);
 		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp2.setBounds(358, 54, 160, 14);
@@ -112,7 +117,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtDireccion, s.blue, Color.WHITE);
 		s.myTextPrompt(txtDireccion, "Direccion", Color.GRAY);
 		
-		lblDireccion = new JLabel("");
+		lblDireccion = new JLabel("Domicilio");
 		lblDireccion.setForeground(Color.BLACK);
 		lblDireccion.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblDireccion.setBounds(27, 126, 200, 14);
@@ -125,7 +130,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtNumInt, s.blue, Color.white);
 		s.myTextPrompt(txtNumInt, "Numero Interior", Color.gray);
 		
-		lblNumInt = new JLabel("");
+		lblNumInt = new JLabel("No. Interior");
 		lblNumInt.setForeground(Color.BLACK);
 		lblNumInt.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNumInt.setBounds(336, 202, 200, 14);
@@ -138,7 +143,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtNumExt, s.blue, Color.white);
 		s.myTextPrompt(txtNumExt, "Numero Exterior", Color.GRAY);
 		
-		lblNumExt = new JLabel("");
+		lblNumExt = new JLabel("No. Exterior");
 		lblNumExt.setForeground(Color.BLACK);
 		lblNumExt.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNumExt.setBounds(27, 202, 200, 14);
@@ -151,23 +156,37 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtTelefono, s.blue, Color.WHITE);
 		s.myTextPrompt(txtTelefono, "Teléfono", Color.GRAY);
 		
-		lblTelefono = new JLabel("");
+		lblTelefono = new JLabel("Telefono");
 		lblTelefono.setForeground(Color.BLACK);
 		lblTelefono.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTelefono.setBounds(27, 281, 200, 14);
 		mainPanel.add(lblTelefono);
 		
-		btnNext.addMouseListener(this);
 		
-		s.placeholder(txtName, lblNombre, "Nombre");
-		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
-		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
+		
+		s.placeholder(txtName, lblNombre);
+		s.placeholder(txtAp1, lblAp1);
+		s.placeholder(txtAp2, lblAp2);
+		
+		btnBack = new JButton("");
+		btnBack.setBounds(10, 10, 32, 32);
+		pnHeader.add(btnBack);
+		s.btnIcon(btnBack, "views/back.png");
+		btnBack.addMouseListener(this);
+		
+		btnGuardar = new JButton("");
+		btnGuardar.setBounds(551, 10, 32, 32);
+		pnHeader.add(btnGuardar);
+		btnGuardar.setVisible(false);
+		s.btnIcon(btnGuardar, "views/saveWhite.png");
+		btnGuardar.addMouseListener(this);
+		btnGuardar.addActionListener(this);
 		
 	
-		s.placeholder(txtDireccion, lblDireccion, "Direccion");
-		s.placeholder(txtNumExt, lblNumExt, "Numero Exterior");
-		s.placeholder(txtNumInt, lblNumInt, "Numero Interior");
-		s.placeholder(txtTelefono, lblTelefono, "Telefono");
+		s.placeholder(txtDireccion, lblDireccion);
+		s.placeholder(txtNumExt, lblNumExt);
+		s.placeholder(txtNumInt, lblNumInt);
+		s.placeholder(txtTelefono, lblTelefono);
 		
 		lblWarning = new JLabel("");
 		lblWarning.setForeground(Color.RED);
@@ -175,7 +194,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		lblWarning.setBounds(134, 348, 341, 21);
 		mainPanel.add(lblWarning);
 		
-		lblColonia = new JLabel("");
+		lblColonia = new JLabel("Colonia");
 		lblColonia.setForeground(Color.BLACK);
 		lblColonia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblColonia.setBounds(336, 126, 200, 14);
@@ -185,7 +204,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		txtColonia.setColumns(10);
 		txtColonia.setBounds(336, 143, 200, 33);
 		mainPanel.add(txtColonia);
-		s.placeholder(txtColonia, lblColonia, "Colonia");
+		s.placeholder(txtColonia, lblColonia);
 		s.mdTextField(txtColonia, s.blue, Color.WHITE);
 		s.myTextPrompt(txtColonia, "Colonia", Color.gray);
 		
@@ -194,6 +213,13 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		alSave.lblMessage.setForeground(Color.black);
 		alSave.btnOk.addActionListener(this);
 		alSave.btnCancel.addActionListener(this);
+		
+		alOk.btnCancel.setVisible(false);
+		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alOk.lblMessage.setText("Datos guardados con exito");
+		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alOk.btnOk.setText("Ok");
+		alOk.btnOk.addActionListener(this);
 	}
 
 	@Override
@@ -207,6 +233,12 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 			s.hoverBorder(btnNext, Color.white);
 			s.btnPointer(btnNext);
 			
+		}else if(e.getSource() == btnBack) {
+			s.hoverBorder(btnBack, Color.white);
+			s.btnPointer(btnBack);
+		}else if(e.getSource() == btnGuardar) {
+			s.hoverBorder(btnGuardar, Color.white);
+			s.btnPointer(btnGuardar);
 		}
 	}
 
@@ -216,6 +248,8 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 			btnNext.setBorder(null);
 		}else if(e.getSource() == btnBack) {
 			btnBack.setBorder(null);
+		}else if(e.getSource() == btnGuardar) {
+			btnGuardar.setBorder(null);
 		}	
 	}
 
@@ -234,11 +268,28 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnNext) {
-			if(fullFields()) {
-				alSave.setVisible(true);
-			}
+			name = txtName.getText();
+			ap1 = txtAp1.getText();
+			ap2 = txtAp2.getText();
+			camposEditables(true);
+			btnNext.setVisible(false);
+			btnGuardar.setVisible(true);
 		}else if(e.getSource() == alSave.btnCancel) {
 			alSave.setVisible(false);
+		}else if(e.getSource() == alSave.btnOk) {
+			updateAval();
+			alOk.setVisible(true);
+			alSave.setVisible(false);
+		}else if(e.getSource() == alOk.btnOk) {
+			alOk.setVisible(false);
+			btnNext.setVisible(true);
+			camposEditables(false);
+			btnGuardar.setVisible(false);
+		}else if(e.getSource() == btnGuardar) {
+			if(fullFields()) {				
+				alSave.setVisible(true);
+				
+			}
 		}
 		
 	}
@@ -252,10 +303,13 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		}
 	}
 	
-	public void updateAval(String name,String ap1,String ap2) {
+	public void updateAval() {
+		
+		System.out.println(name+" "+ap1+" "+ap2+" "+idCliente);
+		
 		try {
-			c.update(" UPDATE avales SET id_Cliente = "+getIdClienteByName(name,ap1,ap2)+",Nombre = '"+txtName.getText()+"',Apellido_Paterno = '"+txtAp1.getText()+"',Apellido_Materno = '"+txtAp2.getText()+"',Direccion = '"+txtDireccion.getText()+"',"
-					+ "Num_Exterior = '"+txtNumExt.getText()+"',Num_Interior = '"+txtNumInt.getText()+"',Colonia = '"+txtColonia.getText()+"',Telefono = '"+txtTelefono.getText()+"';"); 
+			c.update(" UPDATE avales SET Nombre = '"+txtName.getText()+"',Apellido_Paterno = '"+txtAp1.getText()+"',Apellido_Materno = '"+txtAp2.getText()+"',Direccion = '"+txtDireccion.getText()+"',"
+					+ "Num_Exterior = '"+txtNumExt.getText()+"',Num_Interior = '"+txtNumInt.getText()+"',Colonia = '"+txtColonia.getText()+"',Telefono = '"+txtTelefono.getText()+"' WHERE id_Cliente = "+idCliente+" AND nombre = '"+name+"' AND Apellido_Paterno = '"+ap1+"' AND Apellido_Materno = '"+ap2+"';"); 
 					
 			
 		}catch(NumberFormatException nfe) {
@@ -263,7 +317,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		}
 	}
 	
-	public int getIdClienteByName(String name,String ap1,String ap2) {
+	public int clientePorNombre(String name,String ap1,String ap2) {
 		try {
 			ResultSet rs = c.query("SELECT * FROM clientes_personal where nombre = '"+name+"' AND Apellido_Paterno = '"+ap1+"' AND Apellido_Materno ='"+ap2+"';");
 			if(rs.next()) { 
@@ -272,7 +326,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		return (Integer) null;
+		return 0;
 	}
 	
 	public void fillAvalData(String name,String ap1,String ap2) {
@@ -300,4 +354,17 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 		lblNumExt.setText("");lblNumInt.setText("");lblNombre.setText("");
 		lblAp1.setText("");lblAp2.setText("");
 	}
+	
+	public void camposEditables(Boolean b){
+		txtName.setEditable(b);
+		txtAp1.setEditable(b);
+		txtAp2.setEditable(b);
+		txtDireccion.setEditable(b);
+		txtNumInt.setEditable(b);
+		txtNumExt.setEditable(b);
+		txtTelefono.setEditable(b);
+		txtColonia.setEditable(b);
+	}
+	
+	
 }

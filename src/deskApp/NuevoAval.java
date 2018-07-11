@@ -29,6 +29,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 	JTextField txtName,txtAp1,txtAp2,txtDireccion,txtNumInt,txtNumExt,txtTelefono,txtColonia;
 	JLabel lblColonia,lblNombre,lblAp1,lblAp2,lblDireccion,lblNumInt,lblNumExt,lblTelefono,lblHeader;
 	JButton btnOmit,btnBack;
+	
 	Alert alSave = new Alert(); 
 	Alert alNewAaval = new Alert();
 	public NuevoAval() {
@@ -66,7 +67,8 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		btnBack = new JButton("");
 		btnBack.setBounds(11, 11, 32, 32);
 		pnHeader.add(btnBack);
-		s.btnIcon(btnBack, "views/bacl.png");
+		s.btnIcon(btnBack, "views/back.png");
+		btnBack.addMouseListener(this);
 		
 		txtName = new JTextField();
 		txtName.setForeground(Color.WHITE);
@@ -92,19 +94,19 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtAp2, Color.white, s.blue);
 		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);
 		
-		lblNombre = new JLabel("");
+		lblNombre = new JLabel("Nombre(s)");
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNombre.setBounds(10, 54, 168, 14);
 		pnHeader.add(lblNombre);
 		
-		lblAp1 = new JLabel("");
+		lblAp1 = new JLabel("Apellido Paterno");
 		lblAp1.setForeground(Color.WHITE);
 		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp1.setBounds(188, 54, 160, 14);
 		pnHeader.add(lblAp1);
 		
-		lblAp2 = new JLabel("");
+		lblAp2 = new JLabel("Apellido Materno");
 		lblAp2.setForeground(Color.WHITE);
 		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblAp2.setBounds(358, 54, 160, 14);
@@ -117,7 +119,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtDireccion, s.blue, Color.WHITE);
 		s.myTextPrompt(txtDireccion, "Direccion", Color.GRAY);
 		
-		lblDireccion = new JLabel("");
+		lblDireccion = new JLabel("Domicilio");
 		lblDireccion.setForeground(Color.BLACK);
 		lblDireccion.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblDireccion.setBounds(27, 126, 200, 14);
@@ -130,7 +132,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtNumInt, s.blue, Color.white);
 		s.myTextPrompt(txtNumInt, "Numero Interior", Color.gray);
 		
-		lblNumInt = new JLabel("");
+		lblNumInt = new JLabel("No. Interior");
 		lblNumInt.setForeground(Color.BLACK);
 		lblNumInt.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNumInt.setBounds(336, 202, 200, 14);
@@ -143,7 +145,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtNumExt, s.blue, Color.white);
 		s.myTextPrompt(txtNumExt, "Numero Exterior", Color.GRAY);
 		
-		lblNumExt = new JLabel("");
+		lblNumExt = new JLabel("No. Exterior");
 		lblNumExt.setForeground(Color.BLACK);
 		lblNumExt.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblNumExt.setBounds(27, 202, 200, 14);
@@ -156,7 +158,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		s.mdTextField(txtTelefono, s.blue, Color.WHITE);
 		s.myTextPrompt(txtTelefono, "Teléfono", Color.GRAY);
 		
-		lblTelefono = new JLabel("");
+		lblTelefono = new JLabel("Telefono Fijo");
 		lblTelefono.setForeground(Color.BLACK);
 		lblTelefono.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTelefono.setBounds(27, 281, 200, 14);
@@ -164,15 +166,15 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		
 		btnNext.addMouseListener(this);
 		
-		s.placeholder(txtName, lblNombre, "Nombre");
-		s.placeholder(txtAp1, lblAp1, "Apellido Paterno");
-		s.placeholder(txtAp2, lblAp2, "Apellido Materno");
+		s.placeholder(txtName, lblNombre);
+		s.placeholder(txtAp1, lblAp1);
+		s.placeholder(txtAp2, lblAp2);
 		
 	
-		s.placeholder(txtDireccion, lblDireccion, "Direccion");
-		s.placeholder(txtNumExt, lblNumExt, "Numero Exterior");
-		s.placeholder(txtNumInt, lblNumInt, "Numero Interior");
-		s.placeholder(txtTelefono, lblTelefono, "Telefono");
+		s.placeholder(txtDireccion, lblDireccion);
+		s.placeholder(txtNumExt, lblNumExt);
+		s.placeholder(txtNumInt, lblNumInt);
+		s.placeholder(txtTelefono, lblTelefono);
 		
 		lblWarning = new JLabel("");
 		lblWarning.setForeground(Color.RED);
@@ -180,7 +182,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		lblWarning.setBounds(134, 348, 341, 21);
 		mainPanel.add(lblWarning);
 		
-		lblColonia = new JLabel("");
+		lblColonia = new JLabel("Colonia");
 		lblColonia.setForeground(Color.BLACK);
 		lblColonia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblColonia.setBounds(336, 126, 200, 14);
@@ -190,7 +192,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		txtColonia.setColumns(10);
 		txtColonia.setBounds(336, 143, 200, 33);
 		mainPanel.add(txtColonia);
-		s.placeholder(txtColonia, lblColonia, "Colonia");
+		s.placeholder(txtColonia, lblColonia);
 		s.mdTextField(txtColonia, s.blue, Color.WHITE);
 		s.myTextPrompt(txtColonia, "Colonia", Color.gray);
 		
@@ -225,6 +227,9 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 		}else if(e.getSource() == btnOmit) {
 			s.hoverBorder(btnOmit, s.blue);
 			s.btnPointer(btnOmit);
+		}else if(e.getSource() == btnBack) {
+			s.hoverBorder(btnBack, Color.white);
+			s.btnPointer(btnBack);
 		}
 	}
 

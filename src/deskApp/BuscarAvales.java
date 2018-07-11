@@ -25,17 +25,19 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-public class ShowAvalData extends JFrame implements ActionListener,MouseListener{
+public class BuscarAvales extends JFrame implements ActionListener,MouseListener{
 
 	ResultSet rs;
 	private JPanel contentPane;
 	JButton btnBack,btnInfoAvales,btnInfoEmpleo,btnInfoCliente,btnNext,btnAddAval;
 	Style s = new Style();
 	private JTable table;
+	int idCliente;
+	Conexion c = new Conexion();
 	NuevoAval ca = new NuevoAval();
 	MostarAval sa = new MostarAval();
 	Alert alAnother = new Alert();
-	public ShowAvalData() {
+	public BuscarAvales() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -149,7 +151,7 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		alAnother.btnCancel.addActionListener(this);
 		alAnother.btnOk.addActionListener(this);
 		
-		
+		sa.btnBack.addActionListener(this);
 		ca.btnBack.addActionListener(this);
 	}
 	@Override
@@ -169,7 +171,7 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			s.hoverBorder(btnInfoCliente, s.blue);
 		}else if(e.getSource() == btnBack) {
 			s.btnPointer(btnBack);
-			s.hoverBorder(btnBack, s.blue);
+			s.hoverBorder(btnBack, Color.white);
 		}else if(e.getSource() == btnNext) {
 			if(btnNext.isEnabled()) {
 				s.hoverBorder(btnNext, Color.WHITE);
@@ -191,6 +193,8 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			btnNext.setBorder(null);
 		}else if(e.getSource() == btnAddAval) {
 			btnAddAval.setBorder(null);
+		}else if(e.getSource() == btnBack) {
+			btnBack.setBorder(null);
 		}
 	}
 	
@@ -211,6 +215,12 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			int index = table.getSelectedRow();
 			sa.fillAvalData(table.getValueAt(index,0).toString(),table.getValueAt(index, 1).toString(),table.getValueAt(index, 2).toString());
 			sa.setVisible(true);
+			try {
+				sa.idCliente = rs.getInt("id");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			sa.camposEditables(false);
 			this.setVisible(false);
 		}else if(e.getSource() == btnAddAval) {
 			try {
@@ -231,9 +241,14 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 		}else if(e.getSource() == ca.btnBack) {
 			this.setVisible(true);
 			ca.setVisible(false);
+			llenarTabla();
 		}else if(e.getSource() == alAnother.btnOk) {
 			ca.clearFields();
 			alAnother.setVisible(false);
+		}else if (e.getSource() == sa.btnBack) {
+			this.setVisible(true);
+			sa.setVisible(false);
+			llenarTabla();
 		}
 	}	
 	
@@ -249,4 +264,22 @@ public class ShowAvalData extends JFrame implements ActionListener,MouseListener
 			ex.printStackTrace();
 		}
 	}
+	
+	public void llenarTabla() {
+		DefaultTableModel mod = (DefaultTableModel) table.getModel();
+		mod.setRowCount(0);
+		
+		try {
+			System.out.println(rs.getInt("id" )+ " Cliente");
+			ResultSet myRs = c.query("SELECT * FROM avales WHERE id_Cliente = "+rs.getInt("id")+" AND status = 1;");
+			while(myRs.next()) {
+				mod.addRow(new Object[] {myRs.getString("nombre"),myRs.getString("Apellido_Paterno"),myRs.getString("Apellido_Materno"),myRs.getString("Direccion"),myRs.getString("Num_Exterior")
+				});
+			}					
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
 }

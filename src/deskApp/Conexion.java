@@ -7,21 +7,26 @@ import java.sql.Statement;
 
 public class Conexion {
 	public String url = "jdbc:mysql://localhost:3306/", db = "gfg",usuario = "root", password = "";
-	Connection con;
-	ResultSet myRs;
+	
 	
 	public ResultSet query(String sentence) {
+		Connection con;
+		ResultSet myRs = null;
 		try {
 			con = DriverManager.getConnection(url+db,usuario,password);
 			Statement mystmt = con.createStatement();
 			myRs = mystmt.executeQuery(sentence);
+			if(myRs.wasNull()) {
+				con.close();
+			}
 		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
+}
+		
 		return myRs;
 	}
 	
 	public void update(String sentence) {
+		Connection con;
 		try {
 		con = DriverManager.getConnection(url+db,usuario,password);	
 		Statement mystmt = con.createStatement();
@@ -29,5 +34,8 @@ public class Conexion {
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		
 	}
+	
+	
 }
