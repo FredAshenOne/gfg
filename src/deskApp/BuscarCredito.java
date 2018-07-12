@@ -29,17 +29,19 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
 
-public class BuscarCredito extends JFrame implements ActionListener, MouseListener, KeyListener {
+public class BuscarCredito extends JFrame implements ActionListener, MouseListener {
 
 	Style s = new Style();
-	JButton btnBack, btnNext;
+	JButton btnBack, btnNext, btnPersonal, btnGrupal;
 	JLabel lblHeader;
 	private JPanel contentPane;
-	private JTextField txtSearch;
+	public JTextField txtSearch;
 	private JTable table;
 	JScrollPane scrollPane;
 	int idUser;
+	int tipoCredito = 1;
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
 	Alert alCreate = new Alert();
@@ -81,9 +83,15 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		pnHeader.add(lblHeader);
 
 		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				fillTable();
+			}
+		});
 		txtSearch.setForeground(Color.WHITE);
 		txtSearch.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 20));
-		txtSearch.setBounds(100, 79, 447, 60);
+		txtSearch.setBounds(100, 79, 359, 60);
 		pnHeader.add(txtSearch);
 		txtSearch.setColumns(10);
 		s.mdTextField(txtSearch, Color.white, s.blue);
@@ -119,11 +127,10 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		mainPanel.add(scrollPane);
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setBackground(Color.WHITE);
-		txtSearch.addKeyListener(this);
 		table = new JTable();
 
-		DefaultTableModel model = new DefaultTableModel(new Object[][] {},
-				new String[] { "id Cliente","id Credito", "Nombre", "Apellido Paterno", "Apellido Materno", "Cantidad" }) {
+		DefaultTableModel model = new DefaultTableModel(new Object[][] {}, new String[] { "Credito", "Cliente",
+				"Nombre", "A. Paterno", "A. Materno", "Cantidad" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -145,6 +152,29 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		table.setDefaultRenderer(String.class, centerRenderer);
 		btnNext.setEnabled(false);
 
+		btnPersonal = new JButton("Personal");
+
+		btnGrupal = new JButton("Grupal");
+		btnGrupal = new JButton("Grupal");
+		btnGrupal.setForeground(Color.WHITE);
+		btnGrupal.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		btnGrupal.setBorder(null);
+		btnGrupal.setBounds(537, 107, 46, 32);
+		pnHeader.add(btnGrupal);
+		btnGrupal.addActionListener(this);
+		btnGrupal.addMouseListener(this);
+		s.btnHover(btnGrupal, s.blue, s.blue, Color.white);
+
+		btnPersonal = new JButton("Personal");
+		btnPersonal.setForeground(Color.WHITE);
+		btnPersonal.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		btnPersonal.setBorder(null);
+		btnPersonal.setBounds(491, 107, 46, 32);
+		s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+		pnHeader.add(btnPersonal);
+		btnPersonal.addActionListener(this);
+		btnPersonal.addMouseListener(this);
+
 		ListSelectionModel listSelectionModel = table.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -152,9 +182,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 				btnNext.setEnabled(!lsm.isSelectionEmpty());
 			}
 		});
-		
 
-		
 	}
 
 	@Override
@@ -173,6 +201,19 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		} else if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
 			s.btnPointer(btnBack);
+		} else if (e.getSource() == btnGrupal) {
+			if (tipoCredito == 1) {
+				s.btnHover(btnGrupal, Color.WHITE, s.blue, Color.white);
+			} else {
+				s.btnHover(btnGrupal, Color.white, Color.WHITE, s.blue);
+			}
+
+		} else if (e.getSource() == btnPersonal) {
+			if (tipoCredito == 2) {
+				s.btnHover(btnPersonal, Color.WHITE, s.blue, Color.white);
+			} else {
+				s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+			}
 		}
 	}
 
@@ -182,6 +223,18 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 			btnNext.setBorder(null);
 		} else if (e.getSource() == btnBack) {
 			btnBack.setBorder(null);
+		} else if (e.getSource() == btnPersonal) {
+			if (tipoCredito == 1) {
+				s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+			} else {
+				s.btnHover(btnPersonal, s.blue, s.blue, Color.white);
+			}
+		} else if (e.getSource() == btnGrupal) {
+			if (tipoCredito == 2) {
+				s.btnHover(btnGrupal, Color.white, Color.WHITE, s.blue);
+			} else {
+				s.btnHover(btnGrupal, s.blue, s.blue, Color.white);
+			}
 		}
 	}
 
@@ -198,7 +251,35 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNext) {
-			
+
+		} else if (e.getSource() == btnGrupal) {
+			if (tipoCredito == 1) {
+				tipoCredito = 2;
+				table.getColumnModel().getColumn(1).setHeaderValue("Grupo");
+				table.getColumnModel().getColumn(2).setHeaderValue("Nombre");
+				table.getColumnModel().getColumn(3).setHeaderValue("Cantidad");
+				table.getColumnModel().getColumn(4).setHeaderValue("");
+				table.getColumnModel().getColumn(5).setHeaderValue("");
+				s.btnHover(btnPersonal, s.blue, s.blue, Color.white);
+				s.btnHover(btnGrupal, Color.white, Color.WHITE, s.blue);
+				btnGrupal.setSelected(false);
+				fillTable();
+				table.getTableHeader().repaint();
+			}
+		} else if (e.getSource() == btnPersonal) {
+			if (tipoCredito == 2) {
+				table.getColumnModel().getColumn(1).setHeaderValue("Cliente");
+				table.getColumnModel().getColumn(2).setHeaderValue("Nombre");
+				table.getColumnModel().getColumn(3).setHeaderValue("A. Paterno");
+				table.getColumnModel().getColumn(4).setHeaderValue("A. Materno");
+				table.getColumnModel().getColumn(5).setHeaderValue("Can tidad");
+				tipoCredito = 1;
+				s.btnHover(btnGrupal, s.blue, s.blue, Color.white);
+				s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+				btnPersonal.setSelected(false);
+				fillTable();
+				table.getTableHeader().repaint();
+			}
 		}
 
 	}
@@ -208,24 +289,54 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 			String data = txtSearch.getText();
 			String[] nombre = data.split(" ");
 			if (nombre.length > 2) {
-				return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente WHERE cp.nombre = '" + nombre[0]
-						+ "' AND cp.apellido_paterno = '" + nombre[1] + "' AND cp.apellido_materno = '" + nombre[2] + "';");
+				return c.query(
+						"SELECT * FROM clientes_personal cp LEFT JOIN credito_Personal c on cp.id = c.id_Cliente WHERE c.status = 1 AND cp.nombre LIKE '%"
+								+ nombre[0] + "%' AND cp.apellido_paterno LIKE '%" + nombre[1]
+								+ "%' AND cp.apellido_materno LIKE '%" + nombre[2] + "%';");
 			} else if (nombre.length == 2) {
-				return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente credito c WHERE  cp.nombre = '" + nombre[0]
-						+ "' AND cp.apellido_Paterno = '" + nombre[1] + "' OR (cp.apellido_Paterno = '" + nombre[0]
-						+ "' AND cp.apellido_Materno = '" + nombre[1] + "');");
+				return c.query(
+						"SELECT * FROM clientes_personal cp LEFT JOIN credito_Personal c on cp.id = c.id_Cliente WHERE c.status = 1 AND  cp.nombre LIKE '%"
+								+ nombre[0] + "%' AND cp.apellido_Paterno LIKE '%" + nombre[1]
+								+ "%' OR (cp.apellido_Paterno LIKE '%" + nombre[0]
+								+ "%' AND cp.apellido_Materno LIKE '%" + nombre[1] + "%');");
 			} else if (nombre.length == 1) {
+
 				try {
 					int id = Integer.parseInt(data);
-					return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente WHERE cp.id = " + id + " OR c.id = "+id+";");
+					if (tipoCredito == 1) {
+						
+						return c.query(
+								"SELECT * FROM clientes_personal cp LEFT JOIN credito_Personal c on cp.id = c.id_Cliente WHERE c.status = 1 AND cp.id = "
+										+ id + " OR c.id = " + id + ";");
+					}else {
+						return c.query(
+								"SELECT * FROM grupos cp LEFT JOIN credito_grupal c on cp.id = c.id_Cliente WHERE c.status = 1 AND cp.id = "
+										+ id + " OR c.id = " + id + ";");
+					}
+
 				} catch (NumberFormatException nfe) {
-					return c.query("SELECT * FROM clientes_personal cp LEFT JOIN credito c on cp.id = c.id_Cliente WHERE cp.nombre LIKE '%" + nombre[0]
-							+ "%' OR cp.apellido_Paterno LIKE '%" + nombre[0] + "%' OR cp.apellido_Materno LIKE '%"
-							+ nombre[0] + "%';");
+					if(tipoCredito == 1) {
+						return c.query(
+								"SELECT * FROM clientes_personal cp LEFT JOIN credito_Personal c on cp.id = c.id_Cliente WHERE c.status = 1 AND c.id IS NOT NULL AND (cp.nombre LIKE '%"
+										+ nombre[0] + "%' OR cp.apellido_Paterno LIKE '%" + nombre[0]
+										+ "%' OR cp.apellido_Materno LIKE '%" + nombre[0] + "%');");
+					}else {
+						return c.query(
+								"SELECT * FROM grupos cp LEFT JOIN credito_grupal c on cp.id = c.id_grupo WHERE c.status = 1 AND c.id IS NOT NULL AND cp.nombre LIKE '%"
+										+ data +"%';");
+					}
+					
+
 				}
 			} else {
-				lblWarning.setText("No se encontraron resultados");
-				return null;
+				if(tipoCredito == 1) {
+					return c.query(
+							"SELECT * FROM clientes_personal cp LEFT JOIN credito_Personal c on cp.id = c.id_Cliente WHERE c.status = 1 AND c.id IS NOT NULL;");
+				}else {
+					System.out.println("aqui si llega");
+					return c.query("SELECT * FROM grupos cp LEFT JOIN credito_grupal c on cp.id = c.id_grupo WHERE c.status = 1 AND c.id IS NOT NULL;");
+				}
+				
 			}
 		} catch (Exception ex) {
 			lblWarning.setText("No se encontraron resultados");
@@ -237,24 +348,30 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		DefaultTableModel mod = (DefaultTableModel) table.getModel();
 		mod.setRowCount(0);
 		ResultSet res = searchCredito();
-		ResultSet resv = searchCredito();
 		try {
-			if (resv.next()) {
+			if(tipoCredito == 1) {
 				while (res.next()) {
-					mod.addRow(new Object[] { res.getString("id"),res.getString("c.id"), res.getString("nombre"),
+					mod.addRow(new Object[] { res.getString("c.id"), res.getString("cp.id"), res.getString("nombre"),
 							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
 							res.getString("c.Cantidad_inicial") });
 					scrollPane.setVisible(true);
 					lblWarning.setText("");
 				}
-			} else {
-				lblWarning.setText("No se encontraron resultados");
-				scrollPane.setVisible(false);
+
+			}else {
+				while (res.next()) {
+					mod.addRow(new Object[] { res.getString("c.id"), res.getString("cp.id"), res.getString("cp.nombre"),
+							res.getString("c.Cantidad_inicial") });
+					scrollPane.setVisible(true);
+					lblWarning.setText("");
+				}
 			}
-		} catch (SQLException e) {
+		}catch (SQLException e) {
+			e.printStackTrace();
 			lblWarning.setText("No se encontraron resultados");
 			scrollPane.setVisible(false);
-		}
+		}	
+		
 	}
 
 	public ResultSet getClientById(int id) {
@@ -266,22 +383,4 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		}
 		return null;
 	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == e.VK_ENTER) {
-			fillTable();
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
-
 }

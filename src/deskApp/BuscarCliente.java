@@ -256,7 +256,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			} else if (nombre.length == 1) {
 				try {
 					int id = Integer.parseInt(data);
-					return c.query("SELECT * FROM clientes_personal WHERE id = " + id + ";");
+					return c.query("SELECT * FROM clientes_personal WHERE id LIKE " + id + ";");
 				} catch (NumberFormatException nfe) {					
 					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0] + "%' OR apellido_Paterno LIKE '%"+nombre[0]+"%' OR apellido_Materno LIKE '%"+nombre[0]+"%';");
 				}

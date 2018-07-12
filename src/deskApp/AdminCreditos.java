@@ -132,6 +132,7 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		btnQuery.addActionListener(this);
 		bcc.btnBack.addActionListener(this);
 		bcc.btnNext.addActionListener(this);
+		buscarCred.btnBack.addActionListener(this);
 		
 	}
 
@@ -186,6 +187,11 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 			bcc.setVisible(false);
 		}else if(e.getSource() == btnQuery) {
 			buscarCred.setVisible(true);
+			this.setVisible(false);
+			buscarCred.fillTable();
+		}else if(e.getSource() == buscarCred.btnBack) {
+			 this.setVisible(true);
+			 buscarCred.setVisible(false);
 		}
 	}
 }

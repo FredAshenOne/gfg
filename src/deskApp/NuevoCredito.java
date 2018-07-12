@@ -16,6 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -97,15 +100,16 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 			public void actionPerformed(ActionEvent arg0) {
 				if (cbTipo.getSelectedIndex() > 0) {
 					semanas = 15;
+					cbInteres.setSelectedIndex(0);
+					cbInteres.setVisible(false);
 					if (cbTipo.getSelectedIndex() > 1) {
 						semanas = 16;
-
+						cbInteres.setSelectedIndex(0);
 						if (cbTipo.getSelectedIndex() > 2) {
 							cbInteres.setVisible(true);
-							lblInteres.setVisible(true);
 						} else {
 							cbInteres.setVisible(false);
-							lblInteres.setVisible(false);
+							
 						}
 					}
 				}
@@ -140,7 +144,6 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 			public void actionPerformed(ActionEvent e) {
 				if (cbInteres.getSelectedIndex() > 0) {
 					interes = 7;
-					lblInteresWarning.setVisible(true);
 					if (cbInteres.getSelectedIndex() > 1) {
 						interes = 8;
 						if (cbInteres.getSelectedIndex() > 2) {
@@ -219,14 +222,29 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 
 	public void insertarCredito(int id) {
 		int cantidad = Integer.parseInt(txtCantidad.getText());
-
 		try {
-			c.update(
-					"INSERT INTO credito (id_Cliente,Cantidad_Inicial,Cantidad_Actual,Tipo_Credito,Fecha_inicio,Status) VALUES ("
-							+ id + "," + cantidad + "," + cantidad + "," + cbTipo.getSelectedIndex() + ",'"
-							+ txtFecha.getText() + "',1);");
+			if(tipoCredito == 1) {
+				if(cbTipo.getSelectedIndex() == 1 || cbTipo.getSelectedIndex() == 2) {
+					c.update(
+								"INSERT INTO credito_Personal (id_Cliente,Cantidad_Inicial,Cantidad_Actual,Tipo_Credito,Fecha_inicio,Status) VALUES ("
+										+ id + "," + cantidad + "," + cantidad + "," + cbTipo.getSelectedIndex() + ",'"
+										+ txtFecha.getText() + "',1);");
+	
+				}else if(cbTipo.getSelectedIndex() == 3){
+					
+				}
+			}else {
+				if(cbTipo.getSelectedIndex() == 1 || cbTipo.getSelectedIndex() == 2) {
+					c.update(
+						"INSERT INTO credito_Grupal (id_Grupo,Cantidad_Inicial,Cantidad_Actual,Tipo_Credito,Fecha_inicio,Status) VALUES ("
+								+ id + "," + cantidad + "," + cantidad + "," + cbTipo.getSelectedIndex() + ",'"
+								+ txtFecha.getText() + "',1);");	
+				}else if(cbTipo.getSelectedIndex() == 3){
+					
+				}
+			}
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		}
 	}
 
@@ -235,24 +253,37 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		if (cbTipo.getSelectedIndex() != 3) {
 			for (int i = 1; i < semanas; i++) {
 				k += 7;
-				c.update(
-						"INSERT INTO tarjetones (id_Cliente,id_Credito,numero_Pago,cantidad,fecha_Asignada,status) VALUES ("
-								+ idCliente + "," + idCredito + "," + i + "," + cantidad + ",DATE_ADD('"
-								+ txtFecha.getText() + "',INTERVAL " + k + " DAY),2);");
-
+				if(tipoCredito == 1) {
+					c.update(
+							"INSERT INTO credito_Personal (id_Cliente,id_Credito,numero_Pago,cantidad,fecha_Asignada,status) VALUES ("
+									+ idCliente + "," + idCredito + "," + i + "," + cantidad + ",DATE_ADD('"
+									+ txtFecha.getText() + "',INTERVAL " + k + " DAY),2);");
+				}else {
+					c.update(
+							"INSERT INTO credito_Personal (id_Cliente,id_Credito,numero_Pago,cantidad,fecha_Asignada,status) VALUES ("
+									+ idCliente + "," + idCredito + "," + i + "," + cantidad + ",DATE_ADD('"
+									+ txtFecha.getText() + "',INTERVAL " + k + " DAY),2);");
+				}
+				
 			}
 		}
 	}
 
-	public Boolean creditoPersonalActivo(int idCliente) {
+	public Boolean creditoActivo(int idCliente) {
 		try {
-			return c.query("SELECT * FROM credito WHERE id_Cliente = " + idCliente + " AND status = 1;").next();
-
+			System.out.println(tipoCredito);
+			if(tipoCredito == 1) {
+				return c.query("SELECT * FROM credito_Personal WHERE id_Cliente = " + idCliente + " AND status = 1;").next();
+			}else {
+				System.out.println(tipoCredito);
+				return c.query("SELECT * FROM credito_Grupal WHERE id_Grupo = " + idCliente + " AND status = 1;").next();
+			}
+			
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return false;
-
 	}
 
 	public void limpiarCampos() {

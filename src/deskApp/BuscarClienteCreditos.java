@@ -210,6 +210,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 			if (btnNext.isEnabled()) {
 				s.hoverBorder(btnNext, Color.white);
 				s.btnPointer(btnNext);
+				
 
 			}
 		} else if (e.getSource() == btnBack) {
@@ -265,12 +266,18 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNext) {
+			nc.tipoCredito = tipoCredito;
 			int index = table.getSelectedRow();
 			int idCliente = Integer.parseInt(table.getModel().getValueAt(index, 0).toString());
 				
-				if (!nc.creditoPersonalActivo(idCliente)) {
+				if (!nc.creditoActivo(idCliente)) {					
 					nc.setVisible(true);
 					this.setVisible(false);
+					if(tipoCredito == 1) {
+						nc.lblHeader.setText("Nuevo Credito para : "+table.getModel().getValueAt(index, 1).toString()+" "+table.getModel().getValueAt(index, 2).toString());
+					}else {
+						nc.lblHeader.setText("Nuevo Credito para : "+table.getModel().getValueAt(index, 1).toString());
+					}
 				} else {
 					lblWarning.setText("Este cliente ya tiene un credito Activo");
 					lblWarning.setForeground(s.red);

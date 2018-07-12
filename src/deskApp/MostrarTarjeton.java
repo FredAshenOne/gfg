@@ -21,6 +21,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	JButton btnBack,btnNext;
 	Style s = new Style();
 	private JPanel contentPane;
+	int tipoCredito;
 
 	public MostrarTarjeton() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,8 +72,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
 		
 	}
 
