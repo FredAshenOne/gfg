@@ -141,10 +141,11 @@ public class Style {
 		TextPrompt tp = new TextPrompt(str, txt);
 		tp.setFont(txt.getFont());
 		tp.setForeground(c);
+		tp.setHorizontalAlignment(txt.getHorizontalAlignment());
 	}
 	
 	
-	public boolean dateChecker(String text) {
+	public boolean checarFecha(String text) {
 	    if (text == null || !text.matches("\\d{4}-[01]\\d-[0-3]\\d"))
 	        return false;
 	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

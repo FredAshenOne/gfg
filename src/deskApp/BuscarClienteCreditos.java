@@ -34,7 +34,7 @@ import java.awt.event.KeyAdapter;
 public class BuscarClienteCreditos extends JFrame implements ActionListener, MouseListener {
 
 	Style s = new Style();
-	JButton btnBack, btnNext,btnCreditoGrupal,btnCreditoPersonal;
+	JButton btnBack, btnNext, btnCreditoGrupal, btnCreditoPersonal;
 	JLabel lblHeader;
 	private JPanel contentPane;
 	private JTextField txtSearch;
@@ -45,8 +45,10 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
 	Alert alCreate = new Alert();
-	Alert alOk = new Alert();
+	Alert alert = new Alert();
 	int tipoCredito = 1;
+	MostrarTarjeton mt = new MostrarTarjeton();
+
 	public BuscarClienteCreditos() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -151,7 +153,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
 		btnNext.setEnabled(false);
-		
+
 		btnCreditoGrupal = new JButton("Grupal");
 		btnCreditoGrupal.setForeground(Color.WHITE);
 		btnCreditoGrupal.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -161,7 +163,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		btnCreditoGrupal.addActionListener(this);
 		btnCreditoGrupal.addMouseListener(this);
 		s.btnHover(btnCreditoGrupal, s.blue, s.blue, Color.white);
-		
+
 		btnCreditoPersonal = new JButton("Personal");
 		btnCreditoPersonal.setForeground(Color.WHITE);
 		btnCreditoPersonal.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -170,15 +172,16 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		pnHeader.add(btnCreditoPersonal);
 		btnCreditoPersonal.addActionListener(this);
 		btnCreditoPersonal.addMouseListener(this);
-		
+
 		s.btnHover(btnCreditoGrupal, s.blue, s.blue, Color.white);
 		s.btnHover(btnCreditoPersonal, Color.white, Color.WHITE, s.blue);
-		
+
 		ListSelectionModel listSelectionModel = table.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 				btnNext.setEnabled(!lsm.isSelectionEmpty());
+
 			}
 		});
 
@@ -186,14 +189,16 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		alCreate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
 		alCreate.btnCancel.addActionListener(this);
 		alCreate.btnOk.addActionListener(this);
-
-		alOk.btnCancel.setVisible(false);
-		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
-		alOk.lblMessage.setText("Datos guardados con exito");
-		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
-		alOk.btnOk.setText("Ok");
-		alOk.btnOk.addActionListener(this);
-
+		
+		alert.lblMessage.setText("<html><body>Este cliente ya tiene un credito activo <br> Desea agretar otro?</body></html>");
+		alert.lblAlertIcon.setIcon(new ImageIcon("views/alert.png"));		
+		alert.btnOk.setText("Si");
+		alert.btnOk.addActionListener(this);
+		alert.btnCancel.setText("No");
+		alert.btnCancel.addActionListener(this);
+		
+		mt.btnBack.addActionListener(this);
+		
 		nc.btnNext.addActionListener(this);
 		nc.btnBack.addActionListener(this);
 
@@ -210,23 +215,22 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 			if (btnNext.isEnabled()) {
 				s.hoverBorder(btnNext, Color.white);
 				s.btnPointer(btnNext);
-				
 
 			}
 		} else if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
 			s.btnPointer(btnBack);
-		}else if(e.getSource() == btnCreditoGrupal) {
-			if(tipoCredito == 1) {
+		} else if (e.getSource() == btnCreditoGrupal) {
+			if (tipoCredito == 1) {
 				s.btnHover(btnCreditoGrupal, Color.WHITE, s.blue, Color.white);
-			}else {
+			} else {
 				s.btnHover(btnCreditoGrupal, Color.white, Color.WHITE, s.blue);
 			}
-			
-		}else if(e.getSource() == btnCreditoPersonal) {
-			if(tipoCredito == 2) {
+
+		} else if (e.getSource() == btnCreditoPersonal) {
+			if (tipoCredito == 2) {
 				s.btnHover(btnCreditoPersonal, Color.WHITE, s.blue, Color.white);
-			}else {
+			} else {
 				s.btnHover(btnCreditoPersonal, Color.white, Color.WHITE, s.blue);
 			}
 		}
@@ -238,17 +242,17 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 			btnNext.setBorder(null);
 		} else if (e.getSource() == btnBack) {
 			btnBack.setBorder(null);
-		}else if(e.getSource() == btnCreditoPersonal) {
-			if(tipoCredito == 1) {
-			s.btnHover(btnCreditoPersonal, Color.white, Color.WHITE, s.blue);
-			}else {
+		} else if (e.getSource() == btnCreditoPersonal) {
+			if (tipoCredito == 1) {
+				s.btnHover(btnCreditoPersonal, Color.white, Color.WHITE, s.blue);
+			} else {
 				s.btnHover(btnCreditoPersonal, s.blue, s.blue, Color.white);
 			}
-		}else if(e.getSource() == btnCreditoGrupal) {
-			if(tipoCredito == 2) {
+		} else if (e.getSource() == btnCreditoGrupal) {
+			if (tipoCredito == 2) {
 				s.btnHover(btnCreditoGrupal, Color.white, Color.WHITE, s.blue);
-			}else {
-				s.btnHover(btnCreditoGrupal, s.blue,s.blue, Color.white);
+			} else {
+				s.btnHover(btnCreditoGrupal, s.blue, s.blue, Color.white);
 			}
 		}
 	}
@@ -269,68 +273,93 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 			nc.tipoCredito = tipoCredito;
 			int index = table.getSelectedRow();
 			int idCliente = Integer.parseInt(table.getModel().getValueAt(index, 0).toString());
+			if (!nc.creditoActivo(idCliente)) {
+				nc.lblHeader.setText("Nuevo Credito para : " + table.getModel().getValueAt(index, 1).toString() + " "
+						+ table.getModel().getValueAt(index, 2).toString());
+				nc.setVisible(true);
+				this.setVisible(false);
+			}else {
+				alert.setVisible(true);
 				
-				if (!nc.creditoActivo(idCliente)) {					
-					nc.setVisible(true);
-					this.setVisible(false);
-					if(tipoCredito == 1) {
-						nc.lblHeader.setText("Nuevo Credito para : "+table.getModel().getValueAt(index, 1).toString()+" "+table.getModel().getValueAt(index, 2).toString());
-					}else {
-						nc.lblHeader.setText("Nuevo Credito para : "+table.getModel().getValueAt(index, 1).toString());
-					}
-				} else {
-					lblWarning.setText("Este cliente ya tiene un credito Activo");
-					lblWarning.setForeground(s.red);
-				}
+			}
 
 		} else if (e.getSource() == nc.btnNext) {
 			if (nc.camposCompletos()) {
-				alCreate.setVisible(true);
+				if (s.checarFecha(nc.txtFecha.getText())) {
+					alCreate.setVisible(true);
+				} else {
+					nc.lblWarning.setText("La fecha no es correcta, verifique el formato");
+				}
+			} else {
+				nc.lblWarning.setText("Algunos campos estan vacíos");
 			}
 
 		} else if (e.getSource() == alCreate.btnOk) {
 			int index = table.getSelectedRow();
 			int idCliente = Integer.parseInt(table.getModel().getValueAt(index, 0).toString());
+			if (tipoCredito == 1) { // si es credito personal
+				nc.lblHeader.setText("Nuevo Credito para : " + table.getModel().getValueAt(index, 1).toString() + " "
+						+ table.getModel().getValueAt(index, 2).toString());
+				if (nc.cbTipo.getSelectedIndex() < 3) { // si es credito semanal
+					nc.crearCreditoPersonal(idCliente);
+					if (creditoPersonalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
+						nc.crearTarjeton(idCliente,
+								idCreditoPersonalPorDatos(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText()));
+						alCreate.setVisible(false);
+						mt.setVisible(true);
+						
+					}
+				} else {
+					
+					
+					nc.crearCreditoPersonal(idCliente);
+					if (creditoPersonalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
+						alCreate.setVisible(false);
+						
+						
+					}
 
-			nc.insertarCredito(idCliente);
-			if (creditoIngresado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
-				ResultSet rsCredito;
-				int idCredito = 0;
-				try { 
-					rsCredito = obtenerCreditoPorDatos(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText());
-					rsCredito.next();
-					idCredito = rsCredito.getInt("id");
-				} catch (SQLException e1) {
-					e1.printStackTrace();
 				}
-				nc.crearTarjeton(idCliente, idCredito);
-				alOk.setVisible(true);
-				alCreate.setVisible(false);
-				nc.setVisible(false);
-			}
 
-		} else if (e.getSource() == alOk.btnOk) {
-			alOk.setVisible(false);
-			this.setVisible(true);
+			} else { // si es credito grupal
+				nc.lblHeader.setText("Nuevo Credito para : " + table.getModel().getValueAt(index, 1).toString());
+				if (nc.cbTipo.getSelectedIndex() < 3) { // si es credito semanal
+					nc.crearCreditoGrupal(idCliente);
+					if (creditoGrupalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
+						nc.crearTarjeton(idCliente,
+								idCreditoGrupalPorDatos(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText()));
+						alCreate.setVisible(false);
+						mt.setVisible(true);
+						mt.llenarTabla(buscarTarjetonGrupal(idCreditoGrupalPorDatos(idCliente,nc.txtFecha.getText(), nc.txtCantidad.getText())));
+					}
+				} else {
+					nc.crearCreditoGrupal(idCliente);
+					if (creditoGrupalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
+						alCreate.setVisible(false);
+						
+					}
+				}
+
+			}
 		} else if (e.getSource() == alCreate.btnCancel) {
 			alCreate.setVisible(false);
 		} else if (e.getSource() == nc.btnBack) {
 			this.setVisible(true);
 			nc.setVisible(false);
-		}else if(e.getSource() == btnCreditoGrupal) {
-			if(tipoCredito == 1) {
+		} else if (e.getSource() == btnCreditoGrupal) {
+			if (tipoCredito == 1) {
 				tipoCredito = 2;
 				table.getColumnModel().getColumn(2).setHeaderValue("Fecha Creacion");
 				table.getColumnModel().getColumn(3).setHeaderValue("");
 				table.getColumnModel().getColumn(4).setHeaderValue("");
 				s.btnHover(btnCreditoPersonal, s.blue, s.blue, Color.white);
-				s.btnHover(btnCreditoGrupal,Color.white, Color.WHITE, s.blue);
+				s.btnHover(btnCreditoGrupal, Color.white, Color.WHITE, s.blue);
 				btnCreditoGrupal.setSelected(false);
 				llenarTabla();
 				table.getTableHeader().repaint();
 			}
-		}else if(e.getSource() == btnCreditoPersonal) {
-			if(tipoCredito == 2) {				
+		} else if (e.getSource() == btnCreditoPersonal) {
+			if (tipoCredito == 2) {
 				table.getColumnModel().getColumn(2).setHeaderValue("A. Paterno");
 				table.getColumnModel().getColumn(3).setHeaderValue("A. Materno");
 				table.getColumnModel().getColumn(4).setHeaderValue("Dirección");
@@ -341,6 +370,18 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 				llenarTabla();
 				table.getTableHeader().repaint();
 			}
+		}else if(e.getSource() == mt.btnBack) {
+			mt.setVisible(false);
+			this.setVisible(true);
+		}else if(e.getSource() == alert.btnOk) {
+			int index = table.getSelectedRow();
+			nc.lblHeader.setText("Nuevo Credito para : " + table.getModel().getValueAt(index, 1).toString() + " "
+					+ table.getModel().getValueAt(index, 2).toString());
+			nc.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == alert.btnCancel) {
+			this.setVisible(true);
+			alert.setVisible(false);
 		}
 	}
 
@@ -348,10 +389,11 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		try {
 			String data = txtSearch.getText();
 			String[] nombre = data.split(" ");
-			if(tipoCredito == 1) {
+			if (tipoCredito == 1) {
 				if (nombre.length > 2) {
 					return c.query("SELECT * FROM clientes_personal WHERE nombre = '" + nombre[0]
-							+ "' AND apellido_paterno = '" + nombre[1] + "' AND apellido_materno = '" + nombre[2] + "';");
+							+ "' AND apellido_paterno = '" + nombre[1] + "' AND apellido_materno = '" + nombre[2]
+							+ "';");
 				} else if (nombre.length == 2) {
 					return c.query("SELECT * FROM clientes_personal WHERE  nombre = '" + nombre[0]
 							+ "' AND apellido_Paterno = '" + nombre[1] + "' OR (apellido_Paterno = '" + nombre[0]
@@ -368,11 +410,11 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 				} else {
 					lblWarning.setText("No se encontraron resultados");
 					return null;
-				}
-			}else {
-				return c.query("SELECT * FROM grupos WHERE nombre LIKE '%" +data+"%';");
+				}  
+			} else {
+				return c.query("SELECT * FROM grupos WHERE nombre LIKE '%" + data + "%';");
 			}
-			
+
 		} catch (Exception ex) {
 			lblWarning.setText("No se encontraron resultados");
 			return null;
@@ -384,8 +426,8 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		mod.setRowCount(0);
 		ResultSet res = searchClient();
 		ResultSet resv = searchClient();
-		if(tipoCredito == 1) {
-			
+		if (tipoCredito == 1) {
+
 			try {
 				if (resv.next()) {
 					while (res.next()) {
@@ -403,13 +445,12 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 				lblWarning.setText("No se encontraron resultados");
 				scrollPane.setVisible(false);
 			}
-		}else {
+		} else {
 			try {
 				if (resv.next()) {
 					while (res.next()) {
 						mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"),
-								res.getString("fecha_Creacion")
-								});
+								res.getString("fecha_Creacion") });
 						scrollPane.setVisible(true);
 						lblWarning.setText("");
 					}
@@ -422,7 +463,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 				scrollPane.setVisible(false);
 			}
 		}
-		
+
 	}
 
 	public ResultSet clientePorId(int id) {
@@ -434,7 +475,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		}
 		return null;
 	}
-	
+
 	public ResultSet grupoPorId(int id) {
 		try {
 			return c.query("SELECT * FROM grupos WHERE id = " + id + ";");
@@ -445,10 +486,9 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		return null;
 	}
 
-
-	public ResultSet obtenerCreditoPorDatos(int idCliente, String fecha, String cantidad) {
+	public ResultSet creditoGrualPorDatos(int idCliente, String fecha, String cantidad) {
 		try {
-			return c.query("SELECT * FROM credito WHERE id_Cliente =" + idCliente + " AND Fecha_inicio = '" + fecha
+			return c.query("SELECT * FROM credito_Grupal WHERE id_Grupo =" + idCliente + " AND Fecha_inicio = '" + fecha
 					+ "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";");
 
 		} catch (Exception ex) {
@@ -457,10 +497,10 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		return null;
 	}
 
-	public Boolean creditoIngresado(int idCliente, String fecha, String cantidad) {
+	public ResultSet creditoPersonalPorDatos(int idCliente, String fecha, String cantidad) {
 		try {
-			return c.query("SELECT * FROM credito WHERE id_Cliente =" + idCliente + " AND Fecha_inicio = '" + fecha
-					+ "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";").next();
+			return c.query("SELECT * FROM credito_Personal WHERE id_Cliente =" + idCliente + " AND Fecha_inicio = '"
+					+ fecha + "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -468,6 +508,77 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		return null;
 	}
 
+	public Boolean creditoPersonalRegistrado(int idCliente, String fecha, String cantidad) {
+		try {
+			return c.query("SELECT * FROM credito_Personal WHERE id_Cliente =" + idCliente + " AND Fecha_inicio = '"
+					+ fecha + "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";").next();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	public Boolean creditoGrupalRegistrado(int idCliente, String fecha, String cantidad) {
+		try {
+			return c.query("SELECT * FROM credito_Grupal WHERE id_Grupo =" + idCliente + " AND Fecha_inicio = '" + fecha
+					+ "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";").next();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	public int idCreditoPersonalPorDatos(int idCliente, String fecha, String cantidad) {
+		try {
+			ResultSet rs = c.query("SELECT * FROM credito_Personal WHERE id_Cliente =" + idCliente
+					+ " AND Fecha_inicio = '" + fecha + "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";");
+
+			if (rs.next()) {
+				return rs.getInt("id");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+
+	public int idCreditoGrupalPorDatos(int idCliente, String fecha, String cantidad) {
+		try {
+			ResultSet rs = c.query("SELECT * FROM credito_Grupal WHERE id_Grupo =" + idCliente + " AND Fecha_inicio = '"
+					+ fecha + "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";");
+
+			if (rs.next()) {
+				return rs.getInt("id");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
 	
+	public ResultSet buscarTarjetonPersonal(int idCredito) {
+		int index = table.getSelectedRow();
+		 int id = Integer.parseInt(table.getModel().getValueAt(index,0).toString());
+		try {
+			return c.query("SELECT * FROM tarjeton_Personal tp LEFT JOIN clientes_personal cp on tp.id_Cliente = cp.id LEFT JOIN credito_Personal cep on cep.id = tp.id_credito WHERE tp.id_Credito = "+idCredito+" ;");
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ResultSet buscarTarjetonGrupal(int idCredito) {
+		int index = table.getSelectedRow();
+		 int id = Integer.parseInt(table.getModel().getValueAt(index,0).toString());
+		try {
+			return c.query("SELECT * FROM tarjeton_Grupal tp LEFT JOIN grupos cp on tp.id_Grupo = cp.id LEFT JOIN credito_Grupal cep on cep.id = tp.id_credito WHERE tp.id_Credito = "+idCredito+" ;");
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 
 }

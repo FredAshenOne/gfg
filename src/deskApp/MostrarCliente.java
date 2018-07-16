@@ -569,7 +569,7 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 				&& txtColonia.getText().length() > 0 && txtTiempo.getText().length() > 0
 				&& txtNumCel.getText().length() > 0 && txtNumFijo.getText().length() > 0
 				&& txtSueldo.getText().length() > 0) {
-			if (s.dateChecker(txtNacimiento.getText())) {
+			if (s.checarFecha(txtNacimiento.getText())) {
 
 				if (txtTiempo.getText().length() > 2 || txtNumCel.getText().length() > 12
 						|| txtNumFijo.getText().length() > 12) {

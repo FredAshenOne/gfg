@@ -2,12 +2,14 @@ package deskApp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.ResultSet;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,12 +18,25 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 public class MostrarTarjeton extends JFrame implements ActionListener,MouseListener{
-	JButton btnBack,btnNext;
+	JButton btnBack;
 	Style s = new Style();
 	private JPanel contentPane;
 	int tipoCredito;
+	JScrollPane scrollPane;
+	JLabel lblWarning;
+	private JTable table;
+	JTextField txtNombre,txtPrestamo,txtRestante,txtPago;
+	private JLabel lblNombre;
+	private JLabel lblPrestamo;
+	private JLabel lblRestante;
+	private JLabel lblPago;
 
 	public MostrarTarjeton() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,23 +65,97 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		s.btnIcon(btnBack, "views/back.png");
 		btnBack.addMouseListener(this);
 		
-		JLabel lblHeader = new JLabel("Avales Registrados");
+		JLabel lblHeader = new JLabel("Tarjeton");
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setForeground(Color.WHITE);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
 		
-		btnNext = new JButton("");
-		btnNext.setBorder(null);
-		btnNext.setBounds(551, 11, 32, 32);
-		pnHeader.add(btnNext);
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(79, 111, 432, 199);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(199, 151, 384, 200);
 		mainPanel.add(scrollPane);
-		btnNext.addActionListener(this);
-		btnNext.setEnabled(false);
-		s.btnIcon(btnNext, "views/next.png");
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"No.", "F.Esperada", "F.Pago", "Status", "Observaciones"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JTable table = new JTable(){
+		    @Override
+		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+		           Component component = super.prepareRenderer(renderer, row, column);
+		           int rendererWidth = component.getPreferredSize().width;
+		           TableColumn tableColumn = getColumnModel().getColumn(column);
+		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		           return component;
+		        }
+		    };
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		lblWarning = new JLabel("");
+		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWarning.setForeground(Color.WHITE);
+		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
+		lblWarning.setBounds(52, 43, 489, 21);
+		pnHeader.add(lblWarning);
+		
+		JLabel lblPagos = new JLabel("Pagos");
+		lblPagos.setFont(new Font("Yu Gothic UI", Font.PLAIN, 13));
+		lblPagos.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPagos.setBounds(199, 111, 384, 29);
+		mainPanel.add(lblPagos);
+		
+		txtNombre = new JTextField();
+		txtNombre.setBounds(10, 155, 179, 29);
+		mainPanel.add(txtNombre);
+		txtNombre.setColumns(10);
+		s.mdTextField(txtNombre, s.blue, Color.white);
+		
+		txtPrestamo = new JTextField();
+		txtPrestamo.setColumns(10);
+		txtPrestamo.setBounds(10, 210, 179, 29);
+		mainPanel.add(txtPrestamo);
+		s.mdTextField(txtPrestamo, s.blue, Color.WHITE);
+		
+		txtRestante = new JTextField();
+		txtRestante.setColumns(10);
+		txtRestante.setBounds(10, 267, 179, 29);
+		mainPanel.add(txtRestante);
+		s.mdTextField(txtRestante, s.blue, Color.white);
+		
+		txtPago = new JTextField();
+		txtPago.setColumns(10);
+		txtPago.setBounds(10, 322, 179, 29);
+		mainPanel.add(txtPago);
+		s.mdTextField(txtPago, s.blue, Color.white);
+		
+		lblNombre = new JLabel("Cliente");
+		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblNombre.setBounds(10, 141, 179, 14);
+		mainPanel.add(lblNombre);
+		
+		lblPrestamo = new JLabel("Cantidad Inicial");
+		lblPrestamo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblPrestamo.setBounds(10, 195, 179, 14);
+		mainPanel.add(lblPrestamo);
+		
+		lblRestante = new JLabel("Restante");
+		lblRestante.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblRestante.setBounds(10, 250, 179, 14);
+		mainPanel.add(lblRestante);
+		
+		lblPago = new JLabel("Pago Semanal");
+		lblPago.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblPago.setBounds(10, 307, 179, 14);
+		mainPanel.add(lblPago);
+		
 		
 
 	}
@@ -83,14 +172,18 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseEntered(MouseEvent e) {
+		if(e.getSource() == btnBack) {
+			s.hoverBorder(btnBack, Color.white);
+			s.btnPointer(btnBack);
+		}
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseExited(MouseEvent e) {
+		if(e.getSource() == btnBack) {
+			btnBack.setBorder(null);
+		}
 		
 	}
 
@@ -105,5 +198,29 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	public void llenarTabla(ResultSet rs) {
+		DefaultTableModel mod = (DefaultTableModel) table.getModel();
+		mod.setRowCount(0);
+		try {
+			while(rs.next()) {
+				mod.addRow(new Object[] { rs.getString("tp.numero_pago"), rs.getString("tp.fecha_Asignada"),
+						rs.getString("tp.fecha_pago"), rs.getString("tp.status"),
+						rs.getString("tp.observaciones") });
+				scrollPane.setVisible(true);
+				lblWarning.setText("");
+				if(tipoCredito == 1) {
+					txtNombre.setText(rs.getString("cp.Nombre")+" "+rs.getString("cp.Apellido_Paterno")+" "+rs.getString("cp.Apellido_Materno"));						
+				}else {
+					txtNombre.setText(rs.getString("cp.Nombre"));
+				}
+				txtPrestamo.setText(rs.getString("cep.cantidad_Inicial"));
+				txtRestante.setText(rs.getString("cep.cantidad_Actual"));
+				txtPago.setText(rs.getString("tp.cantidad"));
+			}
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
 }
