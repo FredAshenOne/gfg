@@ -103,7 +103,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		JLabel lblLogHeader = new JLabel("Inicia Sesi\u00F3n");
 		lblLogHeader.setBounds(0, 0, 214, 37);
 		logPanel.add(lblLogHeader);
-		lblLogHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblLogHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 16));
 		lblLogHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		
@@ -121,7 +121,8 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		s.mdPanel(pnHeader, s.blue);
 		
 		lblHeader = new JLabel("");
-		lblHeader.setBounds(10, 11, 589, 40);
+		lblHeader.setBounds(240, 11, 140, 78);
+		lblHeader.setIcon(new ImageIcon("views/gfgWhite.png"));
 		pnHeader.add(lblHeader);
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 20));
@@ -171,6 +172,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 				if(userType == 1) {
 					mam.setVisible(true);
 					this.setVisible(false);
+					cargarInteresesMensuales();
 					lblWarning.setText("");
 				}				
 			}
@@ -199,6 +201,28 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		return false;
 		
 		
+	}
+	
+	public void cargarInteresesMensuales() {
+		
+		try {
+			ResultSet mensualP = c.query("SELECT * FROM intereses_mensuales_personal imp LEFT JOIN credito_personal cp ON imp.id_Credito = cp.id LEFT JOIN tipos_interes ti ON cp.tipo_interes = ti.id WHERE CURDATE() = DATE_ADD(imp.fecha,interval 1 MONTH)");
+			ResultSet mensualG = c.query("SELECT * FROM intereses_mensuales_Grupal img LEFT JOIN credito_grupal cg ON img.id_Credito = cg.id LEFT JOIN tipos_interes ti ON cg.tipo_interes = ti.id WHERE CURDATE() = DATE_ADD(img.fecha,interval 1 MONTH)");
+			while(mensualP.next()) {
+				int intereses = mensualP.getInt("cp.total") * mensualP.getInt("ti.Descripcion")/100;
+				c.update("UPDATE intereses_mensuales_personal SET cantidad = "+intereses+", fecha = CURDATE();");
+				c.update("UPDATE credito_personal SET intereses = intereses + "+intereses+",total = capital + intereses ;");
+			}
+			
+			
+			while(mensualG.next()) {
+				int intereses = mensualP.getInt("cg.total") * mensualP.getInt("ti.Descripcion")/100;
+				c.update("UPDATE intereses_mensuales_grupal SET cantidad = "+intereses+", fecha = CURDATE();");
+				c.update("UPDATE credito_grupal SET intereses = intereses + "+intereses+",total = capital + intereses ;");
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
 	

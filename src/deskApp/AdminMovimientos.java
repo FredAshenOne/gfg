@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,8 +21,9 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 
 	private JPanel contentPane,pnHeader;
 	Style s = new Style();
-	JButton btnBack,btnNext;
-	
+	JButton btnBack,btnPagos;
+	RegistrarPago rp = new RegistrarPago();
+	JPanel pnPagos;
 	public AdminMovimientos() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -49,20 +51,18 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		
 		s.btnIcon(btnBack, "views/back.png");
 		
-		btnNext = new JButton("");
-		btnNext.setBorder(null);
-		btnNext.setBounds(551, 11, 32, 32);
-		pnHeader.add(btnNext);
-		s.btnIcon(btnNext, "views/next.png");
-		
-		JPanel pnPagos = new JPanel();
+		pnPagos = new JPanel();		
 		pnPagos.setLayout(null);
 		pnPagos.setBounds(24, 156, 155, 180);
 		mainPanel.add(pnPagos);
+		pnPagos.addMouseListener(this);
+		s.mdPanel(pnPagos, Color.white);
+		pnPagos.setBorder(null);
 		
 		JLabel lblIconPagos = new JLabel("");
 		lblIconPagos.setBounds(10, 11, 135, 135);
 		pnPagos.add(lblIconPagos);
+		lblIconPagos.setIcon(new ImageIcon("views/pay.png"));
 		
 		JLabel lblPagos = new JLabel("Registrar Pago");
 		lblPagos.setHorizontalAlignment(SwingConstants.CENTER);
@@ -70,9 +70,12 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		lblPagos.setBounds(10, 157, 135, 23);
 		pnPagos.add(lblPagos);
 		
-		JButton btnPagos = new JButton("");
+		btnPagos = new JButton("");
 		btnPagos.setBounds(0, 0, 155, 180);
 		pnPagos.add(btnPagos);
+		s.btnTransparent(btnPagos);
+		btnPagos.addActionListener(this);
+		btnPagos.addMouseListener(this);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
@@ -111,8 +114,7 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		JButton button_2 = new JButton("");
 		button_2.setBounds(0, 0, 155, 180);
 		panel_2.add(button_2);
-		btnNext.addActionListener(this);
-		btnNext.addMouseListener(this);
+		rp.btnBack.addActionListener(this);
 	}
 
 	@Override
@@ -123,24 +125,21 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			if (btnNext.isEnabled()) {
-				s.hoverBorder(btnNext, Color.white);
-				s.btnPointer(btnNext);
-
-			}
-		} else if (e.getSource() == e) {
+		if (e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.WHITE);
 			s.btnPointer(btnBack);
-		} 
+		} else if(e.getSource() == btnPagos){
+			s.imgBtnHover(s.blue,pnPagos);
+			s.panelPointer(pnPagos);
+		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			btnNext.setBorder(null);
-		} else if (e.getSource() == btnBack) {
+		if (e.getSource() == btnBack) {
 			btnBack.setBorder(null);
+		}else if(e.getSource() == btnPagos) {
+			pnPagos.setBorder(null);
 		}
 	}
 
@@ -157,8 +156,13 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnPagos) {
+			rp.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == rp.btnBack) {
+			rp.setVisible(false);
+			this.setVisible(true);
+		}
 	}
 }

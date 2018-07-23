@@ -28,6 +28,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 	int idUser;
 	AdminCreditos acre = new AdminCreditos();
 	AdminClientes ac = new AdminClientes();
+	AdminMovimientos am = new AdminMovimientos();
 	public AdminMenuPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -144,10 +145,14 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		lblTitle.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTitle.setBounds(52, 54, 489, 32);
 		pnHeader.add(lblTitle);
+		
+		
 		btnSettings.addActionListener(this);
 		btnSettings.addMouseListener(this);
+		
 		ac.btnBack.addActionListener(this);
 		acre.btnBack.addActionListener(this);
+		am.btnBack.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -207,6 +212,12 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		}else if(e.getSource() == acre.btnBack) {
 			this.setVisible(true);
 			acre.setVisible(false);
+		}else if(e.getSource() == btnMoves) {
+			am.setVisible(true);
+			this.setVisible(false);			
+		}else if(e.getSource() == am.btnBack ) {
+			this.setVisible(true);
+			am.setVisible(false);
 		}
 	}
 }

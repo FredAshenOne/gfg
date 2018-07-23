@@ -46,9 +46,10 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 	private JLabel lblWarning;
 	Alert alCreate = new Alert();
 	Alert alert = new Alert();
+	Alert alOk = new Alert();
 	int tipoCredito = 1;
 	MostrarTarjeton mt = new MostrarTarjeton();
-
+	MostrarCreditoMensual mcm = new MostrarCreditoMensual();
 	public BuscarClienteCreditos() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,8 +130,13 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		mainPanel.add(scrollPane);
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setBackground(Color.WHITE);
-		table = new JTable();
+		table = new JTable(){
+			private static final long serialVersionUID = 1L;
 
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };
+		};
 		DefaultTableModel model = new DefaultTableModel(new Object[][] {},
 				new String[] { "id", "Nombre", "A. Paterno", "A. Materno", "Dirección" }) {
 			@Override
@@ -145,6 +151,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		table.getTableHeader().setBackground(Color.WHITE);
 		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setVisible(false);
 
 		table.addMouseListener(this);
@@ -197,10 +204,19 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		alert.btnCancel.setText("No");
 		alert.btnCancel.addActionListener(this);
 		
+		alOk.btnCancel.setVisible(false);
+		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alOk.lblMessage.setText("Datos guardados con exito");
+		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alOk.btnOk.setText("Ok");
+		alOk.btnOk.addActionListener(this);
+		
 		mt.btnBack.addActionListener(this);
 		
 		nc.btnNext.addActionListener(this);
 		nc.btnBack.addActionListener(this);
+		
+		mcm.btnBack.addActionListener(this);
 
 	}
 
@@ -277,6 +293,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 				nc.lblHeader.setText("Nuevo Credito para : " + table.getModel().getValueAt(index, 1).toString() + " "
 						+ table.getModel().getValueAt(index, 2).toString());
 				nc.setVisible(true);
+				nc.limpiarCampos();
 				this.setVisible(false);
 			}else {
 				alert.setVisible(true);
@@ -305,9 +322,10 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 					if (creditoPersonalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
 						nc.crearTarjeton(idCliente,
 								idCreditoPersonalPorDatos(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText()));
-						alCreate.setVisible(false);
+						alCreate.setVisible(false);							
 						mt.setVisible(true);
-						
+						mt.llenarTabla(buscarTarjetonPersonal(idCreditoPersonalPorDatos(idCliente,nc.txtFecha.getText(), nc.txtCantidad.getText())));
+						nc.setVisible(false);
 					}
 				} else {
 					
@@ -315,8 +333,22 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 					nc.crearCreditoPersonal(idCliente);
 					if (creditoPersonalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
 						alCreate.setVisible(false);
+						mcm.setVisible(true);
+						alOk.setVisible(true);
+						
+						ResultSet cd = creditoPersonalPorDatos(idCliente,nc.txtFecha.getText(),nc.txtCantidad.getText());
+						
+						try {
+							if(cd.next()) {
+								mcm.llenarDatos(cd.getString("id"), cd.getString("id_Cliente"),cd.getString("cantidad_inicial"), cd.getString("intereses"), cd.getString("Fecha_inicio"));	
+							}								
+						}catch(Exception ex) {
+							ex.printStackTrace();
+						}
 						
 						
+						
+					
 					}
 
 				}
@@ -331,13 +363,27 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 						alCreate.setVisible(false);
 						mt.setVisible(true);
 						mt.llenarTabla(buscarTarjetonGrupal(idCreditoGrupalPorDatos(idCliente,nc.txtFecha.getText(), nc.txtCantidad.getText())));
+						
 					}
 				} else {
 					nc.crearCreditoGrupal(idCliente);
 					if (creditoGrupalRegistrado(idCliente, nc.txtFecha.getText(), nc.txtCantidad.getText())) {
 						alCreate.setVisible(false);
+						mcm.setVisible(true);
+						alOk.setVisible(true);
+						
+						ResultSet cd = creditoGrupalPorDatos(idCliente,nc.txtFecha.getText(),nc.txtCantidad.getText());
+						try {
+							if(cd.next()){
+								mcm.llenarDatos(cd.getString("id"), cd.getString("id_Grupo"),cd.getString("cantidad_inicial"), cd.getString("intereses"), cd.getString("Fecha_inicio"));	
+							}
+								
+						}catch(Exception ex) {
+							ex.printStackTrace();
+						}
 						
 					}
+					
 				}
 
 			}
@@ -354,8 +400,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 				table.getColumnModel().getColumn(4).setHeaderValue("");
 				s.btnHover(btnCreditoPersonal, s.blue, s.blue, Color.white);
 				s.btnHover(btnCreditoGrupal, Color.white, Color.WHITE, s.blue);
-				btnCreditoGrupal.setSelected(false);
-				llenarTabla();
+				llenarTabla(); 
 				table.getTableHeader().repaint();
 			}
 		} else if (e.getSource() == btnCreditoPersonal) {
@@ -378,10 +423,16 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 			nc.lblHeader.setText("Nuevo Credito para : " + table.getModel().getValueAt(index, 1).toString() + " "
 					+ table.getModel().getValueAt(index, 2).toString());
 			nc.setVisible(true);
+			nc.limpiarCampos();
 			this.setVisible(false);
 		}else if(e.getSource() == alert.btnCancel) {
 			this.setVisible(true);
 			alert.setVisible(false);
+		}else if(e.getSource() == alOk.btnOk) {
+			alOk.setVisible(false);
+		}else if(e.getSource() == mcm.btnBack ) {
+			mcm.setVisible(false);
+			this.setVisible(true);
 		}
 	}
 
@@ -486,7 +537,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 		return null;
 	}
 
-	public ResultSet creditoGrualPorDatos(int idCliente, String fecha, String cantidad) {
+	public ResultSet creditoGrupalPorDatos(int idCliente, String fecha, String cantidad) {
 		try {
 			return c.query("SELECT * FROM credito_Grupal WHERE id_Grupo =" + idCliente + " AND Fecha_inicio = '" + fecha
 					+ "' AND Cantidad_Inicial = " + Integer.parseInt(cantidad) + ";");
@@ -515,7 +566,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
+		}	
 		return null;
 	}
 
@@ -558,8 +609,6 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 	}
 	
 	public ResultSet buscarTarjetonPersonal(int idCredito) {
-		int index = table.getSelectedRow();
-		 int id = Integer.parseInt(table.getModel().getValueAt(index,0).toString());
 		try {
 			return c.query("SELECT * FROM tarjeton_Personal tp LEFT JOIN clientes_personal cp on tp.id_Cliente = cp.id LEFT JOIN credito_Personal cep on cep.id = tp.id_credito WHERE tp.id_Credito = "+idCredito+" ;");
 			
@@ -570,8 +619,6 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 	}
 	
 	public ResultSet buscarTarjetonGrupal(int idCredito) {
-		int index = table.getSelectedRow();
-		 int id = Integer.parseInt(table.getModel().getValueAt(index,0).toString());
 		try {
 			return c.query("SELECT * FROM tarjeton_Grupal tp LEFT JOIN grupos cp on tp.id_Grupo = cp.id LEFT JOIN credito_Grupal cep on cep.id = tp.id_credito WHERE tp.id_Credito = "+idCredito+" ;");
 			

@@ -33,13 +33,11 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	JLabel lblWarning;
 	private JTable table;
 	JTextField txtNombre,txtPrestamo,txtRestante,txtPago;
-	private JLabel lblNombre;
-	private JLabel lblPrestamo;
-	private JLabel lblRestante;
-	private JLabel lblPago;
+	JLabel lblNombre,lblPrestamo,lblRestante,lblPago;
+	JLabel lblCredito;
 
 	public MostrarTarjeton() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -77,7 +75,15 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		scrollPane.setBounds(199, 151, 384, 200);
 		mainPanel.add(scrollPane);
 		
-		table = new JTable();
+		table = new JTable(){
+		    
+				private static final long serialVersionUID = 1L;
+
+		        public boolean isCellEditable(int row, int column) {                
+		                return false;               
+		        }
+		        
+		};
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -87,24 +93,19 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		));
 		scrollPane.setViewportView(table);
 		
-		JTable table = new JTable(){
-		    @Override
-		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-		           Component component = super.prepareRenderer(renderer, row, column);
-		           int rendererWidth = component.getPreferredSize().width;
-		           TableColumn tableColumn = getColumnModel().getColumn(column);
-		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
-		           return component;
-		        }
-		    };
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		
 		lblWarning = new JLabel("");
 		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWarning.setForeground(Color.WHITE);
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblWarning.setBounds(52, 43, 489, 21);
 		pnHeader.add(lblWarning);
+		
+		lblCredito = new JLabel("");
+		lblCredito.setForeground(Color.WHITE);
+		lblCredito.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCredito.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
+		lblCredito.setBounds(52, 68, 490, 21);
+		pnHeader.add(lblCredito);
 		
 		JLabel lblPagos = new JLabel("Pagos");
 		lblPagos.setFont(new Font("Yu Gothic UI", Font.PLAIN, 13));
@@ -113,24 +114,28 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		mainPanel.add(lblPagos);
 		
 		txtNombre = new JTextField();
+		txtNombre.setEditable(false);
 		txtNombre.setBounds(10, 155, 179, 29);
 		mainPanel.add(txtNombre);
 		txtNombre.setColumns(10);
 		s.mdTextField(txtNombre, s.blue, Color.white);
 		
 		txtPrestamo = new JTextField();
+		txtPrestamo.setEditable(false);
 		txtPrestamo.setColumns(10);
 		txtPrestamo.setBounds(10, 210, 179, 29);
 		mainPanel.add(txtPrestamo);
 		s.mdTextField(txtPrestamo, s.blue, Color.WHITE);
 		
 		txtRestante = new JTextField();
+		txtRestante.setEditable(false);
 		txtRestante.setColumns(10);
 		txtRestante.setBounds(10, 267, 179, 29);
 		mainPanel.add(txtRestante);
 		s.mdTextField(txtRestante, s.blue, Color.white);
 		
 		txtPago = new JTextField();
+		txtPago.setEditable(false);
 		txtPago.setColumns(10);
 		txtPago.setBounds(10, 322, 179, 29);
 		mainPanel.add(txtPago);
@@ -202,6 +207,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	public void llenarTabla(ResultSet rs) {
 		DefaultTableModel mod = (DefaultTableModel) table.getModel();
 		mod.setRowCount(0);
+		
 		try {
 			while(rs.next()) {
 				mod.addRow(new Object[] { rs.getString("tp.numero_pago"), rs.getString("tp.fecha_Asignada"),
@@ -215,12 +221,17 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 					txtNombre.setText(rs.getString("cp.Nombre"));
 				}
 				txtPrestamo.setText(rs.getString("cep.cantidad_Inicial"));
-				txtRestante.setText(rs.getString("cep.cantidad_Actual"));
+				txtRestante.setText(rs.getString("capital"));
 				txtPago.setText(rs.getString("tp.cantidad"));
+				lblCredito.setText("Credito : " + rs.getString("cep.id"));
+				
 			}
 			
+		
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 	}
+	
+	
 }

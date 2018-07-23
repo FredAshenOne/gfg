@@ -186,7 +186,14 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		spClientesExistentes.setBounds(10, 211, 230, 158);
 		mainPanel.add(spClientesExistentes);
 
-		tableClientesExistentes = new JTable();
+		tableClientesExistentes = new JTable() {
+			private static final long serialVersionUID = 1L;
+
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };
+		};
+		tableClientesExistentes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableClientesExistentes.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "id", "Nombre", "Apellido P", "Apellido M", "Celular" }));
 		spClientesExistentes.setViewportView(tableClientesExistentes);
@@ -194,7 +201,14 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		spClientesAgregados = new JScrollPane();
 		spClientesAgregados.setBounds(353, 211, 230, 158);
 		mainPanel.add(spClientesAgregados);
-		tableClientesAgregados = new JTable();
+		tableClientesAgregados = new JTable(){
+			private static final long serialVersionUID = 1L;
+
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };
+		};
+		tableClientesAgregados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableClientesAgregados.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "id", "Nombre", "A.Paterno", "A.Materno", "Celular" }));
 		spClientesAgregados.setViewportView(tableClientesAgregados);

@@ -28,7 +28,7 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 	private JComboBox cbEstadoCivil, cbTipoDom;
 	int idUser;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
-			lblAp2;
+			lblAp2,lblColonia,lblNumFijo,lblOcupacion,lblTiempoDeResidencia;
 	JButton btnBack, btnNext,btnInfoCliente,btnInfoJob,btnInfoAvales;
 	
 	NuevoAval ca = new NuevoAval();
@@ -178,7 +178,7 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		s.mdTextField(txtTiempo, s.blue, Color.white);
 		s.myTextPrompt(txtTiempo, "Tiempo de Residencia", Color.gray);
 
-		JLabel lblTiempoDeResidencia = new JLabel("Tiempo Residencia");
+		lblTiempoDeResidencia = new JLabel("Tiempo Residencia");
 		lblTiempoDeResidencia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTiempoDeResidencia.setBounds(197, 167, 115, 14);
 		mainPanel.add(lblTiempoDeResidencia);
@@ -257,18 +257,18 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		mainPanel.add(lblNacimiento);
 		s.placeholder(txtNacimiento, lblNacimiento);
 
-		JLabel lblColonia = new JLabel("Colonia");
+		lblColonia = new JLabel("Colonia");
 		lblColonia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblColonia.setBounds(10, 167, 170, 14);
 		mainPanel.add(lblColonia);
 		s.placeholder(txtColonia, lblColonia);
 
-		JLabel lblNumFijo = new JLabel("Telefono Fijo");
+		lblNumFijo = new JLabel("Telefono Fijo");
 		lblNumFijo.setBounds(190, 232, 170, 14);
 		mainPanel.add(lblNumFijo);
 		s.placeholder(txtNumFijo, lblNumFijo);
 
-		JLabel lblOcupacion = new JLabel("Ocupacion");
+		lblOcupacion = new JLabel("Ocupacion");
 		lblOcupacion.setBounds(370, 232, 170, 14);
 		mainPanel.add(lblOcupacion);
 		s.placeholder(txtOcupacion, lblOcupacion);
@@ -461,6 +461,22 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		}
 		return null;
 	}
+	
+	 public void etiquetasInvisibles(Boolean b) {
+		 lblDomicilio.setVisible(b);
+		 lblExterior.setVisible(b);
+		 lblInterior.setVisible(b);
+		 lblNacimiento.setVisible(b);
+		 lblSueldo.setVisible(b);
+		 lblNumCel.setVisible(b);
+		 lblNombre.setVisible(b);
+		 lblAp1.setVisible(b);		 
+		 lblAp2.setVisible(b);
+		 lblOcupacion.setVisible(b);
+		 lblNumFijo.setVisible(b);
+		 lblColonia.setVisible(b);
+		 lblTiempoDeResidencia.setVisible(b);		 
+	 }
 	
 
 }

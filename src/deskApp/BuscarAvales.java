@@ -91,7 +91,13 @@ public class BuscarAvales extends JFrame implements ActionListener,MouseListener
 		btnAddAval.addActionListener(this);
 		
 		
-		table = new JTable();
+		table = new JTable(){
+			private static final long serialVersionUID = 1L;
+
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };
+		};
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -103,6 +109,7 @@ public class BuscarAvales extends JFrame implements ActionListener,MouseListener
 		
 		table.getTableHeader().setBackground(Color.white);
 		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setBackground(Color.white);
 		scrollPane.setBackground(Color.WHITE);
 		

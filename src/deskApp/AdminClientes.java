@@ -33,6 +33,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	Alert alNewAval = new Alert();
 	NuevoCliente nc = new NuevoCliente();
 	NuevoGrupo ng = new NuevoGrupo();
+	
 	public AdminClientes() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -61,7 +62,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		JLabel lblNewClient = new JLabel("Nuevo Cliente");
 		lblNewClient.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewClient.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblNewClient.setBounds(10, 157, 135, 23);
+		lblNewClient.setBounds(0, 157, 155, 23);
 		pnNewClient.add(lblNewClient);
 		
 		btnNewClient = new JButton("");
@@ -86,7 +87,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		JLabel lblQuery = new JLabel("Buscar Cliente");
 		lblQuery.setHorizontalAlignment(SwingConstants.CENTER);
 		lblQuery.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblQuery.setBounds(10, 157, 135, 23);
+		lblQuery.setBounds(0, 157, 155, 23);
 		pnQuery.add(lblQuery);
 		
 		btnQuery = new JButton("");
@@ -107,10 +108,10 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		lblIconGrupo.setBounds(10, 11, 135, 135);
 		pnGrupos.add(lblIconGrupo);
 		
-		JLabel lblGrupo = new JLabel("Nuevo Grupo");
+		JLabel lblGrupo = new JLabel("Grupos");
 		lblGrupo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGrupo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblGrupo.setBounds(10, 157, 135, 23);
+		lblGrupo.setBounds(0, 157, 155, 23);
 		pnGrupos.add(lblGrupo);
 		
 		btnGrupo = new JButton("");
@@ -196,6 +197,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnNewClient) {
+			nc.etiquetasInvisibles(false);
 			nc.setVisible(true);
 			nc.idUser = idUser;
 		}else if(e.getSource() == nc.btnBack) {
@@ -208,8 +210,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == btnQuery) {
 			sc.setVisible(true);
 			sc.idUser = idUser;
-			sc.fillTable();
-			
+			sc.fillTable();			
 			this.setVisible(false);
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);

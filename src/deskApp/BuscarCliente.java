@@ -121,8 +121,13 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		
-		table = new JTable();
-		
+		table = new JTable(){
+			private static final long serialVersionUID = 1L;
+
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };
+		};		
 		DefaultTableModel model = new DefaultTableModel(
 				new Object[][] {
 				},
@@ -142,6 +147,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 		table.getTableHeader().setBackground(Color.WHITE);
 		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setVisible(false);
 		
 		sc.btnBack.addActionListener(this);

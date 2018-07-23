@@ -41,13 +41,12 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 	private JTable table;
 	JScrollPane scrollPane;
 	int idUser;
-	int tipoCredito = 1;
+	int tipoCredito = 1,tipoDuracion = 1;
+	MostrarCreditoMensual mcm = new MostrarCreditoMensual();
 	Conexion c = new Conexion();
 	private JLabel lblWarning;
 	Alert alCreate = new Alert();
 	MostrarTarjeton mt = new MostrarTarjeton();
-	Alert alOk = new Alert();
-
 	public BuscarCredito() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,8 +127,13 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		mainPanel.add(scrollPane);
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setBackground(Color.WHITE);
-		table = new JTable();
-		
+		table = new JTable(){
+			private static final long serialVersionUID = 1L;
+
+	        public boolean isCellEditable(int row, int column) {                
+	                return false;               
+	        };
+		};		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
@@ -150,6 +154,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 
 		};
 		table.setModel(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 		
 
@@ -170,6 +175,8 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		btnGrupal.addMouseListener(this);
 		s.btnHover(btnGrupal, s.blue, s.blue, Color.white);
 
+		mcm.lblCantidad.setText("Total");
+		
 		btnPersonal = new JButton("Personal");
 		btnPersonal.setForeground(Color.WHITE);
 		btnPersonal.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
@@ -258,13 +265,43 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNext) {
+			
 			this.setVisible(false);
-			mt.setVisible(true);
+			int index = table.getSelectedRow();
+			int id = Integer.parseInt(table.getModel().getValueAt(index,0).toString());
+			tipoDuracion = tipoDuracionPorCredito(id,tipoCredito);
+			ResultSet cred = clienteCreditoPorCredito(id,tipoCredito);
 			if(tipoCredito == 1) {
 				
-				mt.llenarTabla(buscarTarjetonPersonal());
+				if(tipoDuracion == 1) {
+					mt.llenarTabla(buscarTarjetonPersonal());
+
+					mt.setVisible(true);
+				}else {
+					try {
+						mcm.llenarDatos(cred.getString("cp.id"), cred.getString("clip.Nombre") +" " +cred.getString("clip.Apellido_Paterno") +" " +cred.getString("clip.Apellido_Materno"), cred.getString("cp.Total"),cred.getString("cp.Intereses") , cred.getString("cp.fecha_Inicio"));
+						mcm.setVisible(true);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				
 			}else {
-				mt.llenarTabla(buscarTarjetonGrupal());
+				if(tipoDuracion == 1) {
+					mt.llenarTabla(buscarTarjetonGrupal());
+
+					mt.setVisible(true);
+				}else{
+					try {
+						mcm.llenarDatos(cred.getString("cp.id"), cred.getString("clip.Nombre") ,cred.getString("cp.Total"),cred.getString("cp.Intereses") , cred.getString("cp.fecha_Inicio"));
+						mcm.setVisible(true);
+					} catch (SQLException e1) {
+					
+						e1.printStackTrace();
+					}
+				}
+				
 			}
 
 		} else if (e.getSource() == btnGrupal) {
@@ -420,6 +457,48 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		try {
 			return c.query("SELECT * FROM tarjeton_Grupal tp LEFT JOIN grupos cp on tp.id_Grupo = cp.id LEFT JOIN credito_Grupal cep on cep.id = tp.id_credito WHERE tp.id_Credito = "+id+" ;");
 			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	public int tipoDuracionPorCredito(int idCredito,int tipoCredito) {
+		ResultSet rs;
+		
+		try {
+			if(tipoCredito == 1) {
+				rs = c.query("SELECT *FROM credito_personal WHERE id = "+idCredito+";");
+				if(rs.next()) {
+					return rs.getInt("Tipo_Credito");
+				}
+			}else {
+				rs = c.query("SELECT * FROM credito_grupal WHERE id = "+idCredito+";");
+				if(rs.next()) {
+					return rs.getInt("Tipo_Credito");
+				}
+			}
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public ResultSet clienteCreditoPorCredito(int idCredito, int tipoCredito) {
+		ResultSet rs;
+		try {
+			if(tipoCredito == 1) {
+				rs = c.query("SELECT * FROM credito_personal cp LEFT JOIN clientes_Personal clip on cp.id_Cliente = clip.id WHERE cp.id = "+idCredito+";");
+				if(rs.next()) {
+					return rs;
+				}
+			}else {
+				rs = c.query("SELECT * FROM credito_grupal cp LEFT JOIN clientes_grupo clip on cp.id_grupo = clip.id WHERE cp.id = "+idCredito+";");
+				if(rs.next()) {
+					return rs;
+				}
+			}
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}

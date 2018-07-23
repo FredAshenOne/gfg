@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
-
+import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,8 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
+
 public class NuevoCredito extends JFrame implements MouseListener, ActionListener {
 	Style s = new Style();
+	
 	private JPanel contentPane;
 	JButton btnBack, btnNext;
 	JLabel lblHeader, lblWarning, lblInteres;
@@ -33,11 +35,11 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 	JComboBox cbTipo, cbInteres;
 	JTextField txtFecha, txtCantidad;
 	int semanas, interes, tipoCredito;
-	private JLabel lblInteresWarning;
 	MostrarTarjeton mt = new MostrarTarjeton();
+	
 
 	public NuevoCredito() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -74,6 +76,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		btnNext.setBorder(null);
 		btnNext.setBounds(551, 11, 32, 32);
 		pnHeader.add(btnNext);
+		btnNext.addMouseListener(this);
 		s.btnIcon(btnNext, "views/next.png");
 
 		lblWarning = new JLabel("");
@@ -102,16 +105,19 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		cbTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (cbTipo.getSelectedIndex() > 0) {
-					semanas = 15;
+					semanas = 14;
 					cbInteres.setSelectedIndex(0);
 					cbInteres.setVisible(false);
+					lblInteres.setVisible(false);
 					if (cbTipo.getSelectedIndex() > 1) {
-						semanas = 16;
+						semanas = 15;
 						cbInteres.setSelectedIndex(0);
 						if (cbTipo.getSelectedIndex() > 2) {
 							cbInteres.setVisible(true);
+							lblInteres.setVisible(true);
 						} else {
 							cbInteres.setVisible(false);
+							lblInteres.setVisible(false);
 
 						}
 					}
@@ -121,6 +127,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		cbTipo.setModel(new DefaultComboBoxModel(new String[] { "", "13 Semanas", "14 Semanas", "Interes Mensual" }));
 		cbTipo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbTipo.setBounds(44, 142, 185, 35);
+		s.mdCombo(cbTipo, Color.WHITE, s.blue);
 		mainPanel.add(cbTipo);
 
 		JLabel lblFecha = new JLabel("Fecha inicio");
@@ -158,25 +165,21 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 				}
 			}
 		});
-		cbInteres.setModel(new DefaultComboBoxModel(new String[] { "", "7%", "8%", "9%", "10%" }));
+		cbInteres.setModel(new DefaultComboBoxModel(new String[] { "", "7", "8", "9", "10" }));
 		cbInteres.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbInteres.setBounds(269, 142, 185, 35);
 		mainPanel.add(cbInteres);
 		cbInteres.setVisible(false);
 		s.mdCombo(cbInteres, Color.white, s.blue);
+		s.mdCombo(cbInteres, Color.white, s.blue);
 
-		lblInteres = new JLabel("Interes Mensual");
+		lblInteres = new JLabel("Interes Mensual (% Porcentaje)");
 		lblInteres.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblInteres.setBounds(269, 109, 185, 22);
 		mainPanel.add(lblInteres);
 		lblInteres.setVisible(false);
-
-		lblInteresWarning = new JLabel("Opcion No Valida");
-		lblInteresWarning.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 11));
-		lblInteresWarning.setBounds(393, 115, 101, 14);
-		mainPanel.add(lblInteresWarning);
-		lblInteresWarning.setForeground(s.red);
-		lblInteresWarning.setVisible(false);
+		
+		
 	}
 
 	@Override
@@ -187,7 +190,13 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if(e.getSource() == btnBack){
+			s.btnPointer(btnBack);
+			s.hoverBorder(btnBack, Color.WHITE);
+		}else if(e.getSource() == btnNext) {
+			s.btnPointer(btnNext);
+			s.hoverBorder(btnNext, Color.white);
+		}
 
 	}
 
@@ -222,19 +231,22 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 	}
 
 	public void crearCreditoPersonal(int id) {
-		int interes;
+		int interes = 5,total = 0;
 		int cantidad = Integer.parseInt(txtCantidad.getText());
-		if (cbTipo.getSelectedIndex()<3) {
-			interes = 5;
-		}else {
-			interes = cbInteres.getSelectedIndex();	
+		float intereses = 0;
+		if (cbTipo.getSelectedIndex() == 3) {		
+			interes = cbInteres.getSelectedIndex();
+			int inter = Integer.parseInt(cbInteres.getSelectedItem().toString());
+			intereses = Integer.parseInt(txtCantidad.getText()) * inter / 100;
+			total = (int) (cantidad + intereses);
 		}
 		try {
-
+			
 			c.update(
-					"INSERT INTO credito_Personal (id_Cliente,Cantidad_Inicial,Cantidad_Actual,Tipo_Credito,interes,Fecha_inicio,Status) VALUES ("
-							+ id + "," + cantidad + "," + cantidad + "," + cbTipo.getSelectedIndex() + ","
-							+ interes + ",'" + txtFecha.getText() + "',1);");
+					"INSERT INTO credito_Personal (id_Cliente,Cantidad_Inicial,total,capital,Tipo_Credito,tipo_interes,intereses,Fecha_inicio,Status) VALUES ("
+							+ id + "," + cantidad + "," + total + "," + cantidad + "," + cbTipo.getSelectedIndex() + ","
+							+ interes + ","+intereses+",'" + txtFecha.getText() + "',1);");
+			c.update("INSERT INTO intereses_mensuales_personal (id_credito,cantidad,fecha) VALUES ("+idCreditoPorDatos(id,cantidad,txtFecha.getText())+","+intereses+",'"+txtFecha.getText()+"');");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -242,18 +254,22 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 	}
 
 	public void crearCreditoGrupal(int id) {
+		float intereses = 0,total = 0;
 		int cantidad = Integer.parseInt(txtCantidad.getText());
-		if (cbTipo.getSelectedIndex()<3) {
-			interes = 5;
-		}else {
+		int interes = 5;
+		if (cbTipo.getSelectedIndex() == 3) {
 			interes = cbInteres.getSelectedIndex();	
+			int inter = Integer.parseInt(cbInteres.getSelectedItem().toString());
+			intereses = Integer.parseInt(txtCantidad.getText()) * inter / 100;
+			total = cantidad + intereses;
 		}
 
 		try {
 			c.update(
-					"INSERT INTO credito_Grupal (id_Grupo,Cantidad_Inicial,Cantidad_Actual,Tipo_Credito,interes,Fecha_inicio,Status) VALUES ("
-							+ id + "," + cantidad + "," + cantidad + "," + cbTipo.getSelectedIndex() + ","
-							+ interes + ",'" + txtFecha.getText() + "',1);");
+					"INSERT INTO credito_Grupal (id_Grupo,Cantidad_Inicial,total,capital,Tipo_Credito,tipo_interes,intereses,Fecha_inicio,Status) VALUES ("
+							+ id + "," + cantidad + "," + total + ","+cantidad + "," + cbTipo.getSelectedIndex() + ","
+							+ interes + ","+intereses+",'" + txtFecha.getText() + "',1);");
+			c.update("INSERT INTO intereses_mensuales_grupal (id_credito,cantidad,fecha) VALUES ("+idCreditoPorDatos(id,cantidad,txtFecha.getText())+","+intereses+",'"+txtFecha.getText()+"');");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -296,9 +312,30 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		return false;
 	}
 
+	public int idCreditoPorDatos(int idCliente,int cantidad,String fecha_inicio) {
+		ResultSet rs ;
+		try {
+			if(tipoCredito == 1) {
+				rs = c.query("SELECT * FROM credito_personal WHERE id_Cliente = "+idCliente+" AND cantidad_inicial  = "+cantidad+" AND fecha_inicio = '"+fecha_inicio+"';");	
+				
+			}else {
+				rs = c.query("SELECT * FROM credito_grupal WHERE id_grupo = "+idCliente+" AND cantidad_inicial  = "+cantidad+" AND fecha_inicio = '"+fecha_inicio+"';");
+			}
+			
+			if(rs.next()) {
+				return rs.getInt("id");
+			}
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+	
 	public void limpiarCampos() {
+		cbTipo.setSelectedIndex(0);
+		cbInteres.setSelectedIndex(0);
 		txtFecha.setText("");
 		txtCantidad.setText("");
-		cbTipo.setSelectedIndex(0);
 	}
 }
