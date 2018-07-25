@@ -196,6 +196,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		});
 		
 		mt.btnBack.addActionListener(this);
+		mcm.btnBack.addActionListener(this);
 
 	}
 
@@ -273,7 +274,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 			ResultSet cred = clienteCreditoPorCredito(id,tipoCredito);
 			if(tipoCredito == 1) {
 				
-				if(tipoDuracion == 1) {
+				if(tipoDuracion != 3) {
 					mt.llenarTabla(buscarTarjetonPersonal());
 
 					mt.setVisible(true);
@@ -288,7 +289,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 				
 				
 			}else {
-				if(tipoDuracion == 1) {
+				if(tipoDuracion !=3) {
 					mt.llenarTabla(buscarTarjetonGrupal());
 
 					mt.setVisible(true);
@@ -335,6 +336,9 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 		}else if(e.getSource() == mt.btnBack){
 			this.setVisible(true);
 			mt.setVisible(false);
+		}else if(e.getSource() == mcm.btnBack) {
+			this.setVisible(true);
+			mcm.setVisible(false);
 		}
 
 	}

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,11 +21,12 @@ import javax.swing.border.EmptyBorder;
 public class AdminCreditos extends JFrame implements ActionListener,MouseListener{
 	
 	private JPanel contentPane;
-	JPanel pnNewCredit,pnQuery,mainPanel;
-	JButton btnQuery,btnNuevoCredito,btnBack;
-	JLabel lblIconNewCredit,lblIconQuery;
+	JPanel pnNewCredit,pnQuery,mainPanel,pnRenovacion;
+	JButton btnQuery,btnNuevoCredito,btnBack,btnRenovacion;
+	JLabel lblIconNewCredit,lblIconQuery,lblIconRenovacion;
 	Style s = new Style();
 	int idUser;
+	BuscarRenovacion br = new BuscarRenovacion();
 	BuscarClienteCreditos bcc = new BuscarClienteCreditos();
 	BuscarCredito buscarCred = new BuscarCredito();
 	public AdminCreditos() {
@@ -90,26 +92,29 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		btnQuery.addActionListener(this);
 		btnQuery.addMouseListener(this);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBounds(414, 147, 155, 180);
-		mainPanel.add(panel_3);
-		s.mdPanel(panel_3, Color.white);
+		pnRenovacion = new JPanel();
+		pnRenovacion.setLayout(null);
+		pnRenovacion.setBounds(414, 147, 155, 180);
+		mainPanel.add(pnRenovacion);
+		s.mdPanel(pnRenovacion, Color.white);
 		
-		JLabel label_4 = new JLabel("");
-		label_4.setBounds(10, 11, 135, 135);
-		panel_3.add(label_4);
+		 lblIconRenovacion = new JLabel("");
+		lblIconRenovacion.setBounds(10, 11, 135, 135);
+		lblIconRenovacion.setIcon(new ImageIcon("views/update.png"));
+		pnRenovacion.add(lblIconRenovacion);
 		
-		JLabel label_5 = new JLabel("Clientes");
-		label_5.setHorizontalAlignment(SwingConstants.CENTER);
-		label_5.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		label_5.setBounds(10, 157, 135, 23);
-		panel_3.add(label_5);
+		JLabel lblRenovacion = new JLabel("Renovaciones");
+		lblRenovacion.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRenovacion.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblRenovacion.setBounds(10, 157, 135, 23);
+		pnRenovacion.add(lblRenovacion);
 		
-		JButton button_2 = new JButton("");
-		button_2.setBounds(0, 0, 155, 180);
-		panel_3.add(button_2);
-		s.mdButton(button_2, Color.WHITE);
+		btnRenovacion = new JButton("");
+		btnRenovacion.setBounds(0, 0, 155, 180);
+		pnRenovacion.add(btnRenovacion);
+		s.btnTransparent(btnRenovacion);
+		btnRenovacion.addActionListener(this);
+		btnRenovacion.addMouseListener(this);
 		
 		JPanel pnHeader = new JPanel();
 		pnHeader.setBounds(0, 0, 603, 100);
@@ -152,6 +157,9 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == btnQuery) {
 			s.imgBtnHover(s.blue,pnQuery);
 			s.panelPointer(pnQuery);
+		}else if(e.getSource() == btnRenovacion) {
+			s.imgBtnHover(s.blue,pnRenovacion);
+			s.panelPointer(pnRenovacion);
 		}
 	}
 
@@ -163,6 +171,8 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 			pnQuery.setBorder(null);
 		}else if(e.getSource() == btnBack){
 			btnBack.setBorder(null);
+		}else if(e.getSource() == btnRenovacion) {
+			pnRenovacion.setBorder(null);
 		}
 	}
 
@@ -192,6 +202,9 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == buscarCred.btnBack) {
 			 this.setVisible(true);
 			 buscarCred.setVisible(false);
+		}else if(e.getSource() == btnRenovacion) {
+			br.setVisible(true);
+			this.setVisible(false);
 		}
 	}
 }
