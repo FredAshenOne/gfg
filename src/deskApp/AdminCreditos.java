@@ -29,6 +29,7 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 	BuscarRenovacion br = new BuscarRenovacion();
 	BuscarClienteCreditos bcc = new BuscarClienteCreditos();
 	BuscarCredito buscarCred = new BuscarCredito();
+	
 	public AdminCreditos() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
@@ -138,6 +139,8 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		bcc.btnBack.addActionListener(this);
 		bcc.btnNext.addActionListener(this);
 		buscarCred.btnBack.addActionListener(this);
+		br.btnBack.addActionListener(this);
+		
 		
 	}
 
@@ -205,6 +208,10 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == btnRenovacion) {
 			br.setVisible(true);
 			this.setVisible(false);
+			br.fillTable(br.searchCredito());
+		}else if(e.getSource() == br.btnBack) {
+			br.setVisible(false);
+			this.setVisible(true);			
 		}
 	}
 }

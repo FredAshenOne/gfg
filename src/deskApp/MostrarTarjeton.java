@@ -25,7 +25,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 public class MostrarTarjeton extends JFrame implements ActionListener,MouseListener{
-	JButton btnBack;
+	JButton btnBack,btnNext;
 	Style s = new Style();
 	private JPanel contentPane;
 	int tipoCredito;
@@ -52,7 +52,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 
 		JPanel pnHeader = new JPanel();
 		pnHeader.setBounds(0, 0, 593, 100);
-		mainPanel.add(pnHeader);
+		mainPanel.add(pnHeader); 
 		pnHeader.setLayout(null);
 		s.mdPanel(pnHeader, s.blue);
 
@@ -70,6 +70,13 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
 		
+		btnNext = new JButton("");
+		btnNext.setBorder(null);
+		btnNext.setBounds(551, 11, 32, 32);
+		pnHeader.add(btnNext);
+		s.btnIcon(btnNext, "views/next.png");
+		btnNext.addMouseListener(this);
+		btnNext.setVisible(false);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(199, 151, 384, 200);
@@ -181,6 +188,9 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		if(e.getSource() == btnBack) {
 			s.hoverBorder(btnBack, Color.white);
 			s.btnPointer(btnBack);
+		}else if(e.getSource() == btnNext) {
+			s.hoverBorder(btnNext, Color.white);
+			s.btnPointer(btnNext);
 		}
 	}
 
@@ -188,6 +198,8 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	public void mouseExited(MouseEvent e) {
 		if(e.getSource() == btnBack) {
 			btnBack.setBorder(null);
+		}else if(e.getSource() == btnNext) {
+			btnNext.setBorder(null);
 		}
 		
 	}
@@ -203,6 +215,12 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/*el resultSet de esta funcion debe ser la union de las tablas 
+	cliente_Personal cp		grupos cp
+	credito_Personal cep	credito grupal cep
+	Tarjeton_Personal tp  	tarjeton_grupal tp
+	*/
 	
 	public void llenarTabla(ResultSet rs) {
 		DefaultTableModel mod = (DefaultTableModel) table.getModel();

@@ -35,16 +35,16 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 	private JPanel contentPane;
 	Style s = new Style();
 	JButton btnBack, btnNext, btnPersonal, btnGrupal;
-	JLabel lblHeader;
+	JLabel lblHeader,lblWarning;
 	public JTextField txtSearch;
-	private JTable table;
+	JTable table;
 	JScrollPane scrollPane;
-	int idUser;
-	int tipoCredito = 1, tipoDuracion = 1;
+	int idUser,tipoCredito = 1, tipoDuracion = 1;
 	Conexion c = new Conexion();
-	private JLabel lblWarning;
 	Alert alCreate = new Alert();
-
+	Renovacion r = new Renovacion();
+	MostrarTarjeton mt = new MostrarTarjeton();
+	
 	public BuscarRenovacion() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,7 +73,7 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 		s.btnIcon(btnBack, "views/back.png");
 		btnBack.addMouseListener(this);
 
-		lblHeader = new JLabel("Buscar Cliente");
+		lblHeader = new JLabel("Clientes disponibles para renovaci\u00F3n");
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setForeground(Color.WHITE);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
@@ -84,7 +84,7 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				fillTable();
+				fillTable(searchCredito());
 			}
 		});
 		txtSearch.setForeground(Color.WHITE);
@@ -141,23 +141,15 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 		table.getTableHeader().setBackground(Color.WHITE);
 		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
-		scrollPane.setVisible(false);
+		scrollPane.setVisible(true);
 
 		DefaultTableModel model = new DefaultTableModel(new Object[][] {},
-				new String[] { "Credito", "Cliente", "Nombre", "A. Paterno", "A. Materno", "Cantidad" }) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-
-		};
+				new String[] { "cliente","Credito", "Nombre", "A. Paterno", "A. Materno", "Cantidad" });
 		table.setModel(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 
 		table.addMouseListener(this);
-
-		btnPersonal = new JButton("Personal");
 
 		btnGrupal = new JButton("Grupal");
 		btnGrupal = new JButton("Grupal");
@@ -187,6 +179,10 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 				btnNext.setEnabled(!lsm.isSelectionEmpty());
 			}
 		});
+		
+		mt.btnNext.addActionListener(this);
+		mt.btnBack.addActionListener(this);
+		r.btnBack.addActionListener(this);
 
 	}
 
@@ -197,14 +193,52 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseEntered(MouseEvent e) {
+		if (e.getSource() == btnNext) {
+			if (btnNext.isEnabled()) {
+				s.hoverBorder(btnNext, Color.white);
+				s.btnPointer(btnNext);
+
+			}
+		} else if (e.getSource() == btnBack) {
+			s.hoverBorder(btnBack, Color.WHITE);
+			s.btnPointer(btnBack);
+		}else if (e.getSource() == btnGrupal) {
+			if (tipoCredito == 1) {
+				s.btnHover(btnGrupal, Color.WHITE, s.blue, Color.white);
+			} else {
+				s.btnHover(btnGrupal, Color.white, Color.WHITE, s.blue);
+			}
+
+		} else if (e.getSource() == btnPersonal) {
+			if (tipoCredito == 2) {
+				s.btnHover(btnPersonal, Color.WHITE, s.blue, Color.white);
+			} else {
+				s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+			}
+		}
 
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseExited(MouseEvent e) {
+		if (e.getSource() == btnNext) {
+			btnNext.setBorder(null);
+		} else if (e.getSource() == btnBack) {
+			btnBack.setBorder(null);
+		} else if (e.getSource() == btnPersonal) {
+			if (tipoCredito == 1) {
+				s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+			} else {
+				s.btnHover(btnPersonal, s.blue, s.blue, Color.white);
+			}
+		} else if (e.getSource() == btnGrupal) {
+			if (tipoCredito == 2) {
+				s.btnHover(btnGrupal, Color.white, Color.WHITE, s.blue);
+			} else {
+				s.btnHover(btnGrupal, s.blue, s.blue, Color.white);
+			}
+		}
 
 	}
 
@@ -221,34 +255,72 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnNext) {
+			this.setVisible(false);
+			mt.setVisible(true);
+			int index = table.getSelectedRow();
+			int idCredito = Integer.parseInt(table.getModel().getValueAt(index, 1).toString());
+			mt.tipoCredito = tipoCredito ;
+			mt.llenarTabla(clienteCreditoPorIdCredito(idCredito));
+			mt.btnNext.setVisible(true);
+			
+		}else if (e.getSource() == btnGrupal) {
+			if (tipoCredito == 1) {
+				tipoCredito = 2;
+				table.getColumnModel().getColumn(2).setHeaderValue("Fecha Creacion");
+				table.getColumnModel().getColumn(3).setHeaderValue("");
+				table.getColumnModel().getColumn(4).setHeaderValue("");
+				s.btnHover(btnPersonal, s.blue, s.blue, Color.white);
+				s.btnHover(btnGrupal, Color.white, Color.WHITE, s.blue);
+				fillTable(searchCredito()); 
+				table.getTableHeader().repaint();
+			}
+		} else if (e.getSource() == btnPersonal) {
+			if (tipoCredito == 2) {
+				table.getColumnModel().getColumn(2).setHeaderValue("A. Paterno");
+				table.getColumnModel().getColumn(3).setHeaderValue("A. Materno");
+				table.getColumnModel().getColumn(4).setHeaderValue("Dirección");
+				tipoCredito = 1;
+				s.btnHover(btnGrupal, s.blue, s.blue, Color.white);
+				s.btnHover(btnPersonal, Color.white, Color.WHITE, s.blue);
+				fillTable(searchCredito());
+				table.getTableHeader().repaint();
+			}
+		}else if(e.getSource() == mt.btnNext) {
+			r.setVisible(true);
+			this.setVisible(false);
+			int index = table.getSelectedRow();
+			r.idCliente = Integer.parseInt(table.getModel().getValueAt(index, 0).toString());
+			
+		}else if(e.getSource() == mt.btnBack) {
+			mt.setVisible(false);
+			this.setVisible(true);
+		}else if(e.getSource() == r.btnBack) {
+			mt.setVisible(true);
+			r.setVisible(false);
+		}
 
 	}
 
-	public void fillTable() {
+	public void fillTable(ResultSet res) {
 		DefaultTableModel mod = (DefaultTableModel) table.getModel();
 		mod.setRowCount(0);
-		ResultSet res = searchCredito();
-		
 		try {
-			if(res.next()) {
-				System.out.println("si tiene elementos"+res.getString("nombre"));
-			}
 			if (tipoCredito == 1) {
 				while (res.next()) {
-					System.out.println(res.getString("nombre") + "si hay resultset");
-					mod.addRow(new Object[] { res.getString("c.id"), res.getString("cp.id"), res.getString("nombre"),
-							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
-							res.getString("c.Cantidad_inicial") });
+					
+					mod.addRow(new Object[] { res.getString("c.id"), res.getString("cp.id"), res.getString("c.nombre"),
+							res.getString("c.apellido_Paterno"), res.getString("c.apellido_Materno"),
+							res.getString("cp.Cantidad_inicial") });
 					scrollPane.setVisible(true);
 					lblWarning.setText("");
 				}
 
 			} else {
 				while (res.next()) {
-					mod.addRow(new Object[] { res.getString("c.id"), res.getString("cp.id"), res.getString("cp.nombre"),
-							res.getString("c.Cantidad_inicial") });
+					mod.addRow(new Object[] { res.getString("c.id"), res.getString("cp.id"), res.getString("c.nombre"),
+							res.getString("cp.Cantidad_inicial") });
 					scrollPane.setVisible(true);
 					lblWarning.setText("");
 				}
@@ -267,55 +339,43 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 			String[] nombre = data.split(" ");
 			if (nombre.length > 2) {
 				return c.query("SELECT * FROM credito_personal cp"
-						+ "LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
-						+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-						+ "WHERE pagos > 5 AND (c.nombre LIKE '%" + nombre[0] + "%' AND c.apellido_paterno LIKE '%"+ nombre[1] + "%' "
-						+ "AND c.apellido_materno LIKE '%" + nombre[2] + "%');");
+						+ " LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
+						+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+						+ " WHERE pagos > 5 AND (c.nombre LIKE '%" + nombre[0] + "%' AND c.apellido_paterno LIKE '%"+ nombre[1] + "%' "
+						+ " AND c.apellido_materno LIKE '%" + nombre[2] + "%');");
 			} else if (nombre.length == 2) {
 				return c.query("SELECT * FROM credito_personal cp"
-						+ "LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
-						+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-						+ "WHERE pagos > 5 AND (c.nombre LIKE '%" + nombre[0] + "%' AND c.apellido_Paterno LIKE '%"
-						+ nombre[1] + "%' OR (c.apellido_Paterno LIKE '%" + nombre[0]+"%'"
-						+ "AND c.apellido_Materno LIKE '%" + nombre[1] + "%'));");
+						+ " LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
+						+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+						+ " WHERE pagos > 5 AND (c.nombre LIKE '%" + nombre[0] + "%' AND c.apellido_Paterno LIKE '%"+ nombre[1] + "%' "
+						+ " OR (c.apellido_Paterno LIKE '%" + nombre[0]+"%'"
+						+ " AND c.apellido_Materno LIKE '%" + nombre[1] + "%'));");
 			} else if (nombre.length == 1) {
-				System.out.println(nombre[0]);
 
 				try {
 					int id = Integer.parseInt(data);
 					if (tipoCredito == 1) {
 						return c.query("SELECT * FROM credito_personal cp"
-								+ "LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
-								+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-								+ "WHERE pagos > 5 AND (c.id = " + id + " OR cp.id = " + id + ");");
+								+ " LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
+								+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+								+ " WHERE pagos > 5 AND (c.id = " + id + " OR cp.id = " + id + ");");
 					} else {
 						return c.query("SELECT * FROM credito_grupal cp LEFT JOIN grupos c ON c.id = cp.id_grupo"
-								+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_grupo,id_credito FROM tarjeton_grupal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-								+ "WHERE pagos > 5  AND (cp.id = " + id + " OR c.id = " + id + ");");
+								+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_grupo,id_credito FROM tarjeton_grupal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+								+ " WHERE pagos > 5  AND (cp.id = " + id + " OR c.id = " + id + ");");
 					}
 
 				} catch (NumberFormatException nfe) {
 					if (tipoCredito == 1) {
-						ResultSet rs;
-						rs = c.query("SELECT * FROM credito_personal cp LEFT JOIN clientes_personal c ON c.id = cp.id_cliente "
-								+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-								+ "WHERE pagos > 5  AND (c.nombre LIKE '%"+ nombre[0]+"%' OR c.apellido_Paterno LIKE '%"+ nombre[0]+"%'"
-								+ "OR c.apellido_Materno LIKE '%"+ nombre[0] +"%');");
-						System.out.println("aca termina");
-						try {
-							if(rs.next()) {
-								
-								System.out.println("si tiene resultados "+ rs.getString("nombre"));
-								
-							}
-						}catch(Exception ex) {
-							ex.printStackTrace();
-						}
-						return rs;
+						return c.query("SELECT * FROM credito_personal cp LEFT JOIN clientes_personal c ON c.id = cp.id_cliente "
+								+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+								+ " WHERE pagos > 5  AND (c.nombre LIKE '%"+ nombre[0]+"%' OR c.apellido_Paterno LIKE '%"+ nombre[0]+"%'"
+								+ " OR c.apellido_Materno LIKE '%"+ nombre[0] +"%');");
+						
 					} else {
 						return c.query("SELECT * FROM credito_grupal cp LEFT JOIN grupos c ON c.id = cp.id_grupo"
-								+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_grupo,id_credito FROM tarjeton_grupal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-								+ "WHERE pagos > 5  AND c.nombre LIKE '%" + data + "%';");
+								+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_grupo,id_credito FROM tarjeton_grupal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+								+ " WHERE pagos > 5  AND c.nombre LIKE '%" + data + "%';");
 					}
 
 				}
@@ -323,13 +383,13 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 				if (tipoCredito == 1) {
 					return c.query(
 							"SELECT * FROM credito_personal cp LEFT JOIN clientes_personal c ON c.id = cp.id_cliente"
-									+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito\r\n"
-									+ "WHERE pagos > 5 ");
+									+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_cliente,id_credito FROM tarjeton_personal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito\r\n"
+									+ " WHERE pagos > 5 ");
 				} else {
 
 					return c.query("SELECT * FROM credito_grupal cp LEFT JOIN grupos c ON c.id = cp.id_grupo "
-							+ "LEFT JOIN (SELECT COUNT(STATUS) pagos,id_grupo,id_credito FROM tarjeton_grupal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
-							+ "WHERE pagos > 5 ;");
+							+ " LEFT JOIN (SELECT COUNT(STATUS) pagos,id_grupo,id_credito FROM tarjeton_grupal WHERE STATUS = 1 GROUP BY id_credito ) AS tabla ON cp.id = tabla.id_credito"
+							+ " WHERE pagos > 5 ;");
 				}
 
 			}
@@ -337,5 +397,19 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 			lblWarning.setText("No se encontraron resultados");
 			return null;
 		}
+	}
+	
+	public ResultSet clienteCreditoPorIdCredito(int idCredito) {
+		try
+		{
+			if(tipoCredito == 1){
+				return c.query("SELECT * FROM credito_personal cep LEFT JOIN clientes_Personal cp ON cep.id_Cliente = cp.id LEFT JOIN tarjeton_personal tp ON tp.id_Credito = cep.id WHERE cep.id = "+idCredito+";");
+			}else {
+				return c.query("SELECT * FROM credito_grupal cep LEFT JOIN grupal cp ON cep.id_grupo = cp.id LEFT JOIN tarjeton_grupal tp ON tp.id_Credito = cep.id WHERE cep.id = "+idCredito+";");
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 }

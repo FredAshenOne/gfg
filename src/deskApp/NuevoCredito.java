@@ -16,9 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -170,7 +167,6 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		cbInteres.setBounds(269, 142, 185, 35);
 		mainPanel.add(cbInteres);
 		cbInteres.setVisible(false);
-		s.mdCombo(cbInteres, Color.white, s.blue);
 		s.mdCombo(cbInteres, Color.white, s.blue);
 
 		lblInteres = new JLabel("Interes Mensual (% Porcentaje)");

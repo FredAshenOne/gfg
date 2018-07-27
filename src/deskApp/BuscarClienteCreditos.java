@@ -344,10 +344,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 							}								
 						}catch(Exception ex) {
 							ex.printStackTrace();
-						}
-						
-						
-						
+						}							
 					
 					}
 
