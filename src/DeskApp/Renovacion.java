@@ -138,6 +138,13 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
 		
+		alOk.btnCancel.setVisible(false);
+		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alOk.lblMessage.setText("Datos guardados con exito");
+		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alOk.btnOk.setText("Ok");
+		alOk.btnOk.addActionListener(this);
+		
 		alCreate.btnCancel.addActionListener(this);
 		alCreate.btnOk.addActionListener(this);
 
@@ -152,14 +159,26 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 		}else if(e.getSource() == alCreate.btnCancel) {
 			alCreate.setVisible(false);
 		}else if(e.getSource() == alCreate.btnOk) {
+			System.out.println(tipoCredito);
 			if(tipoCredito == 1) {
 				crearCreditoPersonal(idCliente);
+				
 			}else {
 				crearCreditoGrupal(idCliente);
-			}
-			if(idCreditoPorDatos(idCliente,Integer.parseInt(txtCantidad.getText()),txtFecha.getText()) != 0) {
 				
 			}
+			int idCredito = idCreditoPorDatos(idCliente,Integer.parseInt(txtCantidad.getText()),txtFecha.getText());
+			if(idCredito != 0) {
+				crearTarjeton(idCliente,idCredito);
+				alOk.setVisible(true);
+				alCreate.setVisible(false);
+				this.setVisible(false);
+				mt.tipoCredito = tipoCredito;
+				mt.setVisible(true);
+				mt.llenarTabla(infoCredito(idCredito));
+			}
+		}else if(e.getSource() == alOk.btnOk) {
+			alOk.setVisible(false);
 		}
 	}
 
@@ -183,15 +202,7 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+		// TODO Auto-generated method stub 
 	
 	public Boolean camposLlenos(){
 		if(s.checarFecha(txtFecha.getText())) {
@@ -291,5 +302,34 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 			ex.printStackTrace();
 		}
 		return false;
+	}
+	
+	public ResultSet infoCredito(int idCredito) {
+		try {
+			if(tipoCredito == 1) {
+				return c.query("SELECT * FROM credito_Personal cep LEFT JOIN clientes_personal cp ON cep.id_Cliente = cp.id LEFT JOIN tarjeton_personal tp ON cep.id = tp.id_Credito WHERE cep.id = "+idCredito+";");
+			}else {
+				return c.query("SELECT * FROM credito_Grupal cep LEFT JOIN grupos cp ON cep.id_Grupo = cp.id LEFT JOIN tarjeton_grupal tp ON cep.id = tp.id_Credito WHERE cep.id = "+idCredito+";");
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	public void completarCredito(int idCredito) {
+		try {
+			if(tipoCredito == 1) {
+				c.update("UPDATE tarjeton_Personal SET status = 3 WHERE id_Credito = "+idCredito+" AND status = 1;");
+				c.update("UPDATE credito_personal SET status = 6 WHERE id = "+idCredito+" AND STATUS = 1;");
+			}else {
+				c.update("UPDATE tarjeton_grupal SET status = 3 WHERE id_Credito = "+idCredito+" AND status = 1;");
+				c.update("UPDATE credito_grupal SET status = 6 WHERE id = "+idCredito+" AND status = 1;");
+				
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

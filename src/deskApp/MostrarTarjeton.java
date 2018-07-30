@@ -217,7 +217,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	}
 	
 	/*el resultSet de esta funcion debe ser la union de las tablas 
-	cliente_Personal cp		grupos cp
+	clientes_Personal cp		grupos cp
 	credito_Personal cep	credito grupal cep
 	Tarjeton_Personal tp  	tarjeton_grupal tp
 	*/
@@ -233,6 +233,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 						rs.getString("tp.observaciones") });
 				scrollPane.setVisible(true);
 				lblWarning.setText("");
+				System.out.println(tipoCredito+" tipo credito");
 				if(tipoCredito == 1) {
 					txtNombre.setText(rs.getString("cp.Nombre")+" "+rs.getString("cp.Apellido_Paterno")+" "+rs.getString("cp.Apellido_Materno"));						
 				}else {

@@ -183,6 +183,7 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 		mt.btnNext.addActionListener(this);
 		mt.btnBack.addActionListener(this);
 		r.btnBack.addActionListener(this);
+		r.alCreate.btnOk.addActionListener(this);
 
 	}
 
@@ -264,6 +265,7 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 			mt.tipoCredito = tipoCredito ;
 			mt.llenarTabla(clienteCreditoPorIdCredito(idCredito));
 			mt.btnNext.setVisible(true);
+			r.tipoCredito = tipoCredito;
 			
 		}else if (e.getSource() == btnGrupal) {
 			if (tipoCredito == 1) {
@@ -299,6 +301,10 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 		}else if(e.getSource() == r.btnBack) {
 			mt.setVisible(true);
 			r.setVisible(false);
+		}else if(e.getSource() == r.alCreate.btnOk){
+			int index = table.getSelectedRow();
+			int idCredito = Integer.parseInt(table.getModel().getValueAt(index, 1).toString());
+			r.completarCredito(idCredito);
 		}
 
 	}
@@ -405,7 +411,7 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 			if(tipoCredito == 1){
 				return c.query("SELECT * FROM credito_personal cep LEFT JOIN clientes_Personal cp ON cep.id_Cliente = cp.id LEFT JOIN tarjeton_personal tp ON tp.id_Credito = cep.id WHERE cep.id = "+idCredito+";");
 			}else {
-				return c.query("SELECT * FROM credito_grupal cep LEFT JOIN grupal cp ON cep.id_grupo = cp.id LEFT JOIN tarjeton_grupal tp ON tp.id_Credito = cep.id WHERE cep.id = "+idCredito+";");
+				return c.query("SELECT * FROM credito_grupal cep LEFT JOIN grupos cp ON cep.id_grupo = cp.id LEFT JOIN tarjeton_grupal tp ON tp.id_Credito = cep.id WHERE cep.id = "+idCredito+";");
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();
