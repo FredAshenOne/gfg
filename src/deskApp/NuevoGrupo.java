@@ -51,7 +51,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 	private JLabel lblWarning;
 
 	NuevoGrupo() {
-
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

@@ -37,6 +37,7 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 	JLabel lblCredito;
 
 	public MostrarTarjeton() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -233,7 +234,6 @@ public class MostrarTarjeton extends JFrame implements ActionListener,MouseListe
 						rs.getString("tp.observaciones") });
 				scrollPane.setVisible(true);
 				lblWarning.setText("");
-				System.out.println(tipoCredito+" tipo credito");
 				if(tipoCredito == 1) {
 					txtNombre.setText(rs.getString("cp.Nombre")+" "+rs.getString("cp.Apellido_Paterno")+" "+rs.getString("cp.Apellido_Materno"));						
 				}else {

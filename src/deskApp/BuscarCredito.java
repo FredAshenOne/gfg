@@ -48,7 +48,7 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 	Alert alCreate = new Alert();
 	MostrarTarjeton mt = new MostrarTarjeton();
 	public BuscarCredito() {
-
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -498,7 +498,8 @@ public class BuscarCredito extends JFrame implements ActionListener, MouseListen
 					return rs;
 				}
 			}else {
-				rs = c.query("SELECT * FROM credito_grupal cp LEFT JOIN clientes_grupo clip on cp.id_grupo = clip.id WHERE cp.id = "+idCredito+";");
+				rs = c.query("SELECT * FROM credito_grupal cp LEFT JOIN grupos clip on cp.id_grupo = clip.id"
+						+ " WHERE cp.id = "+idCredito+";");
 				if(rs.next()) {
 					return rs;
 				}

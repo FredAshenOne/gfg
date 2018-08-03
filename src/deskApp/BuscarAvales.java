@@ -38,6 +38,7 @@ public class BuscarAvales extends JFrame implements ActionListener,MouseListener
 	MostarAval sa = new MostarAval();
 	Alert alAnother = new Alert();
 	public BuscarAvales() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -256,6 +257,8 @@ public class BuscarAvales extends JFrame implements ActionListener,MouseListener
 			this.setVisible(true);
 			sa.setVisible(false);
 			llenarTabla();
+			sa.btnGuardar.setVisible(false);
+			sa.btnNext.setVisible(true);
 		}
 	}	
 	

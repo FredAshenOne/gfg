@@ -35,6 +35,7 @@ public class MostarAval extends JFrame implements ActionListener,MouseListener{
 	Alert alNewAaval = new Alert();
 	
 	public MostarAval() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

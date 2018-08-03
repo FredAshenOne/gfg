@@ -51,7 +51,7 @@ public class BuscarClienteCreditos extends JFrame implements ActionListener, Mou
 	MostrarTarjeton mt = new MostrarTarjeton();
 	MostrarCreditoMensual mcm = new MostrarCreditoMensual();
 	public BuscarClienteCreditos() {
-
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

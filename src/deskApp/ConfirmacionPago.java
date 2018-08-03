@@ -26,6 +26,7 @@ public class ConfirmacionPago extends JFrame implements MouseListener {
 	JLabel txtCliente, txtIDCredito, txtSemana, txtFechaAsignada, txtFechaDePago,lblSemana,lblFechaAsignada,lblFechaDePago,lblObservaciones,lblCliente,lblIdCredito;
 	
 	public ConfirmacionPago() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 420, 424);
 		contentPane = new JPanel();
@@ -183,12 +184,10 @@ public class ConfirmacionPago extends JFrame implements MouseListener {
 	
 	public void lblTexts(Boolean b) {
 		if(b) {
-			System.out.println("si entra en verdaderoafred");
 			lblSemana.setText("Semana");
 			lblFechaAsignada.setText("Fecha Asignada");
 			lblFechaDePago.setVisible(true);
 		}else {
-			System.out.println("si entra en falso");
 			lblSemana.setText("Cantidad:");
 			lblFechaAsignada.setText("Fecha de Pago:");
 			lblFechaDePago.setVisible(false);

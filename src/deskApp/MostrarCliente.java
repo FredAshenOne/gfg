@@ -29,7 +29,7 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 	private JTextField txtNombre, txtAp1, txtAp2, txtNacimiento, txtOcupacion, txtDomicilio, txtExterior, txtInterior,
 			txtColonia, txtTiempo, txtNumCel, txtNumFijo, txtSueldo;
 	private JComboBox cbEstadoCivil, cbTipoDom;
-	int idUser;
+	int idUser,tipoUsuario = 1;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2;
 	JButton btnBack, btnNext, btnSave, btnInfoCliente, btnInfoEmpleo, btnInfoAvales;
@@ -44,6 +44,7 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 	BuscarAvales sad = new BuscarAvales();
 
 	public MostrarCliente() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -435,12 +436,17 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 		} else if (e.getSource() == alUpdate.btnCancel) {
 			alUpdate.setVisible(false);
 		} else if (e.getSource() == btnInfoEmpleo) {
-			sjd.btnNext.setVisible(true);
-			sjd.btnSave.setVisible(false);
+			
 			sjd.setVisible(true);
 			sjd.fillJobData();
 			sjd.fieldsEditable(false);
 			this.setVisible(false);
+			if(tipoUsuario == 1) {
+				sjd.btnNext.setVisible(true);
+				sjd.btnSave.setVisible(false);
+			}else {
+				sjd.btnNext.setVisible(false);
+			}
 		} else if (e.getSource() == btnInfoAvales) {
 			sad.setVisible(true);
 			this.setVisible(false);
@@ -448,21 +454,42 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 		} else if (e.getSource() == sad.btnInfoCliente) {
 			this.setVisible(true);
 			sjd.fieldsEditable(false);
+			if(tipoUsuario == 1) {
+				this.btnSave.setVisible(false);
+				this.btnNext.setVisible(true);	
+			}else {
+				btnNext.setVisible(false);
+			}
+			setEnabledFields(false);
 			sad.setVisible(false);
 		} else if (e.getSource() == sad.btnInfoEmpleo) {
 			sjd.fieldsEditable(false);
-			sjd.btnNext.setVisible(true);
-			sjd.btnSave.setVisible(false);
+			if(tipoUsuario == 1) {
+				sjd.btnNext.setVisible(true);
+				sjd.btnSave.setVisible(false);
+			}else {
+				sjd.btnNext.setVisible(false);
+			}
 			sad.setVisible(false);
 			sjd.setVisible(true);
 			sjd.fillJobData();
+			
 		} else if (e.getSource() == sjd.btnInfoAvales) {
 			sad.setVisible(true);
 			sad.fillTableAvales(searchAvalesByIdCliente());
 			sjd.setVisible(false);
+			
+			
 		} else if (e.getSource() == sjd.btnInfoCliente) {
 			this.setVisible(true);
 			sjd.setVisible(false);
+			if(tipoUsuario == 1) {
+				this.btnSave.setVisible(false);
+				this.btnNext.setVisible(true);
+			}else {
+				btnNext.setVisible(false);
+			}
+			setEnabledFields(false);
 		} else if (e.getSource() == sjd.alSave.btnOk) {
 			try {
 				if (sjd.isJobDataRegistered(rs.getInt("id")) == null) {
@@ -475,7 +502,7 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 					sjd.fieldsEditable(false);
 				} else {
 					sjd.actulizarDatosEmpleo(rs.getString("Nombre"), rs.getString("Apellido_Paterno"),
-							rs.getString("Apellido_Materno"));
+					rs.getString("Apellido_Materno"));
 					sjd.alSave.setVisible(false);
 					alOk.setVisible(true);
 					sjd.fieldsEditable(false);

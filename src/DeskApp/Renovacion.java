@@ -41,7 +41,7 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 	
 
 	public Renovacion() {
-
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -202,7 +202,11 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub 
+	}	
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		
+	}
 	
 	public Boolean camposLlenos(){
 		if(s.checarFecha(txtFecha.getText())) {
@@ -332,4 +336,5 @@ public class Renovacion extends JFrame  implements ActionListener,MouseListener{
 			ex.printStackTrace();
 		}
 	}
+	
 }

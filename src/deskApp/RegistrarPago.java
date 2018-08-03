@@ -31,7 +31,7 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 
 	JPanel contentPane, pnHeader, pnSemanal;
 	Style s = new Style();
-	JButton btnNext, btnBack, btnPersonal, btnGrupal, btnRegistrar, btnMensual, btnSemanal;
+	JButton btnNext, btnBack, btnPersonal, btnGrupal, btnMensual, btnSemanal;
 	int tipoCredito = 1, tipoDuracion = 1;
 	JLabel lblNumPago, lblWarning;
 	JTextArea txtObservaciones;
@@ -39,8 +39,13 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 	Conexion c = new Conexion();
 	Alert alOk = new Alert();
 	ConfirmacionPago con = new ConfirmacionPago();
+	
+	Alert alConfirm = new Alert();
+	private JLabel lblHeader;
+	
 
 	public RegistrarPago() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -73,7 +78,7 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 		pnHeader.add(btnNext);
 		s.btnIcon(btnNext, "views/next.png");
 		btnNext.addMouseListener(this);
-		
+		btnNext.addActionListener(this);
 
 		btnPersonal = new JButton("Personal");
 		btnPersonal.setForeground(Color.WHITE);
@@ -119,15 +124,15 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		lblWarning.setBounds(112, 67, 369, 22);
 		pnHeader.add(lblWarning);
+		
+		lblHeader = new JLabel("Registrar Pago");
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblHeader.setBounds(68, 11, 456, 32);
+		pnHeader.add(lblHeader);
 		btnSemanal.addActionListener(this);
 		btnSemanal.addMouseListener(this);
-
-		btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		btnRegistrar.setBounds(177, 334, 273, 34);
-		s.mdButton(btnRegistrar, s.blue);
-		mainPanel.add(btnRegistrar);
-		btnRegistrar.addActionListener(this);
 		pnSemanal = new JPanel();
 		pnSemanal.setBounds(0, 100, 593, 223);
 		mainPanel.add(pnSemanal);
@@ -185,7 +190,13 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
 		alOk.btnOk.setText("Ok");
 		alOk.btnOk.addActionListener(this);
-
+		
+		alConfirm.btnCancel.setVisible(false);
+		alConfirm.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alConfirm.lblMessage.setText("Credito Terminado");
+		alConfirm.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alConfirm.btnOk.setText("Ok");
+		alConfirm.btnOk.addActionListener(this);
 	}
 
 	@Override
@@ -290,7 +301,7 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 				s.btnHover(btnPersonal, s.blue, s.blue, Color.white);
 				s.btnHover(btnGrupal, Color.white, Color.white, s.blue);
 			}
-		} else if (e.getSource() == btnRegistrar) {
+		} else if (e.getSource() == btnNext) {
 			ResultSet rs;
 			int idCred = Integer.parseInt(txtId.getText());
 			int numPago = Integer.parseInt(txtNumPago.getText());
@@ -317,6 +328,8 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
+				}else {
+					lblWarning.setText("Algunos campose estan vacíos");
 				}
 
 			} else {
@@ -346,8 +359,14 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 			if (tipoDuracion == 1) {
 				insertarPagoSemanal();
 				con.setVisible(false);
-				alOk.setVisible(true);
+				if(creditoPorTerminar(idCred)) {
+					alConfirm.setVisible(true);
+				}else {
+					alOk.setVisible(true);
+				}
+				
 				clearFields();
+				
 			} else {
 				insertarPagoMensual(creditoMensualPorId(idCred));
 				con.setVisible(false);
@@ -356,6 +375,8 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 			}
 		} else if (e.getSource() == alOk.btnOk) {
 			alOk.setVisible(false);
+		}else if(e.getSource() == alConfirm.btnOk) {
+			alConfirm.setVisible(false);
 		}
 	}
 
@@ -366,10 +387,12 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 			c.update(" UPDATE tarjeton_Personal SET fecha_Pago = CURDATE(),status = 1, observaciones = '"
 					+ txtObservaciones.getText() + "' WHERE id_Credito = " + idCredito + " AND numero_pago = " + numPago
 					+ " ;");
+			c.update("UPDATE credito_Personal SET capital = capital - (cantidad_inicial/10) WHERE id = "+idCredito+";");
 		} else {
 			c.update(" UPDATE tarjeton_Grupal SET fecha_Pago = CURDATE(),status = 1,observaciones = '"
 					+ txtObservaciones.getText() + "' WHERE id_Credito = " + idCredito + " AND numero_pago = " + numPago
 					+ ";");
+			c.update("UPDATE credito_Grupal SET capital = capital - (cantidad_inicial/10) WHERE id = "+idCredito+";");
 		}
 
 	}
@@ -468,6 +491,7 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 	public void clearFields() {
 		txtId.setText("");
 		txtNumPago.setText("");
+		txtObservaciones.setText("");
 	}
 
 	
@@ -491,6 +515,33 @@ public class RegistrarPago extends JFrame implements ActionListener, MouseListen
 		return 0;
 	}
 	
+	public Boolean creditoPorTerminar(int idCredito) {
+		ResultSet rs;
+		try {
+			if(tipoCredito == 1) {
+				rs = c.query("SELECT * FROM credito_Personal WHERE id = "+idCredito+";");	
+			}else {
+				rs = c.query("SELECT * FROM credito_grupal WHERE id  = "+idCredito+";");
+			}
+			if(rs.next()) {
+				if(rs.getInt("capital") == 0) {
+					if(tipoCredito == 1) {
+						c.update("UPDATE credito_personal SET status = 3 WHERE id = "+idCredito+";");
+					}else {
+						c.update("UPDATE credito_grupal SET status = 3 WHERE id = "+idCredito+";");
+					}
+					return true;
+				}else {
+					return false;
+				}
+			}
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return false;
+	}
 	
 
 }

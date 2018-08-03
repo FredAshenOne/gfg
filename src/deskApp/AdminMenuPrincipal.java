@@ -2,6 +2,7 @@ package deskApp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -22,29 +23,38 @@ import javax.swing.SwingConstants;
 public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseListener {
 	Style s = new Style();
 	private JPanel contentPane;
-	JPanel pnClientes,pnMovimientos,pnCreditos,pnHeader;
+	JPanel pnClientes,pnMovimientos,pnCreditos,pnHeader,pnSolicitud;
 	JLabel lblBack;
-	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings;
+	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings,btnSolicitud;
 	int idUser;
+	PaneButton pbSolicitud;
 	AdminCreditos acre = new AdminCreditos();
 	AdminClientes ac = new AdminClientes();
 	AdminMovimientos am = new AdminMovimientos();
 	public AdminMenuPrincipal() {
+		setBounds(100,100,1135,827);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 593, 379);
+		mainPanel.setBounds(0, 0, 1134, 800);
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
-		s.mdPanel(mainPanel,Color.WHITE);
+		s.mdPanel(mainPanel,Color.white);
+		
+		
+		JPanel pnHeader = new JPanel();
+		pnHeader.setBounds(0, 0, 1124, 151);
+		mainPanel.add(pnHeader);
+		pnHeader.setLayout(null);
+		s.mdPanel(pnHeader, s.blue);
 		
 		pnClientes = new JPanel();
-		pnClientes.setBounds(21, 161, 155, 180);
+		pnClientes.setBounds(21, 367, 155, 180);
 		mainPanel.add(pnClientes);
 		pnClientes.setLayout(null);
 		s.mdPanel(pnClientes,Color.WHITE);
@@ -68,7 +78,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		btnClient.addMouseListener(this);
 		
 		pnCreditos = new JPanel();
-		pnCreditos.setBounds(220, 161, 155, 180);
+		pnCreditos.setBounds(196, 367, 155, 180);
 		mainPanel.add(pnCreditos);
 		pnCreditos.setLayout(null);
 		s.mdPanel(pnCreditos,Color.white);
@@ -92,7 +102,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		btnCredits.addMouseListener(this);
 		
 		pnMovimientos = new JPanel();
-		pnMovimientos.setBounds(417, 161, 155, 181);
+		pnMovimientos.setBounds(376, 366, 155, 181);
 		mainPanel.add(pnMovimientos);
 		pnMovimientos.setLayout(null);
 		s.mdPanel(pnMovimientos,Color.white);
@@ -114,12 +124,6 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		btnMoves.addActionListener(this);
 		btnMoves.addMouseListener(this);
 		
-		pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 593, 100);
-		mainPanel.add(pnHeader);
-		pnHeader.setLayout(null);
-		s.mdPanel(pnHeader, s.blue);
-		
 		btnBack = new JButton("");
 		btnBack.setBounds(10, 11, 32, 32);
 		pnHeader.add(btnBack);
@@ -127,7 +131,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		s.btnIcon(btnBack, "views/back.png");
 		
 		btnSettings = new JButton("");
-		btnSettings.setBounds(551, 11, 32, 32);
+		btnSettings.setBounds(1082, 11, 32, 32);
 		pnHeader.add(btnSettings);
 		s.btnTransparent(btnSettings);
 		btnSettings.setIcon(new ImageIcon("views/settings.png"));
@@ -135,16 +139,24 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		JLabel lblHeader = new JLabel("Bienvenido ");
 		lblHeader.setForeground(Color.WHITE);
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader.setBounds(52, 11, 489, 32);
+		lblHeader.setBounds(52, 11, 1020, 49);
 		pnHeader.add(lblHeader);
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 17));
 		
 		JLabel lblTitle = new JLabel("Selecciona una opci\u00F3n");
 		lblTitle.setForeground(Color.WHITE);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblTitle.setBounds(52, 54, 489, 32);
+		lblTitle.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblTitle.setBounds(52, 54, 1020, 32);
 		pnHeader.add(lblTitle);
+		
+		pbSolicitud = new PaneButton("Solicitud","views/addFile.png");
+		mainPanel.add(pbSolicitud);
+		pbSolicitud.setBounds(21, 162, 155, 180);
+		pbSolicitud.btn.addMouseListener(this);
+		pbSolicitud.btn.addActionListener(this);
+		
+		
 		
 		
 		btnSettings.addActionListener(this);
@@ -173,6 +185,9 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		}else if(e.getSource() == btnBack) {
 			s.btnPointer(btnBack);
 			s.hoverBorder(btnBack, Color.white);
+		}else if(e.getSource() == pbSolicitud.btn){
+			s.panelPointer(pbSolicitud);
+			s.imgBtnHover(s.blue,pbSolicitud);
 		}
 		
 	}
@@ -186,6 +201,8 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 			pnMovimientos.setBorder(null);
 		}else if(e.getSource() == btnBack) {
 			btnBack.setBorder(null);
+		}else if(e.getSource() == pbSolicitud.btn){
+			pbSolicitud.setBorder(null);
 		}
 	}
 	@Override
@@ -209,6 +226,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 			ac.setVisible(false);
 		}else if(e.getSource() == btnCredits) {
 			acre.setVisible(true);
+			this.setVisible(false);
 		}else if(e.getSource() == acre.btnBack) {
 			this.setVisible(true);
 			acre.setVisible(false);

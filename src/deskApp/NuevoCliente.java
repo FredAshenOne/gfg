@@ -26,21 +26,22 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 	private JTextField txtNombre, txtAp1, txtAp2, txtNacimiento, txtOcupacion, txtDomicilio, txtExterior, txtInterior,
 			txtColonia, txtTiempo, txtNumCel, txtNumFijo, txtSueldo;
 	private JComboBox cbEstadoCivil, cbTipoDom;
-	int idUser;
+	int idUser,tipoUsuario;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
 			lblAp2,lblColonia,lblNumFijo,lblOcupacion,lblTiempoDeResidencia;
 	JButton btnBack, btnNext,btnInfoCliente,btnInfoJob,btnInfoAvales;
-	
+	Alert alOk = new Alert();
 	NuevoAval ca = new NuevoAval();
 	Style s = new Style();
-	UploadFiles uf = new UploadFiles();
 	DatosEmpleo jd = new DatosEmpleo();
 	Conexion c = new Conexion();
+	String nombre,ap1,ap2;
 	ResultSet rs;
 	Alert alSave = new Alert();
 	Alert alNewAval = new Alert();
 	public NuevoCliente() {
-
+	this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -192,6 +193,7 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		mainPanel.add(cbTipoDom);
 		s.mdCombo(cbTipoDom, Color.WHITE, s.blue);
 		cbTipoDom.setEditable(false);
+		s.mdCombo(cbTipoDom, Color.white,s.blue);
 		
 		cbEstadoCivil = new JComboBox();
 		cbEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
@@ -201,7 +203,9 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		mainPanel.add(cbEstadoCivil);
 		cbEstadoCivil.setEditable(false);
 		s.mdCombo(cbEstadoCivil, Color.white, s.blue);
-
+		s.mdCombo(cbEstadoCivil,Color.WHITE, s.blue);
+		
+		
 		JLabel lblTipoDeCasa = new JLabel("Tipo de Casa");
 		lblTipoDeCasa.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblTipoDeCasa.setBounds(330, 167, 115, 14);
@@ -290,11 +294,10 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		btnNext.addActionListener(this);
 		btnNext.addMouseListener(this);
 		alSave.btnOk.addActionListener(this);
+		alSave.btnCancel.addActionListener(this);
 		s.placeholder(txtNombre, lblNombre);
 		s.placeholder(txtAp1, lblAp1);
-		s.placeholder(txtAp2, lblAp2);
-		
-		
+		s.placeholder(txtAp2, lblAp2);		
 		
 		jd.btnNext.addActionListener(this);
 		jd.btnOmit.addActionListener(this);
@@ -316,6 +319,13 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		alNewAval.btnOk.addActionListener(this);
 		alNewAval.btnCancel.addActionListener(this);
 		
+		
+		alOk.btnCancel.setVisible(false);
+		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alOk.lblMessage.setText("Cliente registrado con exito");
+		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alOk.btnOk.setText("Ok");
+		alOk.btnOk.addActionListener(this);
 		
 	}
 
@@ -361,11 +371,17 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 			rs = clientByName(txtNombre.getText(), txtAp1.getText(), txtAp2.getText());
 			if (fullFields()) {
 				try {
-					if (!rs.next()) {
+					if (!rs.next()) {if(isNumeric(txtSueldo.getText())) {
 						alSave.setVisible(true);
 
+					}else {
+						lblWarning.setText("El campo de sueldo es incorrecto");
+						
+					}
+							
 					} else {
 						lblWarning.setText("Cliente ya registrado en la base de datos");
+						lblWarning.setForeground(Color.red);
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
@@ -390,14 +406,20 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 			ca.addAval(txtNombre.getText(), txtAp1.getText(), txtAp2.getText());
 			ca.alSave.setVisible(false);
 			alNewAval.setVisible(true);
+			alOk.setVisible(true);
 		} else if (e.getSource() == ca.btnOmit) {
 			ca.setVisible(false);
+			alOk.setVisible(true);
 		}else if(e.getSource() == alNewAval.btnOk) {
 			ca.clearFields();
 			alNewAval.setVisible(false);
 		}else if(e.getSource() == alNewAval.btnCancel) {
-			alNewAval.setVisible(false);
-			
+			alNewAval.setVisible(false);	
+		}else if(e.getSource() == alSave.btnCancel) {
+			this.setVisible(true);
+			alSave.setVisible(false);
+		}else if(e.getSource() == alOk.btnOk) {
+			alOk.setVisible(false);
 		}
 	}
 
@@ -415,6 +437,7 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 						|| txtNumFijo.getText().length() > 12) {
 					lblWarning.setText("Algunos campos exceden el limite de caracteres");
 					lblWarning.setForeground(Color.RED);
+					
 					return false;
 				} else {
 					return true;
@@ -478,5 +501,26 @@ public class NuevoCliente extends JFrame implements ActionListener, MouseListene
 		 lblTiempoDeResidencia.setVisible(b);		 
 	 }
 	
+	 
+	 public static boolean isNumeric(String cadena) {
 
+	        boolean resultado;
+
+	        try {
+	            Integer.parseInt(cadena);
+	            resultado = true;
+	        } catch (NumberFormatException excepcion) {
+	            resultado = false;
+	        }
+
+	        return resultado;
+	    }
+	 
+	 public void limpiarCampos() {
+		 txtNombre.setText("");txtAp1.setText(""); txtAp2.setText(""); txtNacimiento.setText(""); txtOcupacion.setText(""); txtDomicilio.setText("");
+		 txtExterior.setText(""); txtInterior.setText("");txtColonia.setText(""); txtTiempo.setText(""); txtNumCel.setText(""); txtNumFijo.setText(""); txtSueldo.setText("");
+		 cbTipoDom.setSelectedIndex(0);cbEstadoCivil.setSelectedIndex(0);lblWarning.setText("");
+	 }
+	 
+	 
 }

@@ -41,7 +41,7 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 	private JLabel lblWarning;
 	MostrarCliente sc = new MostrarCliente();
 	public BuscarCliente() {
-
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -221,6 +221,8 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			sc.setEnabledFields(false);
 			sc.etiquetasVisibles(true);
 			sc.setVisible(true);
+			sc.btnSave.setVisible(false);
+			sc.btnNext.setVisible(true);
 			sc.idUser = idUser;
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);

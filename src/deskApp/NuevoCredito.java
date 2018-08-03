@@ -1,4 +1,4 @@
-package deskApp;
+	package deskApp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,21 +36,20 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 	
 
 	public NuevoCredito() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 609, 419);
+		setBounds(100,100,1100,700);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 593, 380);
+		mainPanel.setBounds(0, 0, 1101, 695);
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
-		s.mdPanel(mainPanel, Color.WHITE);
-
+		s.mdPanel(mainPanel,Color.white);
+		
 		JPanel pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 593, 100);
+		pnHeader.setBounds(0, 0, 1091, 151);
 		mainPanel.add(pnHeader);
 		pnHeader.setLayout(null);
 		s.mdPanel(pnHeader, s.blue);
@@ -62,7 +61,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		s.btnIcon(btnBack, "views/back.png");
 		btnBack.addMouseListener(this);
 
-		lblHeader = new JLabel("");
+		lblHeader = new JLabel("Creditos");
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setForeground(Color.WHITE);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
@@ -81,6 +80,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWarning.setBounds(52, 54, 489, 22);
 		pnHeader.add(lblWarning);
+		lblWarning.setForeground(s.red);
 
 		txtFecha = new JTextField();
 		txtFecha.setHorizontalAlignment(SwingConstants.CENTER);
@@ -240,7 +240,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 			
 			c.update(
 					"INSERT INTO credito_Personal (id_Cliente,Cantidad_Inicial,total,capital,Tipo_Credito,tipo_interes,intereses,Fecha_inicio,Status) VALUES ("
-							+ id + "," + cantidad + "," + total + "," + cantidad + "," + cbTipo.getSelectedIndex() + ","
+							+ id + "," + cantidad + "," + total + "," + (cantidad/10)*(semanas-1) + "," + cbTipo.getSelectedIndex() + ","
 							+ interes + ","+intereses+",'" + txtFecha.getText() + "',1);");
 			c.update("INSERT INTO intereses_mensuales_personal (id_credito,cantidad,fecha) VALUES ("+idCreditoPorDatos(id,cantidad,txtFecha.getText())+","+intereses+",'"+txtFecha.getText()+"');");
 
@@ -263,7 +263,7 @@ public class NuevoCredito extends JFrame implements MouseListener, ActionListene
 		try {
 			c.update(
 					"INSERT INTO credito_Grupal (id_Grupo,Cantidad_Inicial,total,capital,Tipo_Credito,tipo_interes,intereses,Fecha_inicio,Status) VALUES ("
-							+ id + "," + cantidad + "," + total + ","+cantidad + "," + cbTipo.getSelectedIndex() + ","
+							+ id + "," + cantidad + "," + total + ","+(cantidad/10)*(semanas-1) + "," + cbTipo.getSelectedIndex() + ","
 							+ interes + ","+intereses+",'" + txtFecha.getText() + "',1);");
 			c.update("INSERT INTO intereses_mensuales_grupal (id_credito,cantidad,fecha) VALUES ("+idCreditoPorDatos(id,cantidad,txtFecha.getText())+","+intereses+",'"+txtFecha.getText()+"');");
 		} catch (Exception ex) {

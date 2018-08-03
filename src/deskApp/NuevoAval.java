@@ -33,6 +33,7 @@ public class NuevoAval extends JFrame implements ActionListener,MouseListener{
 	Alert alSave = new Alert(); 
 	Alert alNewAaval = new Alert();
 	public NuevoAval() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

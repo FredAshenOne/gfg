@@ -35,18 +35,23 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	NuevoGrupo ng = new NuevoGrupo();
 	
 	public AdminClientes() {
+		setBounds(100,100,1100,700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 600, 380);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBounds(0, 0, 1101, 695);
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
-		s.mdPanel(mainPanel, Color.white);
+		s.mdPanel(mainPanel,Color.white);
+		
+		JPanel pnHeader = new JPanel();
+		pnHeader.setBounds(0, 0, 1091, 151);
+		mainPanel.add(pnHeader);
+		pnHeader.setLayout(null);
+		s.mdPanel(pnHeader, s.blue);
 		
 		pnNewClient = new JPanel();
 		pnNewClient.setLayout(null);
@@ -121,12 +126,6 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		btnGrupo.addMouseListener(this);
 		s.btnIcon(btnGrupo, "views/group.png");
 		
-		pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 603, 100);
-		mainPanel.add(pnHeader);
-		pnHeader.setLayout(null);
-		s.mdPanel(pnHeader, s.blue);
-		
 		btnBack = new JButton("");
 		btnBack.setBounds(10, 11, 32, 32);
 		pnHeader.add(btnBack);
@@ -134,10 +133,19 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		btnBack.addMouseListener(this);
 		
 		s.btnIcon(btnBack, "views/back.png");
-		JLabel lblHeader = new JLabel("");
+		JLabel lblHeader = new JLabel("Clientes");
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
+		
+		JLabel lblHeader2 = new JLabel("Seleccione una opci\u00F3n");
+		lblHeader2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader2.setForeground(Color.WHITE);
+		lblHeader2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		lblHeader2.setBounds(52, 46, 489, 32);
+		pnHeader.add(lblHeader2);
 		
 		nc.btnBack.addActionListener(this);
 		nc.alNewAval.btnCancel.addActionListener(this);
@@ -198,11 +206,13 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnNewClient) {
 			nc.etiquetasInvisibles(false);
+			nc.limpiarCampos();
 			nc.setVisible(true);
 			nc.idUser = idUser;
 		}else if(e.getSource() == nc.btnBack) {
 			this.setVisible(true);
 			nc.setVisible(false);
+			nc.limpiarCampos();
 		}else if(e.getSource() == nc.alNewAval.btnCancel) {
 			this.setVisible(true);
 			nc.alNewAval.setVisible(false);

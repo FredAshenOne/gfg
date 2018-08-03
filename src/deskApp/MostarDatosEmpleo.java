@@ -33,6 +33,7 @@ public class MostarDatosEmpleo extends JFrame implements ActionListener,MouseLis
 	
 	
 	public MostarDatosEmpleo() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -182,6 +183,9 @@ public class MostarDatosEmpleo extends JFrame implements ActionListener,MouseLis
 		btnInfoEmpleo.addMouseListener(this);
 		btnInfoCliente.addMouseListener(this);
 		btnInfoAvales.addMouseListener(this);
+		
+		btnNext.setVisible(true);
+		btnSave.setVisible(false);
 	}
 
 	@Override

@@ -21,10 +21,13 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 
 	private JPanel contentPane,pnHeader;
 	Style s = new Style();
-	JButton btnBack,btnPagos;
+	JButton btnBack,btnPagos,btnPenalizacion;
+	Penalizacion p = new Penalizacion();
 	RegistrarPago rp = new RegistrarPago();
-	JPanel pnPagos;
+	JLabel lblIconPenalizacion,lblPenalizaciones;
+	JPanel pnPagos,pnPenalizacion;
 	public AdminMovimientos() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -50,6 +53,20 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		btnBack.addMouseListener(this);
 		
 		s.btnIcon(btnBack, "views/back.png");
+		
+		JLabel lblHeader = new JLabel("Movimientos");
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblHeader.setBounds(65, 11, 456, 32);
+		pnHeader.add(lblHeader);
+		
+		JLabel lblHeader2 = new JLabel("Seleccione una opci\u00F3n");
+		lblHeader2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader2.setForeground(Color.WHITE);
+		lblHeader2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
+		lblHeader2.setBounds(65, 57, 456, 32);
+		pnHeader.add(lblHeader2);
 		
 		pnPagos = new JPanel();		
 		pnPagos.setLayout(null);
@@ -77,30 +94,36 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		btnPagos.addActionListener(this);
 		btnPagos.addMouseListener(this);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBounds(212, 156, 155, 180);
-		mainPanel.add(panel_1);
+		pnPenalizacion = new JPanel();
+		pnPenalizacion.setLayout(null);
+		pnPenalizacion.setBounds(212, 156, 155, 180);
+		mainPanel.add(pnPenalizacion);
+		s.mdPanel(pnPenalizacion, Color.white);
+		pnPenalizacion.setBorder(null);
 		
-		JLabel label_2 = new JLabel("");
-		label_2.setBounds(10, 11, 135, 135);
-		panel_1.add(label_2);
+		lblIconPenalizacion = new JLabel("");
+		lblIconPenalizacion.setBounds(10, 11, 135, 135);
+		pnPenalizacion.add(lblIconPenalizacion);
+		lblIconPenalizacion.setIcon(new ImageIcon("views/referee.png"));
 		
-		JLabel label_3 = new JLabel("Nuevo Credito");
-		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		label_3.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		label_3.setBounds(10, 157, 135, 23);
-		panel_1.add(label_3);
+		lblPenalizaciones = new JLabel("Penalizaciones");
+		lblPenalizaciones.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPenalizaciones.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblPenalizaciones.setBounds(10, 157, 135, 23);
+		pnPenalizacion.add(lblPenalizaciones);
 		
-		JButton button_1 = new JButton("");
-		button_1.setBounds(0, 0, 155, 180);
-		panel_1.add(button_1);
+		btnPenalizacion = new JButton("");
+		btnPenalizacion.setBounds(0, 0, 155, 180);
+		pnPenalizacion.add(btnPenalizacion);
+		s.btnTransparent(btnPenalizacion);
+		btnPenalizacion.addActionListener(this);
+		btnPenalizacion.addMouseListener(this);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBounds(404, 156, 155, 180);
 		mainPanel.add(panel_2);
-		
+		panel_2.setVisible(false);
 		JLabel label_4 = new JLabel("");
 		label_4.setBounds(10, 11, 135, 135);
 		panel_2.add(label_4);
@@ -115,6 +138,8 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		button_2.setBounds(0, 0, 155, 180);
 		panel_2.add(button_2);
 		rp.btnBack.addActionListener(this);
+		
+		p.btnBack.addActionListener(this);
 	}
 
 	@Override
@@ -131,6 +156,9 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		} else if(e.getSource() == btnPagos){
 			s.imgBtnHover(s.blue,pnPagos);
 			s.panelPointer(pnPagos);
+		} else if(e.getSource() == btnPenalizacion){
+			s.imgBtnHover(s.blue,pnPenalizacion);
+			s.panelPointer(pnPenalizacion);
 		}
 	}
 
@@ -140,6 +168,8 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 			btnBack.setBorder(null);
 		}else if(e.getSource() == btnPagos) {
 			pnPagos.setBorder(null);
+		}else if(e.getSource() == btnPenalizacion) {
+			pnPenalizacion.setBorder(null);
 		}
 	}
 
@@ -163,6 +193,12 @@ public class AdminMovimientos extends JFrame implements ActionListener,MouseList
 		}else if(e.getSource() == rp.btnBack) {
 			rp.setVisible(false);
 			this.setVisible(true);
+		}else if(e.getSource() == btnPenalizacion) {
+			p.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == p.btnBack) {
+			this.setVisible(true);
+			p.setVisible(false);
 		}
 	}
 }

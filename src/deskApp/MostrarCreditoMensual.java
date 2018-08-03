@@ -26,6 +26,7 @@ public class MostrarCreditoMensual extends JFrame implements ActionListener,Mous
 	JTextField txtIdCredito,txtCantidad,txtFecha,txtCliente,txtIntereses;
 	JLabel lblCantidad;
 	public MostrarCreditoMensual() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();

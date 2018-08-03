@@ -46,7 +46,7 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 	MostrarTarjeton mt = new MostrarTarjeton();
 	
 	public BuscarRenovacion() {
-
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
@@ -305,6 +305,9 @@ public class BuscarRenovacion extends JFrame implements ActionListener, MouseLis
 			int index = table.getSelectedRow();
 			int idCredito = Integer.parseInt(table.getModel().getValueAt(index, 1).toString());
 			r.completarCredito(idCredito);
+		}else if(e.getSource() == r.mt.btnBack) {
+			r.mt.setVisible(false);
+			this.setVisible(true);
 		}
 
 	}

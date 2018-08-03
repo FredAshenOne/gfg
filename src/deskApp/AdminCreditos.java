@@ -29,10 +29,13 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 	BuscarRenovacion br = new BuscarRenovacion();
 	BuscarClienteCreditos bcc = new BuscarClienteCreditos();
 	BuscarCredito buscarCred = new BuscarCredito();
+	private JLabel lblHeader2;
 	
 	public AdminCreditos() {
+		setTitle("Gupo Financiero Guerra");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 609, 419);
+		setBounds(100, 100, 610, 420);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -130,10 +133,19 @@ public class AdminCreditos extends JFrame implements ActionListener,MouseListene
 		btnBack.addMouseListener(this);
 		
 		s.btnIcon(btnBack, "views/back.png");
-		JLabel lblHeader = new JLabel("");
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
+		JLabel lblHeader = new JLabel("Creditos");
+		lblHeader.setForeground(Color.WHITE);
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblHeader.setBounds(52, 11, 489, 32);
 		pnHeader.add(lblHeader);
+		
+		lblHeader2 = new JLabel("Seleccione una opci\u00F3n");
+		lblHeader2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader2.setForeground(Color.WHITE);
+		lblHeader2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblHeader2.setBounds(52, 46, 456, 32);
+		pnHeader.add(lblHeader2);
 		
 		btnQuery.addActionListener(this);
 		bcc.btnBack.addActionListener(this);
