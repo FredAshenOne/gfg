@@ -28,6 +28,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings,btnSolicitud;
 	int idUser;
 	PaneButton pbSolicitud;
+	Solicitud solicitud = new Solicitud();
 	AdminCreditos acre = new AdminCreditos();
 	AdminClientes ac = new AdminClientes();
 	AdminMovimientos am = new AdminMovimientos();
@@ -154,9 +155,10 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		mainPanel.add(pbSolicitud);
 		pbSolicitud.setBounds(21, 162, 155, 180);
 		pbSolicitud.btn.addMouseListener(this);
-		pbSolicitud.btn.addActionListener(this);
+		pbSolicitud.btn.addActionListener(this);		
 		
-		
+		solicitud.alSave.btnOk.addActionListener(this);
+		solicitud.btnBack.addActionListener(this);
 		
 		
 		btnSettings.addActionListener(this);
@@ -236,6 +238,15 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		}else if(e.getSource() == am.btnBack ) {
 			this.setVisible(true);
 			am.setVisible(false);
+		}else if(e.getSource() == pbSolicitud.btn) {
+			solicitud.setVisible(true);
+			solicitud.limpiarCampos();
+			this.setVisible(false);
+		}else if(e.getSource() == solicitud.btnBack) {
+			this.setVisible(true);
+			solicitud.setVisible(false); 
+		}else if(e.getSource() == solicitud.alSave.btnOk) {
+			this.setVisible(true);			
 		}
 	}
 }

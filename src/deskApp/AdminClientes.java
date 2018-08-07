@@ -31,7 +31,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	int idUser;
 	BuscarCliente sc = new BuscarCliente();
 	Alert alNewAval = new Alert();
-	NuevoCliente nc = new NuevoCliente();
+	Solicitud nc = new Solicitud();
 	NuevoGrupo ng = new NuevoGrupo();
 	
 	public AdminClientes() {
@@ -205,7 +205,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnNewClient) {
-			nc.etiquetasInvisibles(false);
+//			nc.etiquetasInvisibles(false);
 			nc.limpiarCampos();
 			nc.setVisible(true);
 			nc.idUser = idUser;
