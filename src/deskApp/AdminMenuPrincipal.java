@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -158,7 +159,7 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		pbSolicitud.btn.addActionListener(this);		
 		
 		solicitud.alSave.btnOk.addActionListener(this);
-		solicitud.btnBack.addActionListener(this);
+		solicitud.headerPrincipal.btnBack.addActionListener(this);
 		
 		
 		btnSettings.addActionListener(this);
@@ -239,14 +240,16 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 			this.setVisible(true);
 			am.setVisible(false);
 		}else if(e.getSource() == pbSolicitud.btn) {
+			Point pos = this.getLocation();
 			solicitud.setVisible(true);
-			solicitud.limpiarCampos();
+			solicitud.limpiarCamposSolicitud();
 			this.setVisible(false);
-		}else if(e.getSource() == solicitud.btnBack) {
+			solicitud.pnSolicitud.setVisible(false);
+			solicitud.pnPrincipal.setVisible(true);
+			
+		}else if(e.getSource() == solicitud.headerPrincipal.btnBack) {
 			this.setVisible(true);
 			solicitud.setVisible(false); 
-		}else if(e.getSource() == solicitud.alSave.btnOk) {
-			this.setVisible(true);			
 		}
 	}
 }

@@ -147,7 +147,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		lblHeader2.setBounds(52, 46, 489, 32);
 		pnHeader.add(lblHeader2);
 		
-		nc.btnBack.addActionListener(this);
+//		nc.btnBack.addActionListener(this);
 		nc.alNewAval.btnCancel.addActionListener(this);
 		btnQuery.addActionListener(this);
 		sc.btnBack.addActionListener(this);
@@ -206,13 +206,13 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnNewClient) {
 //			nc.etiquetasInvisibles(false);
-			nc.limpiarCampos();
+			nc.limpiarCamposSolicitud();
 			nc.setVisible(true);
 			nc.idUser = idUser;
 		}else if(e.getSource() == nc.btnBack) {
 			this.setVisible(true);
 			nc.setVisible(false);
-			nc.limpiarCampos();
+			nc.limpiarCamposSolicitud();
 		}else if(e.getSource() == nc.alNewAval.btnCancel) {
 			this.setVisible(true);
 			nc.alNewAval.setVisible(false);

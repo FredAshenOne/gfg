@@ -4,9 +4,12 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -21,25 +24,34 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
-public class Solicitud extends JFrame implements ActionListener, MouseListener {
+public class Solicitud extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane, pnReferencias;
+	JPanel contentPane, pnReferencias, pnSolicitud, pnPrincipal;
 	MdTextField txtNombre, txtAp1, txtAp2, txtNacimiento, txtOcupacion, txtDomicilio, txtExterior, txtInterior,
 			txtColonia, txtTiempo, txtCelular, txtNumFijo, txtSueldo, txtCiudad, txtCantidad, txtDireccion,
 			txtExteriorEmpleo, txtInteriorEmpleo, txtTelefonoEmpleo, txtDescripcion, txtNombreRef1, txtNombreRef2,
 			txtPaternoRef1, txtPaternoRef2, txtMaternoRef1, txtMaternoRef2, txtDireccionRef1, txtDireccionRef2,
-			txtExteriorRef1, txtExteriorRef2, txtInteriorRef1, txtInteriorRef2, txtTelefonoRef1, txtTelefonoRef2;
+			txtExteriorRef1, txtExteriorRef2, txtInteriorRef1, txtInteriorRef2, txtTelefonoRef1, txtTelefonoRef2,
+			txtTiempoEmpleo, txtNombreAval, txtPaternoAval, txtMaternoAval, txtDireccionAval, txtExteriorAval,
+			txtInteriorAval, txtTelefonoAval, txtOcupacionAval, txtColoniaAval;
 	private JComboBox cbEstadoCivil, cbTipoDom, cbTipo;
-	int idUser, tipoUsuario;
+	int idUser, tipoUsuario, idClienteActual,idSolicitud;
 	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblCelular, lblWarning, lblNombre, lblAp1,
-			lblAp2, lblColonia, lblFijo, lblOcupacion, lblResidencia, lblCiudad, lblTipoDeCasa, lblEstadoCivil,
-			lblCantidad, lblDireccion, lblTelefonoEmpleo, lblDescripcion, lblExteriorEmpleo, lblInteriorEmpleo,
-			lblInfoEmpleo, lblNombreRef1, lblNombreRef2, lblPaternoRef1, lblPaternoRef2, lblMaternoRef1, lblMaternoRef2,
-			lblDireccionRef1, lblDireccionRef2, lblExteriorRef1, lblExteriorRef2, lblInteriorRef1, lblInteriorRef2,
-			lblTelefonoRef1, lblTelefonoRef2;
-	JButton btnBack, btnNext, btnInfoCliente, btnInfoJob, btnInfoAvales,btnNext2,btnBack2,btnNuevoCliente,btnClienteRegistrado;
+			lblWarningAval, lblAp2, lblColonia, lblFijo, lblOcupacion, lblResidencia, lblCiudad, lblTipoDeCasa,
+			lblEstadoCivil, lblCantidad, lblDireccion, lblTelefonoEmpleo, lblDescripcion, lblExteriorEmpleo,
+			lblInteriorEmpleo, lblInfoEmpleo, lblNombreRef1, lblNombreRef2, lblPaternoRef1, lblPaternoRef2,
+			lblMaternoRef1, lblMaternoRef2, lblDireccionRef1, lblDireccionRef2, lblExteriorRef1, lblExteriorRef2,
+			lblInteriorRef1, lblInteriorRef2, lblTiempoEmpleo, lblTelefonoRef1, lblTelefonoRef2, lblNombreAval,
+			lblPaternoAval, lblMaternoAval, lblDireccionAval, lblExteriorAval, lblInteriorAval, lblColoniaAval,
+			lblOcupacionAval, lblTelefonoAval;
+	JButton btnBack, btnNext, btnInfoCliente, btnInfoJob, btnInfoAvales;
+	MdButton btnNuevoCliente, btnClienteRegistrado, btnOmitirAval;
+	MdHeader headerSolicitud,headerPrincipal,headerNuevoAval;
 	Alert alOk = new Alert();
 	NuevoAval ca = new NuevoAval();
 	Style s = new Style();
@@ -47,8 +59,11 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 	Conexion c = new Conexion();
 	String nombre, ap1, ap2;
 	ResultSet rs;
-	Alert alSave = new Alert(), alNewAval = new Alert();
+	Alert alSave = new Alert(), alNewAval = new Alert(), alSaveAval = new Alert();
 	JLabel lblHeader;
+	private JButton btnNewButton;
+	private JPanel pnRegistrarAval;
+	private JLabel lblNewLabel;
 
 	public Solicitud() {
 		setBounds(100, 100, 1135, 827);
@@ -59,92 +74,47 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JPanel pnSolicitud = new JPanel();
-		s.mdPanel(pnSolicitud, Color.white);
-		pnSolicitud.setBounds(1134, 0, 1134, 800);
-		contentPane.add(pnSolicitud);
-		pnSolicitud.setLayout(null);
-		
-		
-		
-		JPanel pnPrincipal = new JPanel();
-		pnPrincipal.setBounds(0, 0, 1134, 800);
+		pnPrincipal = new JPanel();
+		pnPrincipal.setBounds(1140, 0, 1134, 800);
 		contentPane.add(pnPrincipal);
 		pnPrincipal.setLayout(null);
-		s.mdPanel(pnPrincipal,Color.white);
+		s.mdPanel(pnPrincipal, Color.white);
+
+		// Panel de seleccion
 		
-		JPanel pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 1124, 151);
-		pnSolicitud.add(pnHeader);
-		pnHeader.setLayout(null);
-		s.mdPanel(pnHeader, s.blue);
+		JPanel pnChoice = new JPanel();
+		pnChoice.setBounds(1124, 219, 384, 303);
+		pnPrincipal.add(pnChoice);
+		pnChoice.setLayout(null);
 
-		JPanel pnHeader2 = new JPanel();
-		pnHeader2.setBounds(0, 0, 1124, 151);
-		pnPrincipal.add(pnHeader2);
-		pnHeader2.setLayout(null);
-		s.mdPanel(pnHeader2, s.blue);
+		btnNuevoCliente = new MdButton(s.blue, Color.WHITE, "Cliente nuevo");
+		btnNuevoCliente.setBounds(41, 55, 307, 39);
+		pnChoice.add(btnNuevoCliente);
+		s.mdPanel(pnChoice, Color.white);
+		btnNuevoCliente.addActionListener(this);
+
+		btnClienteRegistrado = new MdButton(s.blue, Color.WHITE, "Cliente Registrado");
+		btnClienteRegistrado.setBounds(41, 158, 307, 39);
+		pnChoice.add(btnClienteRegistrado);
+		s.mdPanel(pnChoice, Color.white);
+		btnClienteRegistrado.addActionListener(this);
+
+		// panel de titulo para seleccion
 		
-		btnBack = new JButton("");
-		btnBack.setBorder(null);
-		btnBack.setBounds(10, 11, 32, 32);
-		pnHeader.add(btnBack);
-		s.btnIcon(btnBack, "views/back.png");
-		btnBack.addMouseListener(this);
-
-		btnNext = new JButton("");
-		btnNext.setBorder(null);
-		btnNext.setBounds(1082, 11, 32, 32);
-		pnHeader.add(btnNext);
-		s.btnIcon(btnNext, "views/next.png");
+		headerPrincipal = new MdHeader(s.blue,Color.white);
+		pnPrincipal.add(headerPrincipal);
+		headerPrincipal.lblTitle.setText("Solicitud de credito");
+		headerPrincipal.btnNext.setVisible(false);
+		headerPrincipal.btnBack.addActionListener(this);
 		
-		btnBack2 = new JButton("");
-		btnBack2.setBorder(null);
-		btnBack2.setBounds(10, 11, 32, 32);
-		pnHeader2.add(btnBack2);
-		s.btnIcon(btnBack2, "views/back.png");
-		btnBack2.addMouseListener(this);
+		
+		// Panel de formulario
 
-		btnNext2 = new JButton("");
-		btnNext2.setBorder(null);
-		btnNext2.setBounds(1082, 11, 32, 32);
-		pnHeader2.add(btnNext2);
-		s.btnIcon(btnNext2, "views/next.png");
-
-		lblHeader = new JLabel("Nuevo Cliente: Datos Personales");
-		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader.setForeground(Color.WHITE);
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
-		lblHeader.setBounds(52, 11, 1020, 32);
-		pnHeader.add(lblHeader);
-
-		lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(10, 54, 240, 14);
-		pnHeader.add(lblNombre);
-		txtNombre = new MdTextField(Color.WHITE, "Nombre", s.blue, Color.white, lblNombre);
-		txtNombre.setBounds(10, 69, 240, 35);
-		pnHeader.add(txtNombre);
-
-		lblAp1 = new JLabel("Apellido Paterno");
-		lblAp1.setBounds(260, 54, 240, 14);
-		pnHeader.add(lblAp1);
-		txtAp1 = new MdTextField(Color.white, "Apellido Paterno", s.blue, Color.WHITE, lblAp1);
-		txtAp1.setBounds(260, 69, 240, 35);
-		pnHeader.add(txtAp1);
-
-		lblAp2 = new JLabel();
-		lblAp2.setBounds(523, 55, 240, 14);
-		pnHeader.add(lblAp2);
-		txtAp2 = new MdTextField(Color.WHITE, "Apellido_Materno", s.blue, Color.WHITE, lblAp2);
-		txtAp2.setBounds(523, 69, 240, 35);
-		pnHeader.add(txtAp2);
-
-		lblWarning = new JLabel("");
-		lblWarning.setForeground(Color.RED);
-		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
-		lblWarning.setBounds(10, 115, 1104, 32);
-		pnHeader.add(lblWarning);
-		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
+		pnSolicitud = new JPanel();
+		s.mdPanel(pnSolicitud, Color.white);
+		pnSolicitud.setBounds(1140, 0, 1134, 800);
+		contentPane.add(pnSolicitud);
+		pnSolicitud.setLayout(null);
 
 		lblNacimiento = new JLabel();
 		lblNacimiento.setBounds(57, 280, 179, 14);
@@ -256,6 +226,43 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		lblEstadoCivil.setBounds(245, 468, 115, 14);
 		pnSolicitud.add(lblEstadoCivil);
 
+		// panel de encabeado para formulario
+
+		headerSolicitud = new MdHeader(s.blue,Color.WHITE);
+		pnSolicitud.add(headerSolicitud);
+		headerSolicitud.lblTitle.setText("Nueva Solicitud de Credito");
+		headerSolicitud.lblWarning.setVisible(false);
+		
+		lblNombre = new JLabel("Nombre");
+		lblNombre.setBounds(10, 54, 240, 14);
+		headerSolicitud.add(lblNombre);
+		txtNombre = new MdTextField(Color.WHITE, "Nombre", s.blue, Color.white,lblNombre);
+		txtNombre.setBounds(10, 69, 240, 35);
+		headerSolicitud.add(txtNombre);
+
+		lblAp1 = new JLabel("Apellido Paterno");
+		lblAp1.setBounds(260, 54, 240, 14);
+		headerSolicitud.add(lblAp1);
+		txtAp1 = new MdTextField(Color.white, "Apellido Paterno", s.blue, Color.WHITE, lblAp1);
+		txtAp1.setBounds(260, 69, 240, 35);
+		headerSolicitud.add(txtAp1);
+
+		lblAp2 = new JLabel();
+		lblAp2.setBounds(523, 55, 240, 14);
+		headerSolicitud.add(lblAp2);
+		txtAp2 = new MdTextField(Color.WHITE, "Apellido_Materno", s.blue, Color.WHITE, lblAp2);
+		txtAp2.setBounds(523, 69, 240, 35);
+		headerSolicitud.add(txtAp2);
+
+		lblWarning = new JLabel("");
+		lblWarning.setForeground(Color.RED);
+		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWarning.setBounds(10, 115, 1104, 32);
+		headerSolicitud.add(lblWarning);
+		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
+
+		// Panel de informacion de empleo
+
 		JPanel pnInfoEmpleo = new JPanel();
 		pnInfoEmpleo.setBounds(515, 150, 609, 639);
 		pnSolicitud.add(pnInfoEmpleo);
@@ -294,20 +301,22 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		pnInfoEmpleo.add(txtInteriorEmpleo);
 
 		lblTelefonoEmpleo = new JLabel("");
-		lblTelefonoEmpleo.setBounds(127, 148, 189, 14);
+		lblTelefonoEmpleo.setBounds(20, 148, 177, 14);
 		pnInfoEmpleo.add(lblTelefonoEmpleo);
 		txtTelefonoEmpleo = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, new Color(3, 155, 229),
 				lblTelefonoEmpleo);
-		txtTelefonoEmpleo.setBounds(127, 169, 181, 31);
+		txtTelefonoEmpleo.setBounds(20, 169, 177, 31);
 		pnInfoEmpleo.add(txtTelefonoEmpleo);
 
 		lblDescripcion = new JLabel("");
-		lblDescripcion.setBounds(324, 148, 181, 14);
+		lblDescripcion.setBounds(207, 148, 183, 14);
 		pnInfoEmpleo.add(lblDescripcion);
 		txtDescripcion = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, new Color(3, 155, 229),
 				lblDescripcion);
-		txtDescripcion.setBounds(316, 168, 181, 32);
+		txtDescripcion.setBounds(209, 168, 181, 32);
 		pnInfoEmpleo.add(txtDescripcion);
+
+		// Panel de informacion de referencias
 
 		pnReferencias = new JPanel();
 		pnReferencias.setBounds(0, 211, 609, 428);
@@ -439,13 +448,21 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		lblReferencia.setBounds(10, 202, 589, 31);
 		pnReferencias.add(lblReferencia);
 
+		lblTiempoEmpleo = new JLabel("");
+		lblTiempoEmpleo.setBounds(400, 148, 183, 14);
+		pnInfoEmpleo.add(lblTiempoEmpleo);
+		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, new Color(3, 155, 229),
+				lblTiempoEmpleo);
+		txtTiempoEmpleo.setBounds(402, 168, 181, 32);
+		pnInfoEmpleo.add(txtTiempoEmpleo);
+
 		lblCantidad = new JLabel("Tipo de Casa");
 		lblCantidad.setBounds(71, 728, 170, 14);
 		pnSolicitud.add(lblCantidad);
 		txtCantidad = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, new Color(3, 155, 229), lblCantidad);
 		txtCantidad.setBounds(71, 743, 170, 34);
 		pnSolicitud.add(txtCantidad);
-
+		pnSolicitud.setVisible(true);
 		JLabel lblTipoCredito = new JLabel("Tipo de Credito");
 		lblTipoCredito.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTipoCredito.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
@@ -463,12 +480,101 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		s.mdCombo(cbTipo, Color.WHITE, s.blue);
 		cbTipo.setBounds(246, 743, 185, 35);
 		pnSolicitud.add(cbTipo);
+		
+		//		Panel nuevos Avales
+		JPanel pnNuevosAvales = new JPanel();
+		pnNuevosAvales.setBounds(0, 0, 1134, 800);
+		contentPane.add(pnNuevosAvales);
+		pnNuevosAvales.setLayout(null);
+		//Panel encabezado para nuevos avales
+		headerNuevoAval = new MdHeader(s.blue,Color.WHITE);
+		pnNuevosAvales.add(headerNuevoAval);
+		headerNuevoAval.lblTitle.setText("Registrar nuevo aval");
+		
+		pnRegistrarAval = new JPanel();
+		pnRegistrarAval.setBounds(1140, 247, 737, 399);
+		pnNuevosAvales.add(pnRegistrarAval);
+		pnRegistrarAval.setLayout(null);
+		s.mdPanel(pnRegistrarAval, Color.WHITE);
+		pnRegistrarAval.setVisible(false);
 
-		btnNext.addActionListener(this);
-		btnNext.addMouseListener(this);
+		lblNombreAval = new JLabel();
+		lblNombreAval.setBounds(50, 35, 200, 15);
+		pnRegistrarAval.add(lblNombreAval);
+		txtNombreAval = new MdTextField(Color.BLACK, "Nombre(s)", Color.white, s.blue, lblNombreAval);
+		txtNombreAval.setBounds(50, 50, 200, 35);
+		pnRegistrarAval.add(txtNombreAval);
 
-		alSave.btnOk.addActionListener(this);
-		alSave.btnCancel.addActionListener(this);
+		lblPaternoAval = new JLabel();
+		lblPaternoAval.setBounds(268, 35, 200, 15);
+		pnRegistrarAval.add(lblPaternoAval);
+		txtPaternoAval = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, new Color(3, 155, 229),
+				lblPaternoAval);
+		txtPaternoAval.setBounds(268, 50, 200, 35);
+		pnRegistrarAval.add(txtPaternoAval);
+
+		lblMaternoAval = new JLabel();
+		lblMaternoAval.setBounds(478, 35, 200, 15);
+		pnRegistrarAval.add(lblMaternoAval);
+		txtMaternoAval = new MdTextField(Color.BLACK, "A.Materno", Color.WHITE, new Color(3, 155, 229), lblMaternoAval);
+		txtMaternoAval.setBounds(478, 50, 200, 35);
+		pnRegistrarAval.add(txtMaternoAval);
+
+		lblDireccionAval = new JLabel();
+		lblDireccionAval.setBounds(50, 139, 368, 15);
+		pnRegistrarAval.add(lblDireccionAval);
+		txtDireccionAval = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, new Color(3, 155, 229),
+				lblDireccionAval);
+		txtDireccionAval.setBounds(50, 154, 368, 35);
+		pnRegistrarAval.add(txtDireccionAval);
+
+		lblExteriorAval = new JLabel();
+		lblExteriorAval.setBounds(428, 139, 120, 15);
+		pnRegistrarAval.add(lblExteriorAval);
+		txtExteriorAval = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, new Color(3, 155, 229),
+				lblExteriorAval);
+		txtExteriorAval.setBounds(428, 154, 120, 35);
+		pnRegistrarAval.add(txtExteriorAval);
+
+		lblInteriorAval = new JLabel();
+		lblInteriorAval.setBounds(558, 139, 120, 15);
+		pnRegistrarAval.add(lblInteriorAval);
+		txtInteriorAval = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, new Color(3, 155, 229),
+				lblInteriorAval);
+		txtInteriorAval.setBounds(558, 154, 120, 35);
+		pnRegistrarAval.add(txtInteriorAval);
+
+		lblColoniaAval = new JLabel();
+		lblColoniaAval.setBounds(50, 256, 200, 15);
+		pnRegistrarAval.add(lblColoniaAval);
+		txtColoniaAval = new MdTextField(Color.BLACK, "Colonia", Color.WHITE, new Color(3, 155, 229), lblColoniaAval);
+		txtColoniaAval.setBounds(50, 271, 200, 35);
+		pnRegistrarAval.add(txtColoniaAval);
+
+		lblTelefonoAval = new JLabel();
+		lblTelefonoAval.setBounds(260, 256, 200, 15);
+		pnRegistrarAval.add(lblTelefonoAval);
+		txtTelefonoAval = new MdTextField(Color.BLACK, "Telefono", Color.WHITE, new Color(3, 155, 229),
+				lblTelefonoAval);
+		txtTelefonoAval.setBounds(260, 271, 200, 35);
+		pnRegistrarAval.add(txtTelefonoAval);
+
+		lblOcupacionAval = new JLabel();
+		lblOcupacionAval.setBounds(470, 256, 206, 15);
+		pnRegistrarAval.add(lblOcupacionAval);
+		txtOcupacionAval = new MdTextField(Color.BLACK, "Ocupacion", Color.WHITE, new Color(3, 155, 229),
+				lblOcupacionAval);
+		txtOcupacionAval.setBounds(470, 271, 206, 35);
+		pnRegistrarAval.add(txtOcupacionAval);
+
+		btnOmitirAval = new MdButton(Color.WHITE, s.blue, "Omitir");
+		btnOmitirAval.setBounds(478, 338, 200, 35);
+		pnRegistrarAval.add(btnOmitirAval);
+
+		alSaveAval.lblMessage.setText("Desea continuar y guardar ?");
+		alSaveAval.lblAlertIcon.setIcon(new ImageIcon("views/alert.png"));
+		alSaveAval.btnOk.addActionListener(this);
+		alSaveAval.btnCancel.addActionListener(this);
 
 		jd.btnNext.addActionListener(this);
 		jd.btnOmit.addActionListener(this);
@@ -478,6 +584,8 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 
 		alSave.lblMessage.setText("Desea continuar y guardar ?");
 		alSave.lblAlertIcon.setIcon(new ImageIcon("views/alert.png"));
+		alSave.btnOk.addActionListener(this);
+		alSave.btnCancel.addActionListener(this);
 
 		jd.alSave.btnOk.addActionListener(this);
 
@@ -500,42 +608,6 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			s.hoverBorder(btnNext, Color.white);
-			s.btnPointer(btnNext);
-
-		} else if (e.getSource() == btnBack) {
-			s.hoverBorder(btnBack, Color.WHITE);
-			s.btnPointer(btnBack);
-		}
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			btnNext.setBorder(null);
-		} else if (e.getSource() == btnBack) {
-			btnBack.setBorder(null);
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-
-	}
-
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNext) {
 
@@ -547,15 +619,17 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 				}
 			}
 		} else if (e.getSource() == alSave.btnOk) {
-			int idClienteActual = getCurrentIdFrom("clientes_personal");
-			int idSolicitud = getCurrentIdFrom("solicitudes_personales");
+			idClienteActual = getCurrentIdFrom("clientes_personal");
+			idSolicitud = getCurrentIdFrom("solicitudes_personales");
 			addClient();
 			addSolicitud(idClienteActual);
+			addInfoEmpleo(idClienteActual);
 			addReferencia1(idClienteActual, idSolicitud);
 			addReferencia2(idClienteActual, idSolicitud);
 			alSave.setVisible(false);
 			alOk.setVisible(true);
-			this.setVisible(false);
+			pnSolicitud.setVisible(false);
+			limpiarCamposSolicitud();
 
 		} else if (e.getSource() == ca.alSave.btnOk) {
 			ca.addAval(txtNombre.getText(), txtAp1.getText(), txtAp2.getText());
@@ -575,6 +649,29 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 			alSave.setVisible(false);
 		} else if (e.getSource() == alOk.btnOk) {
 			alOk.setVisible(false);
+		} else if (e.getSource() == btnClienteRegistrado) {
+
+		} else if (e.getSource() == btnNuevoCliente) {
+			pnSolicitud.setVisible(true);
+			pnPrincipal.setVisible(false);
+			limpiarCamposSolicitud();
+		} else if (e.getSource() == btnBack) {
+			pnPrincipal.setVisible(true);
+			pnSolicitud.setVisible(false);
+		} else if (e.getSource() == headerNuevoAval.btnNext) {
+			if (camposAvalLlenos()) {
+				alSaveAval.setVisible(true);
+			} else {
+				lblWarningAval.setText("Algunos campos estan Vacíos");
+			}
+		} else if (e.getSource() == alSaveAval.btnOk) {
+			addAval(idClienteActual);
+			alNewAval.setVisible(true);
+			limpiarCamposAval();
+
+		} else if (e.getSource() == alNewAval.btnCancel) {
+			pnPrincipal.setVisible(true);
+
 		}
 	}
 
@@ -683,15 +780,40 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		}
 	}
 
+	public void addInfoEmpleo(int idCliente) {
+		try {
+			c.update("INSERT INTO clientes_empleo (id_Cliente,Domicilio,Num_Exterior,Telefono,Tiempo) VALUES ("
+					+ idCliente + ",'" + txtDireccion.getText() + "','" + txtExteriorEmpleo.getText() + "','"
+					+ txtInteriorEmpleo.getText() + "','" + txtTelefonoEmpleo.getText() + "','"
+					+ Integer.parseInt(txtTiempoEmpleo.getText()) + "');  ");
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
+	}
+
 	public void addSolicitud(int idCliente) {
 		try {
-			c.update("INSERT INTO solicitudes_personales(id_Cliente,Cantidad,Tipo_Credito) VALUES (" + idCliente + ","
-					+ Integer.parseInt(txtCantidad.getText()) + "," + cbTipo.getSelectedIndex() + ");");
+			c.update("INSERT INTO solicitudes_personales(id_Cliente,Cantidad,Tipo_Credito,status) VALUES (" + idCliente
+					+ "," + Integer.parseInt(txtCantidad.getText()) + "," + cbTipo.getSelectedIndex() + "," + 0 + ");");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
 
+	public void addAval(int idCliente) {
+		try {
+			c.update(
+					"INSERT INTO avales (id_Cliente,Apellido_Paterno,Apellido_Materno,Direccion,Num_Exterior,Num_interior,Colonia,Telefono,Ocupacion) VALUES ("
+							+ idCliente + ",'" + txtNombreAval.getText() + "','" + txtPaternoAval.getText() + "','"
+							+ txtMaternoAval.getText() + "','" + txtDireccionAval.getText() + "','"
+							+ txtExteriorAval.getText() + "','" + txtInteriorAval.getText() + "','"
+							+ txtColoniaAval.getText() + "','" + txtTelefonoAval.getText() + "','"
+							+ txtOcupacionAval.getText() + "')");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+
+		}
 	}
 
 	public void addReferencia1(int idCliente, int idSolicitud) {
@@ -747,7 +869,7 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		return resultado;
 	}
 
-	public void limpiarCampos() {
+	public void limpiarCamposSolicitud() {
 		txtNombre.setText("");
 		txtAp1.setText("");
 		txtAp2.setText("");
@@ -785,5 +907,27 @@ public class Solicitud extends JFrame implements ActionListener, MouseListener {
 		txtInteriorRef2.setText("");
 		txtTelefonoRef1.setText("");
 		txtTelefonoRef2.setText("");
+	}
+
+	public void limpiarCamposAval() {
+		txtNombreAval.setText("");
+		txtPaternoAval.setText("");
+		txtMaternoAval.setText("");
+		txtDireccionAval.setText("");
+		txtExteriorAval.setText("");
+		txtInteriorAval.setText("");
+		txtTelefonoAval.setText("");
+		txtOcupacionAval.setText("");
+		lblWarningAval.setText("");
+	}
+
+	public Boolean camposAvalLlenos() {
+		if (txtNombreAval.getText().length() > 0 && txtPaternoAval.getText().length() > 0
+				&& txtMaternoAval.getText().length() > 0 && txtDireccionAval.getText().length() > 0
+				&& txtExteriorAval.getText().length() > 0 && txtTelefonoAval.getText().length() > 0
+				&& txtOcupacionAval.getText().length() > 0) {
+			return true;
+		}
+		return false;
 	}
 }
