@@ -26,7 +26,7 @@ public class Alert extends JFrame implements ActionListener,MouseListener{
 	public Alert() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 335, 146);
+		setBounds(400, 400, 335, 146);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

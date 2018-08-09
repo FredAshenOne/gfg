@@ -29,14 +29,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class NuevoGrupo extends JFrame implements ActionListener, MouseListener {
+public class Grupos extends JFrame implements ActionListener, MouseListener {
 
 	Style s = new Style();
-	JButton btnBack, btnNext, btnAsignar, btnRemover, btnEditarGrupo, btnRemoverGrupo;
+	JButton btnAsignar, btnRemover, btnEditarGrupo, btnRemoverGrupo;
 	JLabel lblHeader, lblClientesHeader, lblNombre, lblNombreWarning, lblEliminar, lblEdit, lblClientesEnGrupo;
-	JPanel contentPane, pnHeader, mainPanel;
+	JPanel contentPane, mainPanel;
 	JScrollPane scrollPane;
 	int idUser;
+	MdHeader pnHeader;
 	Conexion c = new Conexion();
 	Alert alRemoverGrupo = new Alert();
 	Alert alOk = new Alert();
@@ -50,42 +51,30 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 	TextPrompt tpName;
 	private JLabel lblWarning;
 
-	NuevoGrupo() {
+	Grupos() {
+		setBounds(100, 100, 1135, 827);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 593, 380);
+		mainPanel.setBounds(0, 0, 1137, 800);
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
 		s.mdPanel(mainPanel, Color.WHITE);
 
-		pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 593, 150);
+		pnHeader = new MdHeader(s.blue, Color.WHITE);
+		pnHeader.btnNext.setVisible(false);
+		pnHeader.lblWarning.setVisible(false);
 		mainPanel.add(pnHeader);
-		pnHeader.setLayout(null);
-		s.mdPanel(pnHeader, s.blue);
-
-		btnBack = new JButton("");
-		btnBack.setBorder(null);
-		btnBack.setBounds(10, 11, 32, 32);
-		pnHeader.add(btnBack);
-		s.btnIcon(btnBack, "views/back.png");
-		btnBack.addMouseListener(this);
-
-		lblHeader = new JLabel("Nuevo Grupo");
-		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader.setForeground(Color.WHITE);
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
-		lblHeader.setBounds(52, 11, 489, 32);
-		pnHeader.add(lblHeader);
+		pnHeader.lblTitle.setText("Grupos");
+		pnHeader.btnNext.addActionListener(this);
 
 		txtNombre = new JTextField();
+		txtNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 22));
 		txtNombre.setForeground(Color.WHITE);
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
@@ -120,7 +109,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 			}
 		});
 		txtNombre.setCaretColor(Color.white);
-		txtNombre.setBounds(10, 106, 410, 33);
+		txtNombre.setBounds(10, 106, 531, 33);
 		pnHeader.add(txtNombre);
 		txtNombre.setColumns(10);
 		s.mdTextField(txtNombre, Color.white, s.blue);
@@ -130,23 +119,23 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 		lblNombre = new JLabel("Nombre:");
 		lblNombre.setForeground(Color.WHITE);
-		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblNombre.setBounds(10, 81, 210, 14);
+		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 18));
+		lblNombre.setBounds(10, 69, 489, 26);
 		pnHeader.add(lblNombre);
 
 		lblNombreWarning = new JLabel("");
-		lblNombreWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblNombreWarning.setBounds(285, 81, 135, 14);
+		lblNombreWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 20));
+		lblNombreWarning.setBounds(551, 106, 407, 31);
 		pnHeader.add(lblNombreWarning);
 
 		lblWarning = new JLabel("");
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblWarning.setBounds(62, 56, 426, 14);
+		lblWarning.setBounds(10, 56, 531, 14);
 		pnHeader.add(lblWarning);
 		lblWarning.setForeground(s.red);
 
 		btnEditarGrupo = new JButton("");
-		btnEditarGrupo.setBounds(481, 106, 32, 33);
+		btnEditarGrupo.setBounds(995, 104, 32, 33);
 		pnHeader.add(btnEditarGrupo);
 		s.btnIcon(btnEditarGrupo, "views/edit.png");
 		btnEditarGrupo.addActionListener(this);
@@ -154,7 +143,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		btnEditarGrupo.setVisible(false);
 
 		btnRemoverGrupo = new JButton("");
-		btnRemoverGrupo.setBounds(539, 106, 32, 33);
+		btnRemoverGrupo.setBounds(1053, 104, 32, 33);
 		pnHeader.add(btnRemoverGrupo);
 		s.btnIcon(btnRemoverGrupo, "views/trashWhite.png");
 
@@ -162,7 +151,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		lblEdit.setForeground(Color.WHITE);
 		lblEdit.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEdit.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
-		lblEdit.setBounds(455, 84, 74, 12);
+		lblEdit.setBounds(969, 82, 74, 12);
 		lblEdit.setVisible(false);
 		pnHeader.add(lblEdit);
 
@@ -170,7 +159,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		lblEliminar.setForeground(Color.WHITE);
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEliminar.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
-		lblEliminar.setBounds(523, 83, 66, 12);
+		lblEliminar.setBounds(1037, 81, 66, 12);
 		pnHeader.add(lblEliminar);
 		lblEliminar.setVisible(false);
 		btnRemoverGrupo.addActionListener(this);
@@ -179,19 +168,19 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 		lblClientesHeader = new JLabel("Clientes Existentes");
 		lblClientesHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblClientesHeader.setBounds(10, 161, 212, 27);
+		lblClientesHeader.setBounds(10, 162, 446, 27);
 		mainPanel.add(lblClientesHeader);
 
 		spClientesExistentes = new JScrollPane();
-		spClientesExistentes.setBounds(10, 211, 230, 158);
+		spClientesExistentes.setBounds(10, 236, 446, 533);
 		mainPanel.add(spClientesExistentes);
 
 		tableClientesExistentes = new JTable() {
 			private static final long serialVersionUID = 1L;
 
-	        public boolean isCellEditable(int row, int column) {                
-	                return false;               
-	        };
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			};
 		};
 		tableClientesExistentes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableClientesExistentes.setModel(new DefaultTableModel(new Object[][] {},
@@ -199,14 +188,14 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		spClientesExistentes.setViewportView(tableClientesExistentes);
 
 		spClientesAgregados = new JScrollPane();
-		spClientesAgregados.setBounds(353, 211, 230, 158);
+		spClientesAgregados.setBounds(681, 236, 414, 533);
 		mainPanel.add(spClientesAgregados);
-		tableClientesAgregados = new JTable(){
+		tableClientesAgregados = new JTable() {
 			private static final long serialVersionUID = 1L;
 
-	        public boolean isCellEditable(int row, int column) {                
-	                return false;               
-	        };
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			};
 		};
 		tableClientesAgregados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableClientesAgregados.setModel(new DefaultTableModel(new Object[][] {},
@@ -217,7 +206,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 		btnAsignar = new JButton("Asignar");
 		btnAsignar.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
-		btnAsignar.setBounds(250, 247, 93, 33);
+		btnAsignar.setBounds(466, 449, 205, 33);
 		mainPanel.add(btnAsignar);
 		s.mdButton(btnAsignar, s.blue);
 		btnAsignar.setEnabled(false);
@@ -226,7 +215,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 		btnRemover = new JButton("Remover");
 		btnRemover.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
-		btnRemover.setBounds(250, 303, 93, 33);
+		btnRemover.setBounds(466, 505, 205, 33);
 		mainPanel.add(btnRemover);
 		btnRemover.setEnabled(false);
 		s.mdButton(btnRemover, s.red);
@@ -235,7 +224,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 		lblClientesEnGrupo = new JLabel("Clientes en grupo");
 		lblClientesEnGrupo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblClientesEnGrupo.setBounds(353, 161, 212, 27);
+		lblClientesEnGrupo.setBounds(681, 162, 414, 27);
 		mainPanel.add(lblClientesEnGrupo);
 
 		alOk.btnCancel.setVisible(false);
@@ -264,25 +253,25 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		alEditarNombre.btnOk.addActionListener(this);
 		alEditarNombre.btnCancel.addActionListener(this);
 		alEditarNombre.lblMessage.setVisible(false);
-		
+
 		txtEditar = new JTextField();
 		txtEditar.setBounds(alEditarNombre.lblMessage.getBounds());
 		alEditarNombre.mainPanel.add(txtEditar);
 		s.mdTextField(txtEditar, s.blue, Color.WHITE);
 		s.myTextPrompt(txtEditar, "Nuevo Nombre", Color.LIGHT_GRAY);
-		
+
 		s.mdTable(tableClientesExistentes, Color.WHITE, Color.white);
 		s.mdTable(tableClientesAgregados, Color.WHITE, Color.white);
 
 		txtBuscarDisponibles = new JTextField();
-		txtBuscarDisponibles.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		txtBuscarDisponibles.setFont(new Font("Yu Gothic UI", Font.PLAIN, 20));
 		txtBuscarDisponibles.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				buscarExistente(txtNombre.getText());
 			}
 		});
-		txtBuscarDisponibles.setBounds(10, 186, 149, 20);
+		txtBuscarDisponibles.setBounds(10, 200, 446, 31);
 		mainPanel.add(txtBuscarDisponibles);
 		txtBuscarDisponibles.setColumns(10);
 		s.mdTextField(txtBuscarDisponibles, s.blue, Color.white);
@@ -295,9 +284,9 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 				buscarAgregado(txtNombre.getText());
 			}
 		});
-		txtBuscarAgregados.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		txtBuscarAgregados.setFont(new Font("Yu Gothic UI", Font.PLAIN, 20));
 		txtBuscarAgregados.setColumns(10);
-		txtBuscarAgregados.setBounds(353, 186, 149, 20);
+		txtBuscarAgregados.setBounds(681, 200, 414, 31);
 		mainPanel.add(txtBuscarAgregados);
 		s.mdTextField(txtBuscarAgregados, s.blue, Color.WHITE);
 		s.myTextPrompt(txtBuscarAgregados, "Buscar", Color.LIGHT_GRAY);
@@ -327,15 +316,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			if (btnNext.isEnabled()) {
-				s.hoverBorder(btnNext, Color.white);
-				s.btnPointer(btnNext);
-			}
-		} else if (e.getSource() == btnBack) {
-			s.hoverBorder(btnBack, Color.WHITE);
-			s.btnPointer(btnBack);
-		} else if (e.getSource() == btnRemover) {
+		if (e.getSource() == btnRemover) {
 			if (btnRemover.isEnabled()) {
 				s.hoverBorder(btnRemover, Color.WHITE);
 				s.btnPointer(btnRemover);
@@ -360,8 +341,6 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 			btnAsignar.setBorder(null);
 		} else if (e.getSource() == btnRemover) {
 			btnRemover.setBorder(null);
-		} else if (e.getSource() == btnBack) {
-			btnBack.setBorder(null);
 		} else if (e.getSource() == btnRemoverGrupo) {
 			btnRemoverGrupo.setBorder(null);
 		} else if (e.getSource() == btnEditarGrupo) {
@@ -396,7 +375,8 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 					lblNombreWarning.setText("* Grupo Activo");
 					lblNombreWarning.setForeground(Color.white);
 					btnEditarGrupo.setVisible(true);
-					btnRemoverGrupo.setVisible(true);;
+					btnRemoverGrupo.setVisible(true);
+					;
 				}
 			}
 
@@ -432,7 +412,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 			mainPanel.setEnabled(true);
 		} else if (e.getSource() == alEditarNombre.btnOk) {
 			editarGrupo();
-			System.out.println(nombreActual +" nombre actual " + txtEditar.getText());
+			System.out.println(nombreActual + " nombre actual " + txtEditar.getText());
 			txtNombre.setText(txtEditar.getText());
 			alEditarNombre.setVisible(false);
 			alOk2.setVisible(true);
@@ -456,9 +436,8 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		try {
 			while (res.next()) {
 				if (res.getString("nombre") != null) {
-					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"),
-							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
-							res.getString("Telefono_Cel") });
+					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"), res.getString("Paterno"),
+							res.getString("Materno"), res.getString("Telefono_Cel") });
 					spClientesExistentes.setVisible(true);
 					lblWarning.setText("");
 				}
@@ -479,9 +458,8 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 
 			while (res.next()) {
 				if (res.getString("cp.nombre") != null) {
-					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"),
-							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
-							res.getString("Telefono_Cel") });
+					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"), res.getString("Paterno"),
+							res.getString("Materno"), res.getString("Telefono_Cel") });
 					spClientesExistentes.setVisible(true);
 					lblWarning.setText("");
 				}
@@ -496,7 +474,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		DefaultTableModel mod = (DefaultTableModel) tableClientesAgregados.getModel();
 		mod.setRowCount(0);
 		ResultSet res = c.query(
-				"SELECT cp.id,cp.nombre,cp.Apellido_Paterno ap1,cp.Apellido_Materno ap2 ,cp.Telefono_Cel tel FROM grupos g LEFT JOIN clientes_grupo cg on g.id = cg.id_grupo LEFT JOIN clientes_Personal cp on  cg.id_Cliente = cp.id WHERE g.nombre = '"
+				"SELECT cp.id,cp.nombre,cp.Paterno ap1,cp.Materno ap2 ,cp.Telefono_Cel tel FROM grupos g LEFT JOIN clientes_grupo cg on g.id = cg.id_grupo LEFT JOIN clientes_Personal cp on  cg.id_Cliente = cp.id WHERE g.nombre = '"
 						+ nombre + "';");
 		try {
 			while (res.next()) {
@@ -583,9 +561,8 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 								+ txtBuscarDisponibles.getText() + "%';");
 
 				while (res.next()) {
-					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"),
-							res.getString("apellido_Paterno"), res.getString("apellido_Materno"),
-							res.getString("Telefono_Cel") });
+					mod.addRow(new Object[] { res.getString("id"), res.getString("nombre"), res.getString("Paterno"),
+							res.getString("Materno"), res.getString("Telefono_Cel") });
 					spClientesExistentes.setVisible(true);
 					lblWarning.setText("");
 				}
@@ -597,8 +574,7 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		}
 
 	}
-	
-	
+
 	public void buscarAgregado(String nombreGrupo) {
 		if (txtBuscarAgregados.getText().length() > 0) {
 
@@ -606,14 +582,12 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 			mod.setRowCount(0);
 			try {
 				ResultSet res = c.query(
-						"SELECT cp.id,cp.nombre,cp.Apellido_Paterno ap1,cp.Apellido_Materno ap2 ,cp.Telefono_Cel tel FROM grupos g LEFT JOIN clientes_grupo cg on g.id = cg.id_grupo LEFT JOIN clientes_Personal cp on  cg.id_Cliente = cp.id WHERE g.nombre = '"
-								+ nombreGrupo + "' AND cp.nombre like '%"
-								+ txtBuscarAgregados.getText() + "%';");
+						"SELECT cp.id,cp.nombre,cp.Paterno ap1,cp.Materno ap2 ,cp.Telefono_Cel tel FROM grupos g LEFT JOIN clientes_grupo cg on g.id = cg.id_grupo LEFT JOIN clientes_Personal cp on  cg.id_Cliente = cp.id WHERE g.nombre = '"
+								+ nombreGrupo + "' AND cp.nombre like '%" + txtBuscarAgregados.getText() + "%';");
 
 				while (res.next()) {
-					mod.addRow(new Object[] { res.getString("cp.id"), res.getString("nombre"),
-							res.getString("cp.ap1"), res.getString("cp.ap2"),
-							res.getString("cp.Tel") });
+					mod.addRow(new Object[] { res.getString("cp.id"), res.getString("nombre"), res.getString("cp.ap1"),
+							res.getString("cp.ap2"), res.getString("cp.Tel") });
 					spClientesExistentes.setVisible(true);
 					lblWarning.setText("");
 				}
@@ -623,5 +597,9 @@ public class NuevoGrupo extends JFrame implements ActionListener, MouseListener 
 		} else {
 			mostrarGrupo(txtNombre.getText());
 		}
+	}
+	
+	public void limpiarCampos() {
+		
 	}
 }

@@ -16,6 +16,7 @@ public class MdTextField extends JTextField {
 	int size = 15;
 	Color fore = Color.BLACK;
 	JLabel lbl;
+	TextPrompt tp;
 	public MdTextField(Color fore,String placeHolder,Color back,Color bord,JLabel lbl) {
 		this.fore = fore;
 		this.lbl = lbl;		
@@ -33,17 +34,17 @@ public class MdTextField extends JTextField {
 		lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl.setVisible(true);
 		
-		TextPrompt tp = new TextPrompt(placeHolder, this);
+		tp = new TextPrompt(placeHolder, this);
 		tp.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, size));
 		tp.setForeground(fore);
 		tp.setHorizontalAlignment(CENTER);
-		
-//		if(getText().length() == 0) {
-//			lbl.setVisible(false);
-//			
-//		}else{
-//			lbl.setVisible(true);
-//		}
+//		lbl.setVisible(true);
+		if(getText().length() == 0) {
+			lbl.setVisible(false);
+			
+		}else{
+			lbl.setVisible(true);
+		}
 		this.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {

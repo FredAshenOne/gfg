@@ -2,18 +2,23 @@ package deskApp;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 public class PaneButton extends JPanel{
 	Style s = new Style();
 	JLabel icon,title;
 	JButton btn;
-	public PaneButton(String titulo,String url) {
+	public PaneButton(String titulo,String url,Color border) {
 		
 		
 		setLayout(null);
@@ -35,5 +40,20 @@ public class PaneButton extends JPanel{
 		add(btn);
 		s.btnTransparent(btn);
 		
+		btn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				
+				setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+				new ImageIcon("views/cursor.png").getImage(),
+				new Point(0,0), "custom cursor"));
+				setBorder(new LineBorder(border,2,true));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setBorder(null);
+			}
+		});
 	}
 }

@@ -32,7 +32,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	BuscarCliente sc = new BuscarCliente();
 	Alert alNewAval = new Alert();
 	Solicitud nc = new Solicitud();
-	NuevoGrupo ng = new NuevoGrupo();
+	
 	
 	public AdminClientes() {
 		setBounds(100,100,1100,700);
@@ -152,7 +152,6 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		btnQuery.addActionListener(this);
 		sc.btnBack.addActionListener(this);
 		btnGrupo.addActionListener(this);
-		ng.btnBack.addActionListener(this);
 		
 	}
 
@@ -225,13 +224,6 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		}else if(e.getSource() == sc.btnBack) {
 			this.setVisible(true);
 			sc.setVisible(false);
-		}else if(e.getSource() == btnGrupo) {
-			ng.setVisible(true);
-			this.setVisible(false);
-			ng.mostrarClientesExistentes();
-		}else if(e.getSource() == ng.btnBack) {
-			this.setVisible(true);
-			ng.setVisible(false);
 		}
 	}
 }

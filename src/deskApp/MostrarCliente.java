@@ -527,8 +527,8 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 		try {
 			if (rs.next()) {
 				txtNombre.setText(rs.getString("Nombre"));
-				txtAp1.setText(rs.getString("Apellido_Paterno"));
-				txtAp2.setText(rs.getString("Apellido_Materno"));
+				txtAp1.setText(rs.getString("Paterno"));
+				txtAp2.setText(rs.getString("Materno"));
 				txtDomicilio.setText(rs.getString("Direccion"));
 				txtExterior.setText(rs.getString("Num_Exterior"));
 				txtInterior.setText(rs.getString("Num_Interior"));

@@ -145,6 +145,24 @@ public class Style {
 	}
 	
 	
+	// verifica si una cadena contiene un valor numerico
+
+	public static boolean isNumeric(String cadena) {
+
+		boolean resultado;
+
+		try {
+			Integer.parseInt(cadena);
+			resultado = true;
+		} catch (NumberFormatException excepcion) {
+			resultado = false;
+		}
+
+		return resultado;
+	}
+
+
+	
 	public boolean checarFecha(String text) {
 	    if (text == null || !text.matches("\\d{4}-[01]\\d-[0-3]\\d"))
 	        return false;

@@ -257,16 +257,16 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			String[] nombre = data.split(" ");
 			if (nombre.length > 2) { 
 				return c.query("SELECT * FROM clientes_personal WHERE nombre = '" + nombre[0]
-						+ "' AND apellido_paterno = '" + nombre[1] + "' AND apellido_materno = '" + nombre[2] + "';");
+						+ "' AND paterno = '" + nombre[1] + "' AND materno = '" + nombre[2] + "';");
 			} else if (nombre.length == 2) {
 				return c.query("SELECT * FROM clientes_personal WHERE  nombre = '" + nombre[0]
-						+ "' AND apellido_Paterno = '" + nombre[1] + "' OR (apellido_Paterno = '"+nombre[0]+"' AND apellido_Materno = '"+nombre[1]+"');");
+						+ "' AND Paterno = '" + nombre[1] + "' OR (Paterno = '"+nombre[0]+"' AND Materno = '"+nombre[1]+"');");
 			} else if (nombre.length == 1) {
 				try {
 					int id = Integer.parseInt(data);
 					return c.query("SELECT * FROM clientes_personal WHERE id LIKE " + id + ";");
 				} catch (NumberFormatException nfe) {					
-					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0] + "%' OR apellido_Paterno LIKE '%"+nombre[0]+"%' OR apellido_Materno LIKE '%"+nombre[0]+"%';");
+					return c.query("SELECT * FROM clientes_personal WHERE nombre LIKE '%" + nombre[0] + "%' OR Paterno LIKE '%"+nombre[0]+"%' OR Materno LIKE '%"+nombre[0]+"%';");
 				}
 			} else {
 				lblWarning.setText("No se encontraron resultados");
@@ -287,8 +287,8 @@ public class BuscarCliente extends JFrame implements ActionListener, MouseListen
 			if(resv.next()) {
 				while (res.next()) {	
 					mod.addRow(
-							new Object[] { res.getString("id"), res.getString("nombre"), res.getString("apellido_Paterno"),
-									res.getString("apellido_Materno"), res.getString("Direccion") });
+							new Object[] { res.getString("id"), res.getString("nombre"), res.getString("Paterno"),
+									res.getString("Materno"), res.getString("Direccion") });
 					scrollPane.setVisible(true);
 					lblWarning.setText("");
 				}

@@ -26,9 +26,10 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 	private JPanel contentPane;
 	JPanel pnClientes,pnMovimientos,pnCreditos,pnHeader,pnSolicitud;
 	JLabel lblBack;
-	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings,btnSolicitud;
+	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings,btnSolicitud,btnGrupos;
 	int idUser;
-	PaneButton pbSolicitud;
+	Grupos g = new Grupos();
+	PaneButton pbSolicitud,pbGrupos;
 	Solicitud solicitud = new Solicitud();
 	AdminCreditos acre = new AdminCreditos();
 	AdminClientes ac = new AdminClientes();
@@ -152,14 +153,19 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		lblTitle.setBounds(52, 54, 1020, 32);
 		pnHeader.add(lblTitle);
 		
-		pbSolicitud = new PaneButton("Solicitud","views/addFile.png");
+		pbSolicitud = new PaneButton("Nueva Solicitud","views/addFile.png",s.blue);
 		mainPanel.add(pbSolicitud);
 		pbSolicitud.setBounds(21, 162, 155, 180);
-		pbSolicitud.btn.addMouseListener(this);
-		pbSolicitud.btn.addActionListener(this);		
+		pbSolicitud.btn.addActionListener(this);
+		
+		pbGrupos = new PaneButton("Grupos","views/group.png",s.blue);
+		mainPanel.add(pbGrupos);
+		pbGrupos.setBounds(196, 162, 155, 180);
+		pbGrupos.btn.addActionListener(this);
 		
 		solicitud.alSave.btnOk.addActionListener(this);
 		solicitud.headerPrincipal.btnBack.addActionListener(this);
+		g.pnHeader.btnBack.addActionListener(this);
 		
 		
 		btnSettings.addActionListener(this);
@@ -188,9 +194,6 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		}else if(e.getSource() == btnBack) {
 			s.btnPointer(btnBack);
 			s.hoverBorder(btnBack, Color.white);
-		}else if(e.getSource() == pbSolicitud.btn){
-			s.panelPointer(pbSolicitud);
-			s.imgBtnHover(s.blue,pbSolicitud);
 		}
 		
 	}
@@ -204,8 +207,6 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 			pnMovimientos.setBorder(null);
 		}else if(e.getSource() == btnBack) {
 			btnBack.setBorder(null);
-		}else if(e.getSource() == pbSolicitud.btn){
-			pbSolicitud.setBorder(null);
 		}
 	}
 	@Override
@@ -240,16 +241,24 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 			this.setVisible(true);
 			am.setVisible(false);
 		}else if(e.getSource() == pbSolicitud.btn) {
-			Point pos = this.getLocation();
-			solicitud.setVisible(true);
-			solicitud.limpiarCamposSolicitud();
 			this.setVisible(false);
+			solicitud.setVisible(true);
+			solicitud.limpiarCamposSolicitud();			
 			solicitud.pnSolicitud.setVisible(false);
 			solicitud.pnPrincipal.setVisible(true);
-			
+			solicitud.pnAvales.setVisible(false);
+			solicitud.pnRegistrados.setVisible(false);
+			solicitud.pnSolicitudReg.setVisible(false);
+			solicitud.idSolicitud = solicitud.getCurrentIdFrom("solicitudes_personales");
 		}else if(e.getSource() == solicitud.headerPrincipal.btnBack) {
 			this.setVisible(true);
 			solicitud.setVisible(false); 
+		}else if(e.getSource() == pbGrupos.btn) {
+			g.setVisible(true);
+			this.setVisible(false);						
+		}else if(e.getSource() == g.pnHeader.btnBack) {
+			g.setVisible(false);
+			this.setVisible(true);
 		}
 	}
 }
