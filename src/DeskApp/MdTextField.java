@@ -38,13 +38,13 @@ public class MdTextField extends JTextField {
 		tp.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, size));
 		tp.setForeground(fore);
 		tp.setHorizontalAlignment(CENTER);
-//		lbl.setVisible(true);
-		if(getText().length() == 0) {
-			lbl.setVisible(false);
-			
-		}else{
-			lbl.setVisible(true);
-		}
+		lbl.setVisible(true);
+//		if(getText().length() == 0) {
+//			lbl.setVisible(false);
+//			
+//		}else{
+//			lbl.setVisible(true);
+//		}
 		this.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {

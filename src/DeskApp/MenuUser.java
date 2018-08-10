@@ -32,7 +32,6 @@ public class MenuUser extends JFrame implements ActionListener,MouseListener{
 	ConfirmarPenalizacion cp = new ConfirmarPenalizacion();
 	Conexion c = new Conexion();
 	Alert alOk = new Alert();
-	BuscarCliente bc = new BuscarCliente();
 	BuscarCredito bcred = new BuscarCredito();
 
  MenuUser() {
@@ -116,16 +115,8 @@ public class MenuUser extends JFrame implements ActionListener,MouseListener{
 		s.btnTransparent(btnCliente);
 		btnCliente.addMouseListener(this);
 		btnCliente.addActionListener(this);
-		
-		bc.btnBack.addActionListener(this);
 		bcred.btnBack.addActionListener(this);
-		
-		bc.sc.btnNext.setVisible(false);
-		bc.sc.sjd.btnNext.setVisible(false);
-		bc.sc.sad.btnAddAval.setVisible(false);
-		bc.sc.sad.sa.btnNext.setVisible(false);
 	
-		bc.btnNext.addActionListener(this);
 	}
 
 @Override
@@ -176,21 +167,9 @@ public void actionPerformed(ActionEvent e) {
 	if(e.getSource() == btnCredito) {
 		bcred.setVisible(true);
 		this.setVisible(false);
-	}else if(e.getSource() == btnCliente) {
-		bc.setVisible(true);
-		this.setVisible(false);
-		bc.sc.tipoUsuario=2;
 	}else if(e.getSource() == bcred.btnBack) {
 		this.setVisible(true);
 		bcred.setVisible(false);
-	}else if(e.getSource() == bc.btnBack) {
-		this.setVisible(true);
-		bc.setVisible(false);
-	}else if(e.getSource() == bc.btnNext) {
-		bc.sc.btnNext.setVisible(false);
-		bc.sc.sjd.btnNext.setVisible(false);
-		bc.sc.sad.btnAddAval.setVisible(false);
-		bc.sc.sad.sa.btnNext.setVisible(false);
 	}
 }
 }

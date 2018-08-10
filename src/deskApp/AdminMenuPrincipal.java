@@ -29,8 +29,9 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 	JButton btnClient,btnMoves,btnCredits,btnBack,btnSettings,btnSolicitud,btnGrupos;
 	int idUser;
 	Grupos g = new Grupos();
-	PaneButton pbSolicitud,pbGrupos;
+	PaneButton pbSolicitud,pbGrupos,pbBuscarCliente	;
 	Solicitud solicitud = new Solicitud();
+	BuscarCliente bc = new BuscarCliente();
 	AdminCreditos acre = new AdminCreditos();
 	AdminClientes ac = new AdminClientes();
 	AdminMovimientos am = new AdminMovimientos();
@@ -163,6 +164,11 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 		pbGrupos.setBounds(196, 162, 155, 180);
 		pbGrupos.btn.addActionListener(this);
 		
+		pbBuscarCliente = new PaneButton("Buscar Cliente","views/search.png",s.blue);
+		mainPanel.add(pbBuscarCliente);
+		pbBuscarCliente.setBounds(376,162, 155, 180);
+		pbBuscarCliente.btn.addActionListener(this);
+		
 		solicitud.alSave.btnOk.addActionListener(this);
 		solicitud.headerPrincipal.btnBack.addActionListener(this);
 		g.pnHeader.btnBack.addActionListener(this);
@@ -258,6 +264,12 @@ public class AdminMenuPrincipal extends JFrame implements ActionListener,MouseLi
 			this.setVisible(false);						
 		}else if(e.getSource() == g.pnHeader.btnBack) {
 			g.setVisible(false);
+			this.setVisible(true);
+		}else if(e.getSource() == pbBuscarCliente.btn) {
+			bc.setVisible(true);
+			this.setVisible(false);
+		}else if(e.getSource() == bc.pnHeader.btnBack) {
+			bc.setVisible(true);			
 			this.setVisible(true);
 		}
 	}

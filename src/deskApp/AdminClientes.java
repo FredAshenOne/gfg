@@ -150,8 +150,8 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 //		nc.btnBack.addActionListener(this);
 		nc.alNewAval.btnCancel.addActionListener(this);
 		btnQuery.addActionListener(this);
-		sc.btnBack.addActionListener(this);
 		btnGrupo.addActionListener(this);
+		
 		
 	}
 

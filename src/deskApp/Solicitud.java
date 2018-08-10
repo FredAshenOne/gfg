@@ -332,7 +332,7 @@ public class Solicitud extends JFrame implements ActionListener {
 		lblTiempoEmpleo = new JLabel("");
 		lblTiempoEmpleo.setBounds(400, 148, 183, 14);
 		pnInfoEmpleo.add(lblTiempoEmpleo);
-		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, s.blue, lblTiempoEmpleo);
+		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Tiempo empleo", Color.WHITE, s.blue, lblTiempoEmpleo);
 		txtTiempoEmpleo.setBounds(402, 168, 181, 32);
 		pnInfoEmpleo.add(txtTiempoEmpleo);
 

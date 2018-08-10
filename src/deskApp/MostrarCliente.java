@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,18 +24,27 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class MostrarCliente extends JFrame implements ActionListener, MouseListener {
+public class MostrarCliente extends JFrame implements ActionListener{
 
-	private JPanel contentPane;
-	private JTextField txtNombre, txtAp1, txtAp2, txtNacimiento, txtOcupacion, txtDomicilio, txtExterior, txtInterior,
-			txtColonia, txtTiempo, txtNumCel, txtNumFijo, txtSueldo;
-	private JComboBox cbEstadoCivil, cbTipoDom;
-	int idUser,tipoUsuario = 1;
-	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblNumCel, lblWarning, lblNombre, lblAp1,
-			lblAp2;
-	JButton btnBack, btnNext, btnSave, btnInfoCliente, btnInfoEmpleo, btnInfoAvales;
+	private JPanel contentPane, pnPersonal, pnInfoEmpleo;
+	int idUser, tipoUsuario = 1;
+	JButton btnInfoCliente, btnInfoEmpleo;
+
+	// lbls txt para informacion personal
+	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblNombre, lblAp1, lblAp2, lblCelular, lblOcupacion,
+			lblColonia, lblResidencia, lblFijo, lblCiudad, lblEstadoCivil, lblSueldo, lblTipoCasa;
+	MdTextField txtNombre, txtAp1, txtAp2, txtDomicilio, txtExterior, txtInterior, txtNacimiento, txtOcupacion,
+			txtColonia, txtTiempo, txtCelular, txtNumFijo, txtSueldo, txtCiudad;
+	JComboBox cbTipoDom, cbEstadoCivil;
+	// componentes para info de empleo
+	JLabel lblTelefonoEmpleo, lblDireccion, lblExteriorEmpleo, lblInteriorEmpleo, lblDescripcion, lblInfoEmpleo,
+			lblTiempoEmpleo;
+	MdTextField txtTelefonoEmpleo, txtDireccion, txtExteriorEmpleo, txtInteriorEmpleo, txtDescripcion, txtTiempoEmpleo;
+
 	NuevoAval ca = new NuevoAval();
 	Style s = new Style();
+	MdHeader pnHeader;
+	IconButton btnSave, btnInfoPersonal, btnEdit;
 	DatosEmpleo jd = new DatosEmpleo();
 	Conexion c = new Conexion();
 	Alert alOk = new Alert();
@@ -44,533 +54,344 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 	BuscarAvales sad = new BuscarAvales();
 
 	public MostrarCliente() {
+		setBounds(100, 100, 1135, 827);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 609, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		// Panel principal de contenido
+
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 593, 380);
+		mainPanel.setBounds(0, 0, 1133, 798);
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
 		s.mdPanel(mainPanel, Color.WHITE);
 
-		JPanel pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 593, 100);
+		// panel de encabezado para info personal
+
+		pnHeader = new MdHeader(s.blue, Color.WHITE);
+		pnHeader.setBounds(0, 0, 1123, 151);
 		mainPanel.add(pnHeader);
-		pnHeader.setLayout(null);
-		s.mdPanel(pnHeader, s.blue);
+		pnHeader.btnNext.setVisible(false);
 
-		btnBack = new JButton("");
-		btnBack.setBorder(null);
-		btnBack.setBounds(10, 11, 32, 32);
-		pnHeader.add(btnBack);
-		s.btnIcon(btnBack, "views/back.png");
-		btnBack.addMouseListener(this);
-
-		JLabel lblHeader = new JLabel("Nuevo Cliente: Datos Personales");
-		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader.setForeground(Color.WHITE);
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
-		lblHeader.setBounds(52, 11, 489, 32);
-		pnHeader.add(lblHeader);
-
-		txtNombre = new JTextField();
-		txtNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
-		txtNombre.setBounds(10, 69, 194, 25);
-		pnHeader.add(txtNombre);
-		txtNombre.setColumns(10);
-		txtNombre.setForeground(Color.WHITE);
-		s.mdTextField(txtNombre, Color.white, s.blue);
-		TextPrompt tpName = new TextPrompt("Nombre", txtNombre);
-		tpName.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 13));
-		tpName.setForeground(Color.white);
-
-		txtAp1 = new JTextField();
-		txtAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
-		txtAp1.setColumns(10);
-		txtAp1.setBounds(214, 69, 140, 25);
-		txtAp1.setForeground(Color.WHITE);
-		pnHeader.add(txtAp1);
-		s.mdTextField(txtAp1, Color.WHITE, s.blue);
-		TextPrompt tpAp1 = new TextPrompt("Apellido Paterno", txtAp1);
-		tpAp1.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 13));
-		tpAp1.setForeground(Color.white);
-
-		txtAp2 = new JTextField();
-		txtAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
-		txtAp2.setColumns(10);
-		txtAp2.setBounds(364, 69, 140, 25);
-		pnHeader.add(txtAp2);
-		txtAp2.setForeground(Color.WHITE);
-		s.mdTextField(txtAp2, Color.white, s.blue);
-		s.myTextPrompt(txtAp2, "Apellido Materno", Color.white);
-
-		btnNext = new JButton("");
-		btnNext.setBorder(null);
-		btnNext.setBounds(551, 11, 32, 32);
-		pnHeader.add(btnNext);
-		s.btnIcon(btnNext, "views/edit.png");
-
-		lblNombre = new JLabel("Nombre(s)");
-		lblNombre.setForeground(Color.WHITE);
-		lblNombre.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblNombre.setBounds(7, 54, 197, 14);
+		lblNombre = new JLabel();
+		lblNombre.setBounds(7, 101, 300, 14);
 		pnHeader.add(lblNombre);
+		txtNombre = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE, lblNombre);
+		txtNombre.setBounds(7, 115, 300, 25);
+		pnHeader.add(txtNombre);
 
 		lblAp1 = new JLabel("Apellido Paterno");
-		lblAp1.setForeground(Color.WHITE);
-		lblAp1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblAp1.setBounds(214, 54, 140, 14);
+		lblAp1.setBounds(317, 101, 245, 14);
 		pnHeader.add(lblAp1);
+		txtAp1 = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE, lblAp1);
+		txtAp1.setBounds(317, 115, 245, 25);
+		pnHeader.add(txtAp1);
 
 		lblAp2 = new JLabel("Apellido Materno");
-		lblAp2.setForeground(Color.WHITE);
-		lblAp2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblAp2.setBounds(364, 54, 140, 14);
+		lblAp2.setBounds(575, 101, 245, 14);
 		pnHeader.add(lblAp2);
+		txtAp2 = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE, lblAp2);
+		txtAp2.setBounds(575, 115, 245, 25);
+		pnHeader.add(txtAp2);
 
-		txtNacimiento = new JTextField();
-		txtNacimiento.setBounds(446, 122, 137, 25);
-		mainPanel.add(txtNacimiento);
-		txtNacimiento.setColumns(10);
-		s.mdTextField(txtNacimiento, s.blue, Color.white);
-		s.myTextPrompt(txtNacimiento, "AAAA-MM-DD", Color.GRAY);
+		btnSave = new IconButton("views/saveWhite.png", Color.white);
+		btnSave.setBounds(1065, 108, 32, 32);
+		pnHeader.add(btnSave);
+		btnSave.addActionListener(this);
+		btnEdit = new IconButton("views/edit.png", Color.white);
+		btnEdit.setBounds(1065, 108, 32, 32);
+		if (tipoUsuario == 1) {
+			btnEdit.setVisible(true);
+		}
+		pnHeader.add(btnEdit);
+		btnEdit.addActionListener(this);
 
-		txtOcupacion = new JTextField();
-		txtOcupacion.setColumns(10);
-		txtOcupacion.setBounds(370, 248, 170, 25);
-		mainPanel.add(txtOcupacion);
-		s.mdTextField(txtOcupacion, s.blue, Color.white);
-		s.myTextPrompt(txtOcupacion, "Ocupacion", Color.GRAY);
+		// panel para informacion personal
 
-		txtDomicilio = new JTextField();
-		txtDomicilio.setBounds(10, 122, 197, 25);
-		mainPanel.add(txtDomicilio);
-		txtDomicilio.setColumns(10);
-		s.mdTextField(txtDomicilio, s.blue, Color.white);
-		s.myTextPrompt(txtDomicilio, "Domicilio", Color.GRAY);
+		pnPersonal = new JPanel();
+		pnPersonal.setLayout(null);
+		pnPersonal.setBounds(0, 150, 513, 650);
+		mainPanel.add(pnPersonal);
+		s.mdPanel(pnPersonal, Color.white);
 
-		txtExterior = new JTextField();
-		txtExterior.setBounds(217, 122, 95, 25);
-		mainPanel.add(txtExterior);
-		txtExterior.setColumns(10);
-		s.mdTextField(txtExterior, s.blue, Color.white);
-		s.myTextPrompt(txtExterior, "Num. Exterior", Color.GRAY);
+		lblNacimiento = new JLabel();
+		lblNacimiento.setBounds(57, 133, 179, 14);
+		pnPersonal.add(lblNacimiento);
+		txtNacimiento = new MdTextField(Color.BLACK, "AAAA-MM-DD", Color.white, s.blue, lblNacimiento);
+		lblNacimiento.setText("Fecha Nacimiento");
+		txtNacimiento.setBounds(57, 151, 179, 32);
+		pnPersonal.add(txtNacimiento);
 
-		txtInterior = new JTextField();
-		txtInterior.setColumns(10);
-		txtInterior.setBounds(330, 122, 95, 25);
-		mainPanel.add(txtInterior);
-		s.mdTextField(txtInterior, s.blue, Color.white);
-		s.myTextPrompt(txtInterior, "Num. Interior", Color.GRAY);
+		lblOcupacion = new JLabel();
+		lblOcupacion.setBounds(71, 406, 170, 14);
+		pnPersonal.add(lblOcupacion);
+		txtOcupacion = new MdTextField(Color.BLACK, "Ocupacion", Color.white, s.blue, lblOcupacion);
+		txtOcupacion.setBounds(71, 425, 170, 31);
+		pnPersonal.add(txtOcupacion);
 
-		txtColonia = new JTextField();
-		txtColonia.setBounds(10, 186, 170, 25);
-		mainPanel.add(txtColonia);
-		txtColonia.setColumns(10);
-		s.mdTextField(txtColonia, s.blue, Color.white);
-		s.myTextPrompt(txtColonia, "Colonia", Color.GRAY);
+		lblDomicilio = new JLabel();
+		lblDomicilio.setBounds(246, 133, 197, 14);
+		pnPersonal.add(lblDomicilio);
+		txtDomicilio = new MdTextField(Color.BLACK, "Domicilio", Color.white, s.blue, lblDomicilio);
+		txtDomicilio.setBounds(246, 151, 197, 32);
+		pnPersonal.add(txtDomicilio);
 
-		txtTiempo = new JTextField();
-		txtTiempo.setColumns(10);
-		txtTiempo.setBounds(197, 186, 115, 25);
-		mainPanel.add(txtTiempo);
-		s.mdTextField(txtTiempo, s.blue, Color.white);
-		s.myTextPrompt(txtTiempo, "Tiempo de Residencia", Color.gray);
+		lblExterior = new JLabel();
+		lblExterior.setBounds(87, 228, 95, 14);
+		pnPersonal.add(lblExterior);
+		txtExterior = new MdTextField(Color.BLACK, "No. Exterior", Color.white, s.blue, lblExterior);
+		txtExterior.setBounds(87, 246, 95, 32);
+		pnPersonal.add(txtExterior);
 
-		JLabel lblTiempoDeResidencia = new JLabel("Tiempo de Residencia");
-		lblTiempoDeResidencia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblTiempoDeResidencia.setBounds(197, 167, 115, 14);
-		mainPanel.add(lblTiempoDeResidencia);
-		s.placeholder(txtTiempo, lblTiempoDeResidencia);
+		lblInterior = new JLabel();
+		lblInterior.setBounds(192, 228, 95, 14);
+		pnPersonal.add(lblInterior);
+		txtInterior = new MdTextField(Color.BLACK, "No. Interior", Color.white, s.blue, lblInterior);
+		txtInterior.setBounds(192, 246, 95, 32);
+		pnPersonal.add(txtInterior);
+
+		lblColonia = new JLabel("Colonia");
+		lblColonia.setBounds(260, 23, 238, 14);
+		pnPersonal.add(lblColonia);
+		txtColonia = new MdTextField(Color.BLACK, "Colonia", Color.white, s.blue, lblColonia);
+		txtColonia.setBounds(260, 42, 238, 32);
+		pnPersonal.add(txtColonia);
+
+		lblResidencia = new JLabel("Tiempo Residencia");
+		lblResidencia.setBounds(297, 228, 115, 14);
+		pnPersonal.add(lblResidencia);
+		txtTiempo = new MdTextField(Color.BLACK, "Tiempo de Residencia", Color.white, s.blue, lblResidencia);
+		txtTiempo.setBounds(297, 246, 115, 32);
+		pnPersonal.add(txtTiempo);
+
+		lblCelular = new JLabel();
+		lblCelular.setBounds(71, 492, 170, 14);
+		pnPersonal.add(lblCelular);
+		txtCelular = new MdTextField(Color.BLACK, "Celular", Color.white, s.blue, lblCelular);
+		txtCelular.setBounds(71, 508, 170, 34);
+		pnPersonal.add(txtCelular);
+
+		lblFijo = new JLabel();
+		lblFijo.setBounds(251, 492, 179, 14);
+		pnPersonal.add(lblFijo);
+		txtNumFijo = new MdTextField(Color.BLACK, "Num Fijo", Color.white, s.blue, lblFijo);
+		txtNumFijo.setBounds(246, 510, 184, 32);
+		pnPersonal.add(txtNumFijo);
+
+		lblSueldo = new JLabel();
+		lblSueldo.setBounds(249, 405, 181, 14);
+		pnPersonal.add(lblSueldo);
+		txtSueldo = new MdTextField(Color.BLACK, "Sueldo", Color.white, s.blue, lblSueldo);
+		txtSueldo.setBounds(251, 424, 179, 32);
+		pnPersonal.add(txtSueldo);
+
+		lblCiudad = new JLabel();
+		lblCiudad.setBounds(10, 24, 240, 14);
+		pnPersonal.add(lblCiudad);
+		txtCiudad = new MdTextField(Color.BLACK, "Ciudad", Color.white, s.blue, lblCiudad);
+		txtCiudad.setBounds(10, 42, 238, 32);
+		pnPersonal.add(txtCiudad);
 
 		cbTipoDom = new JComboBox();
 		cbTipoDom.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbTipoDom.setModel(
 				new DefaultComboBoxModel(new String[] { "", "Propia", "Familiar", "Renta", "Hipoteca", "Otra" }));
-		cbTipoDom.setBounds(330, 186, 115, 25);
-		mainPanel.add(cbTipoDom);
+		cbTipoDom.setBounds(120, 337, 115, 34);
+		pnPersonal.add(cbTipoDom);
 		s.mdCombo(cbTipoDom, Color.WHITE, s.blue);
+		cbTipoDom.setEditable(false);
+		s.mdCombo(cbTipoDom, Color.white, s.blue);
+		lblTipoCasa = new JLabel("Tipo de Casa");
+		lblTipoCasa.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTipoCasa.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblTipoCasa.setBounds(120, 321, 115, 14);
+		pnPersonal.add(lblTipoCasa);
 
 		cbEstadoCivil = new JComboBox();
 		cbEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbEstadoCivil.setModel(new DefaultComboBoxModel(
 				new String[] { "", "Soltero", "Casado", "Viudo", "Divorciado", "Union Libre", "Otro" }));
-		cbEstadoCivil.setBounds(456, 186, 115, 25);
-		mainPanel.add(cbEstadoCivil);
+		cbEstadoCivil.setBounds(245, 337, 115, 34);
+		pnPersonal.add(cbEstadoCivil);
+		cbEstadoCivil.setEditable(false);
 		s.mdCombo(cbEstadoCivil, Color.white, s.blue);
+		s.mdCombo(cbEstadoCivil, Color.WHITE, s.blue);
 
-		JLabel lblTipoDeCasa = new JLabel("Tipo de Casa");
-		lblTipoDeCasa.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblTipoDeCasa.setBounds(330, 167, 115, 14);
-		mainPanel.add(lblTipoDeCasa);
+		lblEstadoCivil = new JLabel();
+		lblEstadoCivil.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEstadoCivil.setText("Estado Civil");
+		lblEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblEstadoCivil.setBounds(245, 321, 115, 14);
+		pnPersonal.add(lblEstadoCivil);
 
-		JLabel lblEstadoCivil = new JLabel("Estado Civil");
-		lblEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblEstadoCivil.setBounds(456, 167, 115, 14);
-		mainPanel.add(lblEstadoCivil);
-
-		txtNumCel = new JTextField();
-		txtNumCel.setColumns(10);
-		txtNumCel.setBounds(10, 248, 170, 25);
-		mainPanel.add(txtNumCel);
-		s.mdTextField(txtNumCel, s.blue, Color.white);
-		s.myTextPrompt(txtNumCel, "Celular", Color.gray);
-
-		txtNumFijo = new JTextField();
-		txtNumFijo.setColumns(10);
-		txtNumFijo.setBounds(190, 248, 170, 25);
-		mainPanel.add(txtNumFijo);
-		s.mdTextField(txtNumFijo, s.blue, Color.white);
-		s.myTextPrompt(txtNumFijo, "Tel Casa", Color.GRAY);
-
-		txtSueldo = new JTextField();
-		txtSueldo.setColumns(10);
-		txtSueldo.setBounds(10, 317, 115, 25);
-		mainPanel.add(txtSueldo);
-		s.mdTextField(txtSueldo, s.blue, Color.white);
-		s.myTextPrompt(txtSueldo, "Sueldo Mensual", Color.gray);
-
-		lblDomicilio = new JLabel("Domicilio");
-		lblDomicilio.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblDomicilio.setBounds(10, 107, 197, 14);
-		mainPanel.add(lblDomicilio);
-		s.placeholder(txtDomicilio, lblDomicilio);
-
-		lblExterior = new JLabel("Num. Exterior");
-		lblExterior.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblExterior.setBounds(217, 108, 95, 14);
-		mainPanel.add(lblExterior);
-		s.placeholder(txtExterior, lblExterior);
-
-		lblInterior = new JLabel("Num. Interior");
-		lblInterior.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblInterior.setBounds(330, 107, 95, 14);
-		mainPanel.add(lblInterior);
-		s.placeholder(txtInterior, lblInterior);
-
-		lblNacimiento = new JLabel("Fecha Nacimiento");
-		lblNacimiento.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblNacimiento.setBounds(446, 108, 137, 14);
-		mainPanel.add(lblNacimiento);
-		s.placeholder(txtNacimiento, lblNacimiento);
-
-		JLabel lblColonia = new JLabel("Colonia");
-		lblColonia.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblColonia.setBounds(10, 167, 170, 14);
-		mainPanel.add(lblColonia);
-		s.placeholder(txtColonia, lblColonia);
-
-		JLabel lblNumFijo = new JLabel("Tel Casa");
-		lblNumFijo.setBounds(190, 232, 170, 14);
-		mainPanel.add(lblNumFijo);
-		s.placeholder(txtNumFijo, lblNumFijo);
-
-		JLabel lblOcupacion = new JLabel("Ocupacion");
-		lblOcupacion.setBounds(370, 232, 170, 14);
-		mainPanel.add(lblOcupacion);
-		s.placeholder(txtOcupacion, lblOcupacion);
-
-		lblSueldo = new JLabel("Sueldo Mensual");
-		lblSueldo.setBounds(10, 302, 115, 14);
-		mainPanel.add(lblSueldo);
-		s.placeholder(txtSueldo, lblSueldo);
-
-		lblNumCel = new JLabel("Num Celular");
-		lblNumCel.setBounds(10, 232, 170, 14);
-		mainPanel.add(lblNumCel);
-		s.placeholder(txtNumCel, lblNumCel);
-
-		lblWarning = new JLabel("");
-		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblWarning.setBounds(135, 310, 222, 32);
-		mainPanel.add(lblWarning);
-		btnNext.addActionListener(this);
-		btnNext.addMouseListener(this);
-		s.placeholder(txtNombre, lblNombre);
-		s.placeholder(txtAp1, lblAp1);
-		s.placeholder(txtAp2, lblAp2);
-
-		btnSave = new JButton("");
-		btnSave.setBorder(null);
-		btnSave.setBounds(551, 11, 32, 32);
-		pnHeader.add(btnSave);
-		btnSave.setVisible(false);
-		btnSave.addActionListener(this);
-		btnSave.addMouseListener(this);
-		s.btnIcon(btnSave, "views/saveWhite.png");
-		jd.btnNext.addActionListener(this);
-		jd.btnOmit.addActionListener(this);
-
-		JPanel menuPane = new JPanel();
-		menuPane.setBounds(475, 317, 96, 32);
-		mainPanel.add(menuPane);
-		menuPane.setLayout(null);
-		s.mdPanel(menuPane, Color.white);
-
-		btnInfoCliente = new JButton("");
-		btnInfoCliente.setBounds(0, 0, 32, 32);
-		menuPane.add(btnInfoCliente);
-		btnInfoCliente.addMouseListener(this);
-		s.btnIcon(btnInfoCliente, "views/userWhite.png");
-		btnInfoCliente.setOpaque(true);
-		btnInfoCliente.setBackground(s.blue);
-
-		btnInfoEmpleo = new JButton("");
-		btnInfoEmpleo.setBounds(32, 0, 32, 32);
-		menuPane.add(btnInfoEmpleo);
-		btnInfoEmpleo.addMouseListener(this);
-		s.btnIcon(btnInfoEmpleo, "views/job.png");
-		btnInfoEmpleo.addActionListener(this);
-
-		btnInfoAvales = new JButton("");
-		btnInfoAvales.setBounds(64, 0, 32, 32);
-		menuPane.add(btnInfoAvales);
-		btnInfoAvales.addMouseListener(this);
-		s.btnIcon(btnInfoAvales, "views/avales.png");
-
-		ca.btnNext.addActionListener(this);
-		ca.btnOmit.addActionListener(this);
-		
 		alOk.btnCancel.setVisible(false);
 		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
 		alOk.lblMessage.setText("Datos guardados con exito");
 		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
 		alOk.btnOk.setText("Ok");
 		alOk.btnOk.addActionListener(this);
+// 	Panel para info de empleo
 
-		jd.alSave.btnOk.addActionListener(this);
-		btnNext.addActionListener(this);
-		ca.alSave.btnOk.addActionListener(this);
-		btnInfoAvales.addActionListener(this);
-		alUpdate.btnCancel.addActionListener(this);
+		pnInfoEmpleo = new JPanel();
+		pnInfoEmpleo.setBounds(515, 150, 609, 217);
+		mainPanel.add(pnInfoEmpleo);
+		pnInfoEmpleo.setLayout(null);
+		s.mdPanel(pnInfoEmpleo, Color.white);
+		pnInfoEmpleo.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, s.blue));
+
+		lblInfoEmpleo = new JLabel("Informaci\u00F3n Laboral");
+		lblInfoEmpleo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInfoEmpleo.setForeground(new Color(0, 0, 0));
+		lblInfoEmpleo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
+		lblInfoEmpleo.setBounds(10, 11, 589, 32);
+		pnInfoEmpleo.add(lblInfoEmpleo);
+
+		lblDireccion = new JLabel("");
+		lblDireccion.setBounds(20, 54, 222, 14);
+		pnInfoEmpleo.add(lblDireccion);
+		txtDireccion = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue, lblDireccion);
+		txtDireccion.setBounds(20, 71, 222, 32);
+		pnInfoEmpleo.add(txtDireccion);
+
+		lblExteriorEmpleo = new JLabel("");
+		lblExteriorEmpleo.setBounds(307, 54, 95, 14);
+		pnInfoEmpleo.add(lblExteriorEmpleo);
+		txtExteriorEmpleo = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue, lblExteriorEmpleo);
+		txtExteriorEmpleo.setBounds(307, 71, 95, 32);
+		pnInfoEmpleo.add(txtExteriorEmpleo);
+
+		lblInteriorEmpleo = new JLabel("");
+		lblInteriorEmpleo.setBounds(465, 54, 95, 14);
+		pnInfoEmpleo.add(lblInteriorEmpleo);
+		txtInteriorEmpleo = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue, lblInteriorEmpleo);
+		txtInteriorEmpleo.setBounds(465, 71, 95, 32);
+		pnInfoEmpleo.add(txtInteriorEmpleo);
+
+		lblTelefonoEmpleo = new JLabel("");
+		lblTelefonoEmpleo.setBounds(20, 148, 177, 14);
+		pnInfoEmpleo.add(lblTelefonoEmpleo);
+		txtTelefonoEmpleo = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, s.blue, lblTelefonoEmpleo);
+		txtTelefonoEmpleo.setBounds(20, 169, 177, 31);
+		pnInfoEmpleo.add(txtTelefonoEmpleo);
+
+		lblDescripcion = new JLabel("");
+		lblDescripcion.setBounds(207, 148, 183, 14);
+		pnInfoEmpleo.add(lblDescripcion);
+		txtDescripcion = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, s.blue, lblDescripcion);
+		txtDescripcion.setBounds(209, 168, 181, 32);
+		pnInfoEmpleo.add(txtDescripcion);
+
+		lblTiempoEmpleo = new JLabel("");
+		lblTiempoEmpleo.setBounds(400, 148, 183, 14);
+		pnInfoEmpleo.add(lblTiempoEmpleo);
+		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Tiempo Empleo", Color.WHITE, s.blue, lblTiempoEmpleo);
+		txtTiempoEmpleo.setBounds(402, 168, 181, 32);
+		pnInfoEmpleo.add(txtTiempoEmpleo);
+
 		alUpdate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
 		alUpdate.lblMessage
 				.setText("<html><body>Se actualizaran los datos del cliente<br>desea continuar?</body></html>");
+		alUpdate.btnOk.addActionListener(this);
+		alUpdate.btnCancel.addActionListener(this);
 
-		sad.btnInfoCliente.addActionListener(this);
-		sad.btnInfoEmpleo.addActionListener(this);
-		sjd.btnInfoCliente.addActionListener(this);
-		sjd.btnInfoAvales.addActionListener(this);
-		sjd.alSave.btnOk.addActionListener(this);
-		sad.alAnother.btnOk.addActionListener(this);
-		sad.alAnother.btnCancel.addActionListener(this);
-		
-		
-		
+		alOk.btnCancel.setVisible(false);
+		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
+		alOk.lblMessage.setText("Cliente registrado con exito");
+		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
+		alOk.btnOk.setText("Ok");
+		alOk.btnOk.addActionListener(this);
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			s.hoverBorder(btnNext, Color.white);
-			s.btnPointer(btnNext);
-
-		} else if (e.getSource() == btnBack) {
-			s.hoverBorder(btnBack, Color.WHITE);
-			s.btnPointer(btnBack);
-		} else if (e.getSource() == btnSave) {
-			s.hoverBorder(btnSave, Color.white);
-			s.btnPointer(btnSave);
-		} else if (e.getSource() == btnInfoEmpleo) {
-			s.btnPointer(btnInfoEmpleo);
-			s.hoverBorder(btnInfoEmpleo, s.blue);
-		} else if (e.getSource() == btnInfoAvales) {
-			s.btnPointer(btnInfoAvales);
-			s.hoverBorder(btnInfoAvales, s.blue);
-		} else if (e.getSource() == btnInfoCliente) {
-			s.btnPointer(btnInfoCliente);
-		} else if (e.getSource() == btnInfoEmpleo) {
-
-		}
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		if (e.getSource() == btnNext) {
-			btnNext.setBorder(null);
-		} else if (e.getSource() == btnBack) {
-			btnBack.setBorder(null);
-		} else if (e.getSource() == btnSave) {
-			btnSave.setBorder(null);
-		} else if (e.getSource() == btnInfoEmpleo) {
-			btnInfoEmpleo.setBorder(null);
-		} else if (e.getSource() == btnInfoAvales) {
-			btnInfoAvales.setBorder(null);
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnNext) {
-			setEnabledFields(true);
-			btnNext.setVisible(false);
+		if (e.getSource() == btnEdit) {
+			btnEdit.setVisible(false);
 			btnSave.setVisible(true);
-
+			setEditableFields(true);
 		} else if (e.getSource() == btnSave) {
-			if (fullFields()) {
-				alUpdate.setVisible(true);
-				lblWarning.setText("");
-			}
+			alUpdate.setVisible(true);
+		} else if (e.getSource() == alUpdate.btnOk) {
+			actualizarCliente();
+			alUpdate.setVisible(false);
+			alOk.setVisible(true);
+			btnEdit.setVisible(true);
+			btnSave.setVisible(false);
 		} else if (e.getSource() == alUpdate.btnCancel) {
 			alUpdate.setVisible(false);
-		} else if (e.getSource() == btnInfoEmpleo) {
-			
-			sjd.setVisible(true);
-			sjd.fillJobData();
-			sjd.fieldsEditable(false);
-			this.setVisible(false);
-			if(tipoUsuario == 1) {
-				sjd.btnNext.setVisible(true);
-				sjd.btnSave.setVisible(false);
-			}else {
-				sjd.btnNext.setVisible(false);
-			}
-		} else if (e.getSource() == btnInfoAvales) {
-			sad.setVisible(true);
-			this.setVisible(false);
-			sad.fillTableAvales(searchAvalesByIdCliente());
-		} else if (e.getSource() == sad.btnInfoCliente) {
-			this.setVisible(true);
-			sjd.fieldsEditable(false);
-			if(tipoUsuario == 1) {
-				this.btnSave.setVisible(false);
-				this.btnNext.setVisible(true);	
-			}else {
-				btnNext.setVisible(false);
-			}
-			setEnabledFields(false);
-			sad.setVisible(false);
-		} else if (e.getSource() == sad.btnInfoEmpleo) {
-			sjd.fieldsEditable(false);
-			if(tipoUsuario == 1) {
-				sjd.btnNext.setVisible(true);
-				sjd.btnSave.setVisible(false);
-			}else {
-				sjd.btnNext.setVisible(false);
-			}
-			sad.setVisible(false);
-			sjd.setVisible(true);
-			sjd.fillJobData();
-			
-		} else if (e.getSource() == sjd.btnInfoAvales) {
-			sad.setVisible(true);
-			sad.fillTableAvales(searchAvalesByIdCliente());
-			sjd.setVisible(false);
-			
-			
-		} else if (e.getSource() == sjd.btnInfoCliente) {
-			this.setVisible(true);
-			sjd.setVisible(false);
-			if(tipoUsuario == 1) {
-				this.btnSave.setVisible(false);
-				this.btnNext.setVisible(true);
-			}else {
-				btnNext.setVisible(false);
-			}
-			setEnabledFields(false);
-		} else if (e.getSource() == sjd.alSave.btnOk) {
-			try {
-				if (sjd.isJobDataRegistered(rs.getInt("id")) == null) {
-					sjd.addDatosEmpleo(rs.getString("Nombre"), rs.getString("Apellido_Paterno"),
-							rs.getString("Apellido_Materno"));
-					sjd.alSave.setVisible(false);
-					alOk.setVisible(true);
-					sjd.btnSave.setVisible(false);
-					sjd.btnNext.setVisible(true);
-					sjd.fieldsEditable(false);
-				} else {
-					sjd.actulizarDatosEmpleo(rs.getString("Nombre"), rs.getString("Apellido_Paterno"),
-					rs.getString("Apellido_Materno"));
-					sjd.alSave.setVisible(false);
-					alOk.setVisible(true);
-					sjd.fieldsEditable(false);
-					sjd.btnSave.setVisible(false);
-					sjd.btnNext.setVisible(true);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
 
-		} else if (e.getSource() == sad.alAnother.btnCancel) {
-			sad.fillTableAvales(searchAvalesByIdCliente());
-			sad.setVisible(true);
-			sad.alAnother.setVisible(false);
-		}else if (e.getSource() == alOk.btnOk) {
+		} else if (e.getSource() == alOk.btnOk) {
 			alOk.setVisible(false);
+			setEditableFields(false);
 			
 		}
+
 	}
 
 	public void fillFields() {
 		try {
 			if (rs.next()) {
-				txtNombre.setText(rs.getString("Nombre"));
-				txtAp1.setText(rs.getString("Paterno"));
-				txtAp2.setText(rs.getString("Materno"));
-				txtDomicilio.setText(rs.getString("Direccion"));
-				txtExterior.setText(rs.getString("Num_Exterior"));
-				txtInterior.setText(rs.getString("Num_Interior"));
-				txtNacimiento.setText(rs.getString("Fecha_Nacimiento"));
-				txtColonia.setText(rs.getString("colonia"));
-				txtTiempo.setText(rs.getString("Tiempo_Residencia"));
-				cbTipoDom.setSelectedIndex(rs.getInt("Tipo_Casa"));
-				cbEstadoCivil.setSelectedIndex(rs.getInt("Estado_Civil"));
-				txtNumCel.setText(rs.getString("Telefono_Cel"));
-				txtNumFijo.setText(rs.getString("Telefono_Fijo"));
-				txtOcupacion.setText(rs.getString("Ocupacion"));
-				txtSueldo.setText(rs.getString("sueldo_Mensual"));
+				txtNombre.setText(rs.getString("cp.Nombre"));
+				txtAp1.setText(rs.getString("cp.Paterno"));
+				txtAp2.setText(rs.getString("cp.Materno"));
+				txtDomicilio.setText(rs.getString("cp.Direccion"));
+				txtExterior.setText(rs.getString("cp.Num_Exterior"));
+				txtInterior.setText(rs.getString("cp.Num_Interior"));
+				txtNacimiento.setText(rs.getString("cp.Fecha_Nacimiento"));
+				txtColonia.setText(rs.getString("cp.colonia"));
+				txtTiempo.setText(rs.getString("cp.Tiempo_Residencia"));
+				cbTipoDom.setSelectedIndex(rs.getInt("cp.Tipo_Casa"));
+				cbEstadoCivil.setSelectedIndex(rs.getInt("cp.Estado_Civil"));
+				txtCelular.setText(rs.getString("cp.Telefono_Cel"));
+				txtNumFijo.setText(rs.getString("cp.Telefono_Fijo"));
+				txtOcupacion.setText(rs.getString("cp.Ocupacion"));
+				txtSueldo.setText(rs.getString("cp.sueldo_Mensual"));
+				txtCiudad.setText(rs.getString("cp.ciudad"));
 				sjd.idUser = rs.getInt("id");
+				
+				txtDireccion.setText(rs.getString("ce.Domicilio"));
+				txtExteriorEmpleo.setText(rs.getString("ce.Num_Exterior"));
+				txtInteriorEmpleo.setText(rs.getString("ce.Num_Interior"));
+				txtTelefonoEmpleo.setText(rs.getString("ce.telefono"));
+				txtDescripcion.setText(rs.getString("ce.Descripcion"));
+				txtTiempoEmpleo.setText(rs.getString("ce.tiempo"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void updateCliente() {
+	public void actualizarCliente() {
 
 		try {
-			c.update("UPDATE clientes_personal SET Nombre = '" + txtNombre.getText() + "',Apellido_Paterno = '"
-					+ txtAp1.getText() + "',Apellido_Materno = '" + txtAp2.getText() + "' ,Telefono_Cel = '"
-					+ txtNumCel.getText() + "'," + "Telefono_Fijo = '" + txtNumFijo.getText() + "',Direccion = '"
+				c.update("UPDATE clientes_personal SET Nombre = '" + txtNombre.getText() + "',Paterno = "
+					+ "'"+txtAp1.getText() + "',Materno = '" + txtAp2.getText() + "' ,Telefono_Cel = '"
+					+ txtCelular.getText() + "'," + "Telefono_Fijo = '" + txtNumFijo.getText() + "',Direccion = '"
 					+ txtDomicilio.getText() + "',Num_Exterior = '" + txtExterior.getText() + "',Num_Interior = '"
 					+ txtInterior.getText() + "',Colonia = '" + txtColonia.getText() + "',Fecha_Nacimiento = '"
-					+ txtNacimiento.getText() + "',Tiempo_Residencia = '" + txtTiempo.getText() + "'," + "Tipo_Casa = "
+					+ txtNacimiento.getText() + "',ciudad = '"+txtCiudad.getText()+"',Tiempo_Residencia = '" + txtTiempo.getText() + "',Tipo_Casa = "
 					+ cbTipoDom.getSelectedIndex() + ",Estado_Civil = " + cbEstadoCivil.getSelectedIndex()
 					+ ",Ocupacion = '" + txtOcupacion.getText() + "',Sueldo_Mensual = "
-					+ Integer.parseInt(txtSueldo.getText()) + ",Editado = " + idUser + " WHERE id =" + rs.getInt("id")
-					+ " ;");
+					+ Integer.parseInt(txtSueldo.getText()) + " WHERE id = " + rs.getInt("id") + " ;");
+
+			c.update("UPDATE clientes_empleo SET Domicilio = '" + txtDireccion.getText() + "',Num_Exterior = '"
+					+ txtExteriorEmpleo.getText() + "', Num_Interior = '" + txtInteriorEmpleo.getText() + "',Telefono ="
+					+ txtNumFijo.getText() + ",tiempo = " + txtTiempoEmpleo.getText() + ",Descripcion = '"
+					+ txtDescripcion.getText() + "';");
 
 		} catch (NumberFormatException nfe) {
-			lblWarning.setText("Algunos campos deben ser numericos");
-			lblWarning.setForeground(Color.RED);
+			pnHeader.lblWarning.setText("Algunos campos deben ser numericos");
+			pnHeader.lblWarning.setForeground(Color.RED);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	public void setEnabledFields(Boolean b) {
+	public void setEditableFields(Boolean b) {
 		txtNombre.setEditable(b);
 		txtAp1.setEditable(b);
 		txtAp2.setEditable(b);
@@ -581,11 +402,18 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 		txtInterior.setEditable(b);
 		txtColonia.setEditable(b);
 		txtTiempo.setEditable(b);
-		txtNumCel.setEditable(b);
+		txtCelular.setEditable(b);
 		txtNumFijo.setEditable(b);
 		txtSueldo.setEditable(b);
 		cbEstadoCivil.setEnabled(b);
 		cbTipoDom.setEnabled(b);
+		txtCiudad.setEditable(b);
+		txtTelefonoEmpleo.setEditable(b);
+		txtDireccion.setEditable(b);
+		txtExteriorEmpleo.setEditable(b); 
+		txtInteriorEmpleo.setEditable(b);
+		txtDescripcion.setEditable(b);
+		txtTiempoEmpleo.setEditable(b);
 	}
 
 	public boolean fullFields() {
@@ -594,50 +422,28 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 				&& txtNacimiento.getText().length() > 0 && txtOcupacion.getText().length() > 0
 				&& txtDomicilio.getText().length() > 0 && txtExterior.getText().length() > 0
 				&& txtColonia.getText().length() > 0 && txtTiempo.getText().length() > 0
-				&& txtNumCel.getText().length() > 0 && txtNumFijo.getText().length() > 0
+				&& txtCelular.getText().length() > 0 && txtNumFijo.getText().length() > 0
 				&& txtSueldo.getText().length() > 0) {
 			if (s.checarFecha(txtNacimiento.getText())) {
 
-				if (txtTiempo.getText().length() > 2 || txtNumCel.getText().length() > 12
+				if (txtTiempo.getText().length() > 2 || txtCelular.getText().length() > 12
 						|| txtNumFijo.getText().length() > 12) {
-					lblWarning.setText("Algunos campos exceden el limite de caracteres");
-					lblWarning.setForeground(Color.RED);
+					pnHeader.lblWarning.setText("Algunos campos exceden el limite de caracteres");
+					pnHeader.lblWarning.setForeground(Color.RED);
 					return false;
 				} else {
 					return true;
 				}
 
 			} else {
-				lblWarning.setText("La fecha introducida no es correcta");
-				lblWarning.setForeground(Color.RED);
+				pnHeader.lblWarning.setText("La fecha introducida no es correcta");
+				pnHeader.lblWarning.setForeground(Color.RED);
 				return false;
 			}
 		} else {
-			lblWarning.setText("Algunos campos estan Vacíos");
-			lblWarning.setForeground(Color.RED);
+			pnHeader.lblWarning.setText("Algunos campos estan Vacíos");
+			pnHeader.lblWarning.setForeground(Color.RED);
 			return false;
-		}
-	}
-
-	public ResultSet clientByName(String nombre, String ap1, String ap2) {
-
-		try {
-			return c.query("SELECT * FROM clientes_personal WHERE Nombre = '" + nombre + "' AND apellido_Paterno = '"
-					+ ap1 + "' AND apellido_Materno = '" + ap2 + "';");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
-
-	public ResultSet searchAvalesByIdCliente() {
-		try {
-			return c.query("SELECT * FROM avales WHERE id_Cliente = " + rs.getInt("id") + " ;");
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			lblWarning.setText("No se encontraron resultados");
-			return null;
 		}
 	}
 
@@ -647,10 +453,9 @@ public class MostrarCliente extends JFrame implements ActionListener, MouseListe
 		lblInterior.setVisible(flag);
 		lblNacimiento.setVisible(flag);
 		lblSueldo.setVisible(flag);
-		lblNumCel.setVisible(flag);
+		lblCelular.setVisible(flag);
 		lblNombre.setVisible(flag);
 		lblAp1.setVisible(flag);
 		lblAp2.setVisible(flag);
 	}
-
 }
