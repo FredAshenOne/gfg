@@ -34,7 +34,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 public class Solicitud extends JFrame implements ActionListener {
-
+	Style s = new Style();
+	DatosEmpleo jd = new DatosEmpleo();
+	Conexion c = new Conexion();
+	private Alert alOk = new Alert();
+	NuevoAval ca = new NuevoAval();
+	Alert alSave = new Alert(), alNewAval = new Alert(), alSaveAval = new Alert(), alSave2 = new Alert();
+	
 	private static final long serialVersionUID = 1L;
 	JPanel contentPane, pnReferencias, pnSolicitud, pnPrincipal, pnAvales, pnRegistrados, pnPersonal, pnSolicitudReg,
 			pnCantidad;
@@ -47,31 +53,17 @@ public class Solicitud extends JFrame implements ActionListener {
 			txtInteriorAval, txtTelefonoAval, txtOcupacionAval, txtColoniaAval, txtSearch, txtCantidadReg;
 	private JComboBox cbEstadoCivil, cbTipoDom, cbTipo, cbTipoReg;
 	int idUser, tipoUsuario = 0, idClienteActual, idSolicitud, idCliente;
-	private JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblSueldo, lblCelular, lblWarning, lblNombre,
-			lblAp1, lblAp2, lblColonia, lblFijo, lblOcupacion, lblResidencia, lblCiudad, lblTipoDeCasa, lblEstadoCivil,
-			lblCantidad, lblDireccion, lblTelefonoEmpleo, lblDescripcion, lblExteriorEmpleo, lblInteriorEmpleo,
-			lblInfoEmpleo, lblNombreRef1, lblNombreRef2, lblPaternoRef1, lblPaternoRef2, lblMaternoRef1, lblMaternoRef2,
-			lblDireccionRef1, lblDireccionRef2, lblExteriorRef1, lblExteriorRef2, lblInteriorRef1, lblInteriorRef2,
-			lblTiempoEmpleo, lblTelefonoRef1, lblTelefonoRef2, lblNombreAval, lblPaternoAval, lblMaternoAval,
-			lblDireccionAval, lblExteriorAval, lblInteriorAval, lblColoniaAval, lblOcupacionAval, lblTelefonoAval,
-			lblCantidadReg;
-	JButton btnBack, btnNext, btnInfoCliente, btnInfoJob, btnInfoAvales;
 	MdButton btnNuevoCliente, btnClienteRegistrado, btnOmitirAval;
 	MdHeader headerSolicitud, headerPrincipal, headerAval, headerRegistrados, headerSolReg;
-	private Alert alOk = new Alert();
 	JTable tbRegistrados;
-	NuevoAval ca = new NuevoAval();
-	private Style s = new Style();
-	DatosEmpleo jd = new DatosEmpleo();
-	private Conexion c = new Conexion();
 	String nombre, ap1, ap2;
 	ResultSet rs;
-	Alert alSave = new Alert(), alNewAval = new Alert(), alSaveAval = new Alert(), alSave2 = new Alert();
-	private JLabel lblHeader, lblSearch, lblSearchIcon;
+	
+	private JLabel lblHeader, lblSearch, lblSearchIcon,lblWarning;
+	
 	JPanel pnRegistrarAval, pnChoice, pnInfoEmpleo, pnReferencias2;
-	private JLabel lblNombreReg1, lblRef1, lblRef2, lblPaternoReg1, lblMaternoReg1, lblDomicilioReg1, lblExteriorReg1,
-			lblInteriorReg1, lblFijoReg1, lblNombreReg2, lblDomicilioReg2, lblPaternoReg2, lblExteriorReg2,
-			lblMaternoReg2, lblInteriorReg2, lblFijoReg2;
+	
+	
 	MdTextField nombreRef1, paternoRef1, maternoRef1, domicilioRef1, exteriorRef1, interiorRef1, fijoRef1, nombreRef2,
 			domicilioRef2, paternoRef2, exteriorRef2, maternoRef2, interiorRef2, fijoRef2;
 
@@ -96,17 +88,16 @@ public class Solicitud extends JFrame implements ActionListener {
 		pnChoice.setBounds(354, 300, 384, 303);
 		pnPrincipal.add(pnChoice);
 		pnChoice.setLayout(null);
-
+		s.mdPanel(pnChoice, Color.white);
+		
 		btnNuevoCliente = new MdButton(s.blue, Color.WHITE, "Cliente nuevo");
 		btnNuevoCliente.setBounds(41, 55, 307, 39);
 		pnChoice.add(btnNuevoCliente);
-		s.mdPanel(pnChoice, Color.white);
 		btnNuevoCliente.addActionListener(this);
 
 		btnClienteRegistrado = new MdButton(s.blue, Color.WHITE, "Cliente Registrado");
 		btnClienteRegistrado.setBounds(41, 158, 307, 39);
 		pnChoice.add(btnClienteRegistrado);
-		s.mdPanel(pnChoice, Color.white);
 		btnClienteRegistrado.addActionListener(this);
 
 		// panel de titulo para seleccion
@@ -131,83 +122,61 @@ public class Solicitud extends JFrame implements ActionListener {
 		pnSolicitud.add(pnPersonal);
 		s.mdPanel(pnPersonal, Color.white);
 
-		lblNacimiento = new JLabel();
-		lblNacimiento.setBounds(57, 133, 179, 14);
-		pnPersonal.add(lblNacimiento);
-		txtNacimiento = new MdTextField(Color.BLACK, "AAAA-MM-DD", Color.white, s.blue, lblNacimiento);
-		lblNacimiento.setText("Fecha Nacimiento");
+		txtNacimiento = new MdTextField(Color.BLACK, "AAAA-MM-DD", Color.white, s.blue,"Nacimiento");
 		txtNacimiento.setBounds(57, 151, 179, 32);
+		txtNacimiento.lbl.setText("Fecha de Nacimiento");
 		pnPersonal.add(txtNacimiento);
-
-		lblOcupacion = new JLabel();
-		lblOcupacion.setBounds(71, 406, 170, 14);
-		pnPersonal.add(lblOcupacion);
-		txtOcupacion = new MdTextField(Color.BLACK, "Ocupacion", Color.white, s.blue, lblOcupacion);
+		txtNacimiento.setLblBounds();
+		
+		txtOcupacion = new MdTextField(Color.BLACK, "Ocupacion", Color.white, s.blue,"Ocupacion");
 		txtOcupacion.setBounds(71, 425, 170, 31);
 		pnPersonal.add(txtOcupacion);
-
-		lblDomicilio = new JLabel();
-		lblDomicilio.setBounds(246, 133, 197, 14);
-		pnPersonal.add(lblDomicilio);
-		txtDomicilio = new MdTextField(Color.BLACK, "Domicilio", Color.white, s.blue, lblDomicilio);
+		txtOcupacion.setLblBounds();
+		
+		txtDomicilio = new MdTextField(Color.BLACK, "Domicilio", Color.white, s.blue,"Domicilio");
 		txtDomicilio.setBounds(246, 151, 197, 32);
 		pnPersonal.add(txtDomicilio);
-
-		lblExterior = new JLabel();
-		lblExterior.setBounds(87, 375, 95, 14);
-		pnPersonal.add(lblExterior);
-		txtExterior = new MdTextField(Color.BLACK, "No. Exterior", Color.white, s.blue, lblExterior);
+		txtDomicilio.setLblBounds();
+		
+		txtExterior = new MdTextField(Color.BLACK, "No. Exterior", Color.white, s.blue,"No. Exterior");
 		txtExterior.setBounds(87, 246, 95, 32);
 		pnPersonal.add(txtExterior);
-
-		lblInterior = new JLabel();
-		lblInterior.setBounds(192, 228, 95, 14);
-		pnPersonal.add(lblInterior);
-		txtInterior = new MdTextField(Color.BLACK, "No. Interior", Color.white, s.blue, lblInterior);
+		txtExterior.setLblBounds();
+		
+		txtInterior = new MdTextField(Color.BLACK, "No. Interior", Color.white, s.blue,"No. Interior");
 		txtInterior.setBounds(192, 246, 95, 32);
 		pnPersonal.add(txtInterior);
-
-		lblColonia = new JLabel("Colonia");
-		lblColonia.setBounds(260, 23, 238, 14);
-		pnPersonal.add(lblColonia);
-		txtColonia = new MdTextField(Color.BLACK, "Colonia", Color.white, s.blue, lblColonia);
+		txtInterior.setLblBounds();
+		
+		txtColonia = new MdTextField(Color.BLACK, "Colonia", Color.white, s.blue,"Colonia");
 		txtColonia.setBounds(260, 42, 238, 32);
 		pnPersonal.add(txtColonia);
-
-		lblResidencia = new JLabel("Tiempo Residencia");
-		lblResidencia.setBounds(297, 228, 115, 14);
-		pnPersonal.add(lblResidencia);
-		txtTiempo = new MdTextField(Color.BLACK, "Tiempo de Residencia", Color.white, s.blue, lblResidencia);
+		txtColonia.setLblBounds();
+		
+		txtTiempo = new MdTextField(Color.BLACK, "Tiempo de Residencia", Color.white, s.blue,"Tiempo en residencia");
 		txtTiempo.setBounds(297, 246, 115, 32);
 		pnPersonal.add(txtTiempo);
+		txtTiempo.setLblBounds();
 
-		lblCelular = new JLabel();
-		lblCelular.setBounds(71, 492, 170, 14);
-		pnPersonal.add(lblCelular);
-		txtCelular = new MdTextField(Color.BLACK, "Celular", Color.white, s.blue, lblCelular);
+		txtCelular = new MdTextField(Color.BLACK, "Celular", Color.white, s.blue,"Celular");
 		txtCelular.setBounds(71, 508, 170, 34);
 		pnPersonal.add(txtCelular);
+		txtCelular.setLblBounds();
 
-		lblFijo = new JLabel();
-		lblFijo.setBounds(251, 492, 179, 14);
-		pnPersonal.add(lblFijo);
-		txtNumFijo = new MdTextField(Color.BLACK, "Num Fijo", Color.white, s.blue, lblFijo);
+		txtNumFijo = new MdTextField(Color.BLACK, "Num Fijo", Color.white, s.blue,"Telefono");
 		txtNumFijo.setBounds(246, 510, 184, 32);
 		pnPersonal.add(txtNumFijo);
+		txtNumFijo.setLblBounds();
 
-		lblSueldo = new JLabel();
-		lblSueldo.setBounds(249, 405, 181, 14);
-		pnPersonal.add(lblSueldo);
-		txtSueldo = new MdTextField(Color.BLACK, "Sueldo", Color.white, s.blue, lblSueldo);
+		txtSueldo = new MdTextField(Color.BLACK, "Sueldo", Color.white, s.blue,"Sueldo Mensual");
 		txtSueldo.setBounds(251, 424, 179, 32);
 		pnPersonal.add(txtSueldo);
+		txtSueldo.setLblBounds();
 
-		lblCiudad = new JLabel();
-		lblCiudad.setBounds(10, 24, 240, 14);
-		pnPersonal.add(lblCiudad);
-		txtCiudad = new MdTextField(Color.BLACK, "Ciudad", Color.white, s.blue, lblCiudad);
+		txtCiudad = new MdTextField(Color.BLACK, "Ciudad", Color.white, s.blue,"Ciudad");
 		txtCiudad.setBounds(10, 42, 238, 32);
 		pnPersonal.add(txtCiudad);
+		txtCiudad.setLblBounds();
 
 		cbTipoDom = new JComboBox();
 		cbTipoDom.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
@@ -215,10 +184,13 @@ public class Solicitud extends JFrame implements ActionListener {
 				new DefaultComboBoxModel(new String[] { "", "Propia", "Familiar", "Renta", "Hipoteca", "Otra" }));
 		cbTipoDom.setBounds(120, 337, 115, 34);
 		pnPersonal.add(cbTipoDom);
-		s.mdCombo(cbTipoDom, Color.WHITE, s.blue);
 		cbTipoDom.setEditable(false);
+		
+		s.mdCombo(cbTipoDom, Color.WHITE, s.blue);
 		s.mdCombo(cbTipoDom, Color.white, s.blue);
-		lblTipoDeCasa = new JLabel("Tipo de Casa");
+		
+		
+		JLabel lblTipoDeCasa = new JLabel("Tipo de Casa");
 		lblTipoDeCasa.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTipoDeCasa.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblTipoDeCasa.setBounds(120, 321, 115, 14);
@@ -234,14 +206,14 @@ public class Solicitud extends JFrame implements ActionListener {
 		s.mdCombo(cbEstadoCivil, Color.white, s.blue);
 		s.mdCombo(cbEstadoCivil, Color.WHITE, s.blue);
 
-		lblEstadoCivil = new JLabel();
+		JLabel lblEstadoCivil = new JLabel();
 		lblEstadoCivil.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEstadoCivil.setText("Estado Civil");
 		lblEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		lblEstadoCivil.setBounds(245, 321, 115, 14);
 		pnPersonal.add(lblEstadoCivil);
 
-		// panel de encabeado para formulario
+		// panel de encabeado para formu lario
 
 		headerSolicitud = new MdHeader(s.blue, Color.WHITE);
 		pnSolicitud.add(headerSolicitud);
@@ -250,26 +222,20 @@ public class Solicitud extends JFrame implements ActionListener {
 		headerSolicitud.btnBack.addActionListener(this);
 		headerSolicitud.btnNext.addActionListener(this);
 
-		lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(10, 54, 240, 14);
-		headerSolicitud.add(lblNombre);
-		txtNombre = new MdTextField(Color.WHITE, "Nombre", s.blue, Color.white, lblNombre);
+		txtNombre = new MdTextField(Color.WHITE, "Nombre", s.blue, Color.white,"Nombre");
 		txtNombre.setBounds(10, 69, 240, 35);
 		headerSolicitud.add(txtNombre);
+		txtNombre.setLblBounds();
 
-		lblAp1 = new JLabel("Apellido Paterno");
-		lblAp1.setBounds(260, 54, 240, 14);
-		headerSolicitud.add(lblAp1);
-		txtAp1 = new MdTextField(Color.white, "Apellido Paterno", s.blue, Color.WHITE, lblAp1);
+		txtAp1 = new MdTextField(Color.white, "Apellido Paterno", s.blue, Color.WHITE,"A. Paterno");
 		txtAp1.setBounds(260, 69, 240, 35);
 		headerSolicitud.add(txtAp1);
+		txtAp1.setLblBounds();
 
-		lblAp2 = new JLabel();
-		lblAp2.setBounds(523, 55, 240, 14);
-		headerSolicitud.add(lblAp2);
-		txtAp2 = new MdTextField(Color.WHITE, "Apellido_Materno", s.blue, Color.WHITE, lblAp2);
+		txtAp2 = new MdTextField(Color.WHITE, "Apellido_Materno", s.blue, Color.WHITE,"A. Materno");
 		txtAp2.setBounds(523, 69, 240, 35);
 		headerSolicitud.add(txtAp2);
+		txtAp2.setLblBounds();
 
 		lblWarning = new JLabel("");
 		lblWarning.setForeground(Color.RED);
@@ -287,61 +253,48 @@ public class Solicitud extends JFrame implements ActionListener {
 		s.mdPanel(pnInfoEmpleo, Color.white);
 		pnInfoEmpleo.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, s.blue));
 
-		lblInfoEmpleo = new JLabel("Informaci\u00F3n Laboral");
+		JLabel lblInfoEmpleo = new JLabel("Informaci\u00F3n Laboral");
 		lblInfoEmpleo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInfoEmpleo.setForeground(new Color(0, 0, 0));
 		lblInfoEmpleo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblInfoEmpleo.setBounds(10, 11, 589, 32);
 		pnInfoEmpleo.add(lblInfoEmpleo);
 
-		lblDireccion = new JLabel("");
-		lblDireccion.setBounds(20, 54, 222, 14);
-		pnInfoEmpleo.add(lblDireccion);
-		txtDireccion = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue, lblDireccion);
+		txtDireccion = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue,"Domicilio");
 		txtDireccion.setBounds(20, 71, 222, 32);
 		pnInfoEmpleo.add(txtDireccion);
+		txtDireccion.setLblBounds();
 
-		lblExteriorEmpleo = new JLabel("");
-		lblExteriorEmpleo.setBounds(307, 54, 95, 14);
-		pnInfoEmpleo.add(lblExteriorEmpleo);
-		txtExteriorEmpleo = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue, lblExteriorEmpleo);
+		txtExteriorEmpleo = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue,"No. Exterior");
 		txtExteriorEmpleo.setBounds(307, 71, 95, 32);
 		pnInfoEmpleo.add(txtExteriorEmpleo);
+		txtExteriorEmpleo.setLblBounds();
 
-		lblInteriorEmpleo = new JLabel("");
-		lblInteriorEmpleo.setBounds(465, 54, 95, 14);
-		pnInfoEmpleo.add(lblInteriorEmpleo);
-		txtInteriorEmpleo = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue, lblInteriorEmpleo);
+		txtInteriorEmpleo = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue,"No. Interior");
 		txtInteriorEmpleo.setBounds(465, 71, 95, 32);
 		pnInfoEmpleo.add(txtInteriorEmpleo);
+		txtInteriorEmpleo.setLblBounds();
 
-		lblTelefonoEmpleo = new JLabel("");
-		lblTelefonoEmpleo.setBounds(20, 148, 177, 14);
-		pnInfoEmpleo.add(lblTelefonoEmpleo);
-		txtTelefonoEmpleo = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, s.blue, lblTelefonoEmpleo);
+		txtTelefonoEmpleo = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, s.blue,"Telefono");
 		txtTelefonoEmpleo.setBounds(20, 169, 177, 31);
 		pnInfoEmpleo.add(txtTelefonoEmpleo);
+		txtTelefonoEmpleo.setLblBounds();
 
-		lblDescripcion = new JLabel("");
-		lblDescripcion.setBounds(207, 148, 183, 14);
-		pnInfoEmpleo.add(lblDescripcion);
-		txtDescripcion = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, s.blue, lblDescripcion);
+		txtDescripcion = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, s.blue,"Indicaciones");
 		txtDescripcion.setBounds(209, 168, 181, 32);
 		pnInfoEmpleo.add(txtDescripcion);
+		txtDescripcion.setLblBounds();
 
-		lblTiempoEmpleo = new JLabel("");
-		lblTiempoEmpleo.setBounds(400, 148, 183, 14);
-		pnInfoEmpleo.add(lblTiempoEmpleo);
-		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Tiempo empleo", Color.WHITE, s.blue, lblTiempoEmpleo);
+		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Tiempo empleo", Color.WHITE, s.blue,"Tiempo en empleo");
 		txtTiempoEmpleo.setBounds(402, 168, 181, 32);
 		pnInfoEmpleo.add(txtTiempoEmpleo);
+		txtTiempoEmpleo.setLblBounds();
 
-		lblCantidad = new JLabel("Tipo de Casa");
-		lblCantidad.setBounds(71, 573, 170, 14);
-		pnPersonal.add(lblCantidad);
-		txtCantidad = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, s.blue, lblCantidad);
+		txtCantidad = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, s.blue,"Cantidad");
 		txtCantidad.setBounds(71, 588, 170, 34);
 		pnPersonal.add(txtCantidad);
+		txtCantidad.setLblBounds();
+		
 		pnSolicitud.setVisible(true);
 		JLabel lblTipoCredito = new JLabel("Tipo de Credito");
 		lblTipoCredito.setHorizontalAlignment(SwingConstants.CENTER);
@@ -368,106 +321,77 @@ public class Solicitud extends JFrame implements ActionListener {
 		pnSolicitud.add(pnReferencias);
 		pnReferencias.setLayout(null);
 		s.mdPanel(pnReferencias, Color.white);
-		pnReferencias.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, s.blue));
+		pnReferencias.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, s.blue));
 
-		lblNombreRef1 = new JLabel("");
-		lblNombreRef1.setBounds(10, 53, 194, 14);
-		pnReferencias.add(lblNombreRef1);
-		txtNombreRef1 = new MdTextField(Color.BLACK, "Nombre(s)", Color.WHITE, s.blue, lblNombreRef1);
-
+		txtNombreRef1 = new MdTextField(Color.BLACK, "Nombre(s)", Color.WHITE, s.blue,"Nombre");
 		txtNombreRef1.setBounds(10, 68, 194, 31);
 		pnReferencias.add(txtNombreRef1);
+		txtNombreRef1.setLblBounds();
 
-		lblPaternoRef1 = new JLabel("");
-		lblPaternoRef1.setBounds(227, 53, 181, 14);
-		pnReferencias.add(lblPaternoRef1);
-		txtPaternoRef1 = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, s.blue, lblPaternoRef1);
+		txtPaternoRef1 = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, s.blue,"A. Paterno");
 		txtPaternoRef1.setBounds(227, 68, 181, 31);
 		pnReferencias.add(txtPaternoRef1);
+		txtPaternoRef1.setLblBounds();
 
-		lblMaternoRef1 = new JLabel("");
-		lblMaternoRef1.setBounds(418, 53, 181, 14);
-		pnReferencias.add(lblMaternoRef1);
-		txtMaternoRef1 = new MdTextField(Color.BLACK, "A. Materno", Color.WHITE, s.blue, lblMaternoRef1);
+		txtMaternoRef1 = new MdTextField(Color.BLACK, "A. Materno", Color.WHITE, s.blue,"A. Materno");
 		txtMaternoRef1.setBounds(418, 68, 181, 31);
 		pnReferencias.add(txtMaternoRef1);
+		txtMaternoRef1.setLblBounds();
 
-		lblDireccionRef1 = new JLabel("");
-		lblDireccionRef1.setBounds(10, 129, 222, 14);
-		pnReferencias.add(lblDireccionRef1);
-		txtDireccionRef1 = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue, lblDireccionRef1);
+		txtDireccionRef1 = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue,"Domicilio");
 		txtDireccionRef1.setBounds(10, 144, 222, 32);
 		pnReferencias.add(txtDireccionRef1);
+		txtDireccionRef1.setLblBounds();
 
-		lblExteriorRef1 = new JLabel("");
-		lblExteriorRef1.setBounds(242, 129, 95, 14);
-		pnReferencias.add(lblExteriorRef1);
-		txtExteriorRef1 = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue, lblExteriorRef1);
+		txtExteriorRef1 = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue,"No. Exterior");
 		txtExteriorRef1.setBounds(242, 144, 95, 32);
 		pnReferencias.add(txtExteriorRef1);
-
-		lblInteriorRef1 = new JLabel("");
-		lblInteriorRef1.setBounds(347, 129, 95, 14);
-		pnReferencias.add(lblInteriorRef1);
-		txtInteriorRef1 = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue, lblInteriorRef1);
+		txtExteriorRef1.setLblBounds();
+		
+		txtInteriorRef1 = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue,"No. Interior");
 		txtInteriorRef1.setBounds(347, 144, 95, 32);
 		pnReferencias.add(txtInteriorRef1);
+		txtInteriorRef1.setLblBounds();
 
-		lblTelefonoRef1 = new JLabel("");
-		lblTelefonoRef1.setBounds(452, 129, 147, 14);
-		pnReferencias.add(lblTelefonoRef1);
-		txtTelefonoRef1 = new MdTextField(Color.BLACK, "Num Fijo", Color.WHITE, s.blue, lblTelefonoRef1);
+		txtTelefonoRef1 = new MdTextField(Color.BLACK, "Num Fijo", Color.WHITE, s.blue,"Telefono");
 		txtTelefonoRef1.setBounds(452, 144, 147, 32);
 		pnReferencias.add(txtTelefonoRef1);
+		txtTelefonoRef1.setLblBounds();
 
-		lblNombreRef2 = new JLabel("");
-		lblNombreRef2.setBounds(10, 262, 194, 14);
-		pnReferencias.add(lblNombreRef2);
-		txtNombreRef2 = new MdTextField(Color.BLACK, "Nombre(s)", Color.WHITE, s.blue, lblNombreRef2);
+		txtNombreRef2 = new MdTextField(Color.BLACK, "Nombre(s)", Color.WHITE, s.blue,"Nombre");
 		txtNombreRef2.setBounds(10, 275, 194, 31);
 		pnReferencias.add(txtNombreRef2);
+		txtNombreRef2.setLblBounds();
 
-		lblDireccionRef2 = new JLabel("");
-		lblDireccionRef2.setBounds(10, 336, 222, 14);
-		pnReferencias.add(lblDireccionRef2);
-		txtDireccionRef2 = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue, lblDireccionRef2);
-		txtDireccionRef2.setBounds(10, 351, 222, 32);
-		pnReferencias.add(txtDireccionRef2);
-
-		lblPaternoRef2 = new JLabel("");
-		lblPaternoRef2.setBounds(227, 262, 181, 14);
-		pnReferencias.add(lblPaternoRef2);
-		txtPaternoRef2 = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, s.blue, lblPaternoRef2);
+		txtPaternoRef2 = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, s.blue,"A. Paterno");
 		txtPaternoRef2.setBounds(227, 275, 181, 31);
 		pnReferencias.add(txtPaternoRef2);
-
-		lblExteriorRef2 = new JLabel("");
-		lblExteriorRef2.setBounds(242, 336, 95, 14);
-		pnReferencias.add(lblExteriorRef2);
-		txtExteriorRef2 = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue, lblExteriorRef2);
-		txtExteriorRef2.setBounds(242, 351, 95, 32);
-		pnReferencias.add(txtExteriorRef2);
-
-		lblMaternoRef2 = new JLabel("");
-		lblMaternoRef2.setBounds(418, 262, 181, 14);
-		pnReferencias.add(lblMaternoRef2);
-		txtMaternoRef2 = new MdTextField(Color.BLACK, "A. Materno", Color.WHITE, s.blue, lblMaternoRef2);
+		txtPaternoRef2.setLblBounds();
+		
+		txtMaternoRef2 = new MdTextField(Color.BLACK, "A. Materno", Color.WHITE, s.blue,"A. Materno");
 		txtMaternoRef2.setBounds(418, 275, 181, 31);
 		pnReferencias.add(txtMaternoRef2);
+		txtMaternoRef2.setLblBounds();
 
-		lblInteriorRef2 = new JLabel("");
-		lblInteriorRef2.setBounds(347, 336, 95, 14);
-		pnReferencias.add(lblInteriorRef2);
-		txtInteriorRef2 = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue, lblInteriorRef2);
+		txtDireccionRef2 = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue,"Domicilio");
+		txtDireccionRef2.setBounds(10, 351, 222, 32);
+		pnReferencias.add(txtDireccionRef2);
+		txtDireccionRef2.setLblBounds();		
+
+		txtExteriorRef2 = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue,"No. exterior");
+		txtExteriorRef2.setBounds(242, 351, 95, 32);
+		pnReferencias.add(txtExteriorRef2);
+		txtExteriorRef2.setLblBounds();
+		
+		txtInteriorRef2 = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue,"No. Interior");
 		txtInteriorRef2.setBounds(347, 351, 95, 32);
 		pnReferencias.add(txtInteriorRef2);
+		txtInteriorRef2.setLblBounds();
 
-		lblTelefonoRef2 = new JLabel("");
-		lblTelefonoRef2.setBounds(452, 336, 147, 14);
-		pnReferencias.add(lblTelefonoRef2);
-		txtTelefonoRef2 = new MdTextField(Color.BLACK, "Num Fijo", Color.WHITE, s.blue, lblTelefonoRef2);
+		txtTelefonoRef2 = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, s.blue,"Teléfono");
 		txtTelefonoRef2.setBounds(452, 351, 147, 32);
 		pnReferencias.add(txtTelefonoRef2);
+		txtTelefonoRef2.setLblBounds();
 
 		JLabel lblReferencia1 = new JLabel("Referencia 1");
 		lblReferencia1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
@@ -501,68 +425,50 @@ public class Solicitud extends JFrame implements ActionListener {
 		pnRegistrarAval.setLayout(null);
 		s.mdPanel(pnRegistrarAval, Color.WHITE);
 
-		lblNombreAval = new JLabel();
-		lblNombreAval.setBounds(50, 35, 200, 15);
-		pnRegistrarAval.add(lblNombreAval);
-		txtNombreAval = new MdTextField(Color.BLACK, "Nombre(s)", Color.white, s.blue, lblNombreAval);
+		txtNombreAval = new MdTextField(Color.BLACK, "Nombre(s)", Color.white, s.blue,"Nombre(s)");
 		txtNombreAval.setBounds(50, 50, 200, 35);
 		pnRegistrarAval.add(txtNombreAval);
+		txtNombreAval.setLblBounds();
 
-		lblPaternoAval = new JLabel();
-		lblPaternoAval.setBounds(268, 35, 200, 15);
-		pnRegistrarAval.add(lblPaternoAval);
-		txtPaternoAval = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, s.blue, lblPaternoAval);
+		txtPaternoAval = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, s.blue,"A. Paterno");
 		txtPaternoAval.setBounds(268, 50, 200, 35);
 		pnRegistrarAval.add(txtPaternoAval);
+		txtPaternoAval.setLblBounds();
 
-		lblMaternoAval = new JLabel();
-		lblMaternoAval.setBounds(478, 35, 200, 15);
-		pnRegistrarAval.add(lblMaternoAval);
-		txtMaternoAval = new MdTextField(Color.BLACK, "A.Materno", Color.WHITE, s.blue, lblMaternoAval);
+		txtMaternoAval = new MdTextField(Color.BLACK, "A.Materno", Color.WHITE, s.blue,"A. Materno");
 		txtMaternoAval.setBounds(478, 50, 200, 35);
 		pnRegistrarAval.add(txtMaternoAval);
+		txtMaternoAval.setLblBounds();
 
-		lblDireccionAval = new JLabel();
-		lblDireccionAval.setBounds(50, 139, 368, 15);
-		pnRegistrarAval.add(lblDireccionAval);
-		txtDireccionAval = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue, lblDireccionAval);
+		txtDireccionAval = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue,"Domicilio");
 		txtDireccionAval.setBounds(50, 154, 368, 35);
 		pnRegistrarAval.add(txtDireccionAval);
+		txtDireccionAval.setLblBounds();
 
-		lblExteriorAval = new JLabel();
-		lblExteriorAval.setBounds(428, 139, 120, 15);
-		pnRegistrarAval.add(lblExteriorAval);
-		txtExteriorAval = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue, lblExteriorAval);
+		txtExteriorAval = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue,"No. Exterior");
 		txtExteriorAval.setBounds(428, 154, 120, 35);
 		pnRegistrarAval.add(txtExteriorAval);
+		txtExteriorAval.setLblBounds();
 
-		lblInteriorAval = new JLabel();
-		lblInteriorAval.setBounds(558, 139, 120, 15);
-		pnRegistrarAval.add(lblInteriorAval);
-		txtInteriorAval = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue, lblInteriorAval);
+		txtInteriorAval = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue,"No. Interior");
 		txtInteriorAval.setBounds(558, 154, 120, 35);
 		pnRegistrarAval.add(txtInteriorAval);
-
-		lblColoniaAval = new JLabel();
-		lblColoniaAval.setBounds(50, 256, 200, 15);
-		pnRegistrarAval.add(lblColoniaAval);
-		txtColoniaAval = new MdTextField(Color.BLACK, "Colonia", Color.WHITE, s.blue, lblColoniaAval);
+		txtInteriorAval.setLblBounds();
+		
+		txtColoniaAval = new MdTextField(Color.BLACK, "Colonia", Color.WHITE, s.blue,"Colonia");
 		txtColoniaAval.setBounds(50, 271, 200, 35);
 		pnRegistrarAval.add(txtColoniaAval);
+		txtColoniaAval.setLblBounds();
 
-		lblTelefonoAval = new JLabel();
-		lblTelefonoAval.setBounds(260, 256, 200, 15);
-		pnRegistrarAval.add(lblTelefonoAval);
-		txtTelefonoAval = new MdTextField(Color.BLACK, "Telefono", Color.WHITE, s.blue, lblTelefonoAval);
+		txtTelefonoAval = new MdTextField(Color.BLACK, "Telefono", Color.WHITE, s.blue,"Telefono");
 		txtTelefonoAval.setBounds(260, 271, 200, 35);
 		pnRegistrarAval.add(txtTelefonoAval);
+		txtTelefonoAval.setLblBounds();
 
-		lblOcupacionAval = new JLabel();
-		lblOcupacionAval.setBounds(470, 256, 206, 15);
-		pnRegistrarAval.add(lblOcupacionAval);
-		txtOcupacionAval = new MdTextField(Color.BLACK, "Ocupacion", Color.WHITE, s.blue, lblOcupacionAval);
+		txtOcupacionAval = new MdTextField(Color.BLACK, "Ocupacion", Color.WHITE, s.blue,"Ocupacion");
 		txtOcupacionAval.setBounds(470, 271, 206, 35);
 		pnRegistrarAval.add(txtOcupacionAval);
+		txtOcupacionAval.setLblBounds();
 
 		btnOmitirAval = new MdButton(Color.WHITE, s.blue, "Omitir");
 		btnOmitirAval.setBounds(478, 338, 200, 35);
@@ -623,12 +529,9 @@ public class Solicitud extends JFrame implements ActionListener {
 		};
 		tbRegistrados.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "ID", "Nombre", "A. Paterno", "A. Materno", "Direccion", "No. Exterior", "Teléfono" }));
-		s.mdTable(tbRegistrados, Color.WHITE, Color.WHITE);
+		s.mdTable(tbRegistrados, Color.WHITE,s.blue, Color.WHITE);
 		sc.setViewportView(tbRegistrados);
 		
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
-		tbRegistrados.setDefaultRenderer(String.class, centerRenderer);
 		headerRegistrados.btnNext.setEnabled(false);
 		
 		ListSelectionModel listSelectionModel = tbRegistrados.getSelectionModel();
@@ -642,7 +545,7 @@ public class Solicitud extends JFrame implements ActionListener {
 		lblSearch = new JLabel();
 		lblSearch.setBounds(175, 162, 822, 15);
 		pnRegistrados.add(lblSearch);
-		txtSearch = new MdTextField(Color.black, "Busqueda por Nombre", Color.white, s.blue, lblSearch);
+		txtSearch = new MdTextField(Color.black, "Busqueda por Nombre", Color.white, s.blue,"Busqueda por Nombre");
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -682,132 +585,85 @@ public class Solicitud extends JFrame implements ActionListener {
 		pnReferencias2.setLayout(null);
 		pnReferencias2.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, s.blue));
 		pnReferencias2.setBounds(448, 288, 609, 432);
-		pnSolicitudReg.add(pnReferencias2);
-		lblNombreReg1 = new JLabel("");
-		lblNombreReg1.setBounds(10, 53, 194, 14);
-		pnReferencias2.add(lblNombreReg1);
+		pnSolicitudReg.add(pnReferencias2);		
 		s.mdPanel(pnReferencias2, Color.white);
 
-		nombreRef1 = new MdTextField(Color.BLACK, "Nombre(s)", Color.WHITE, new Color(3, 155, 229), lblNombreReg1);
+		nombreRef1 = new MdTextField(Color.BLACK, "Nombre(s)", Color.white,s.blue,"Nombre(s)");
 		nombreRef1.setBounds(10, 68, 194, 31);
 		pnReferencias2.add(nombreRef1);
+		nombreRef1.setLblBounds();
 
-		lblPaternoReg1 = new JLabel("");
-		lblPaternoReg1.setBounds(227, 53, 181, 14);
-		pnReferencias2.add(lblPaternoReg1);
-
-		paternoRef1 = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, new Color(3, 155, 229), lblPaternoReg1);
+		paternoRef1 = new MdTextField(Color.BLACK, "A. Paterno", Color.white,s.blue,"A. Paterno");
 		paternoRef1.setBounds(227, 68, 181, 31);
 		pnReferencias2.add(paternoRef1);
-
-		lblMaternoReg1 = new JLabel("");
-		lblMaternoReg1.setBounds(418, 53, 181, 14);
-		pnReferencias2.add(lblMaternoReg1);
-
-		maternoRef1 = new MdTextField(Color.BLACK, "A. Materno", Color.WHITE, new Color(3, 155, 229), lblMaternoReg1);
+		paternoRef1.setLblBounds();
+		
+		maternoRef1 = new MdTextField(Color.BLACK, "A. Materno", Color.white,s.blue, "A.Materno");
 		maternoRef1.setBounds(418, 68, 181, 31);
 		pnReferencias2.add(maternoRef1);
+		maternoRef1.setLblBounds();
 
-		lblDomicilioReg1 = new JLabel("");
-		lblDomicilioReg1.setBounds(10, 129, 222, 14);
-		pnReferencias2.add(lblDomicilioReg1);
-
-		domicilioRef1 = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, new Color(3, 155, 229),
-				lblDomicilioReg1);
+		domicilioRef1 = new MdTextField(Color.BLACK, "Domicilio", Color.white,s.blue,"Domicilio");
 		domicilioRef1.setBounds(10, 144, 222, 32);
 		pnReferencias2.add(domicilioRef1);
-
-		lblExteriorReg1 = new JLabel("");
-		lblExteriorReg1.setBounds(242, 129, 95, 14);
-		pnReferencias2.add(lblExteriorReg1);
-
-		exteriorRef1 = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, new Color(3, 155, 229),
-				lblExteriorReg1);
+		domicilioRef1.setLblBounds();
+		
+		exteriorRef1 = new MdTextField(Color.BLACK, "No. Exterior", Color.white,s.blue,"No. Exterior");
 		exteriorRef1.setBounds(242, 144, 95, 32);
 		pnReferencias2.add(exteriorRef1);
-
-		lblInteriorReg1 = new JLabel("");
-		lblInteriorReg1.setBounds(347, 129, 95, 14);
-		pnReferencias2.add(lblInteriorReg1);
-
-		interiorRef1 = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, new Color(3, 155, 229),
-				lblInteriorReg1);
+		exteriorRef1.setLblBounds();
+		
+		interiorRef1 = new MdTextField(Color.BLACK, "No. Interior", Color.white,s.blue,"No. Interior");
 		interiorRef1.setBounds(347, 144, 95, 32);
 		pnReferencias2.add(interiorRef1);
+		interiorRef1.setLblBounds();
 
-		lblFijoReg1 = new JLabel("");
-		lblFijoReg1.setBounds(452, 129, 147, 14);
-		pnReferencias2.add(lblFijoReg1);
-
-		fijoRef1 = new MdTextField(Color.BLACK, "Num Fijo", Color.WHITE, new Color(3, 155, 229), lblFijoReg1);
+		fijoRef1 = new MdTextField(Color.BLACK, "Telefono", Color.white,s.blue,"Telefono");
 		fijoRef1.setBounds(452, 144, 147, 32);
 		pnReferencias2.add(fijoRef1);
+		fijoRef1.setLblBounds();
 
-		lblNombreReg2 = new JLabel("");
-		lblNombreReg2.setBounds(10, 262, 194, 14);
-		pnReferencias2.add(lblNombreReg2);
-
-		nombreRef2 = new MdTextField(Color.BLACK, "Nombre(s)", Color.WHITE, new Color(3, 155, 229), lblNombreReg2);
+		nombreRef2 = new MdTextField(Color.BLACK, "Nombre(s)", Color.white,s.blue,"Nombre(s)");
 		nombreRef2.setBounds(10, 275, 194, 31);
 		pnReferencias2.add(nombreRef2);
+		nombreRef2.setLblBounds();
 
-		lblDomicilioReg2 = new JLabel("");
-		lblDomicilioReg2.setBounds(10, 336, 222, 14);
-		pnReferencias2.add(lblDomicilioReg2);
-		domicilioRef2 = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, new Color(3, 155, 229),
-				lblDomicilioReg2);
-		domicilioRef2.setBounds(10, 351, 222, 32);
-		pnReferencias2.add(domicilioRef2);
-
-		lblPaternoReg2 = new JLabel("");
-		lblPaternoReg2.setBounds(227, 262, 181, 14);
-		pnReferencias2.add(lblPaternoReg2);
-
-		paternoRef2 = new MdTextField(Color.BLACK, "A. Paterno", Color.WHITE, new Color(3, 155, 229), lblPaternoReg2);
+		paternoRef2 = new MdTextField(Color.BLACK, "A. Paterno", Color.white,s.blue,"A. Paterno");
 		paternoRef2.setBounds(227, 275, 181, 31);
 		pnReferencias2.add(paternoRef2);
+		paternoRef2.setLblBounds();
+		
+		domicilioRef2 = new MdTextField(Color.BLACK, "Domicilio", Color.white,s.blue,"Domicilio");
+		domicilioRef2.setBounds(10, 351, 222, 32);
+		pnReferencias2.add(domicilioRef2);
+		domicilioRef2.setLblBounds();		
 
-		lblExteriorReg2 = new JLabel("");
-		lblExteriorReg2.setBounds(242, 336, 95, 14);
-		pnReferencias2.add(lblExteriorReg2);
-
-		exteriorRef2 = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, new Color(3, 155, 229),
-				lblExteriorReg2);
+		exteriorRef2 = new MdTextField(Color.BLACK, "No. Exterior", Color.white,s.blue,"No.Exterior");
 		exteriorRef2.setBounds(242, 351, 95, 32);
 		pnReferencias2.add(exteriorRef2);
 
-		lblMaternoReg2 = new JLabel("");
-		lblMaternoReg2.setBounds(418, 262, 181, 14);
-		pnReferencias2.add(lblMaternoReg2);
-
-		maternoRef2 = new MdTextField(Color.BLACK, "A. Materno", Color.WHITE, new Color(3, 155, 229), lblMaternoReg2);
+		maternoRef2 = new MdTextField(Color.BLACK, "A. Materno", Color.white,s.blue,"A. Materno");
 		maternoRef2.setBounds(418, 275, 181, 31);
 		pnReferencias2.add(maternoRef2);
-
-		lblInteriorReg2 = new JLabel("");
-		lblInteriorReg2.setBounds(347, 336, 95, 14);
-		pnReferencias2.add(lblInteriorReg2);
-
-		interiorRef2 = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, new Color(3, 155, 229),
-				lblInteriorReg2);
+		maternoRef2.setLblBounds();
+		
+		interiorRef2 = new MdTextField(Color.BLACK, "No. Interior", Color.white,s.blue,"No. Interior");
 		interiorRef2.setBounds(347, 351, 95, 32);
 		pnReferencias2.add(interiorRef2);
+		interiorRef2.setLblBounds();
 
-		lblFijoReg2 = new JLabel("");
-		lblFijoReg2.setBounds(452, 336, 147, 14);
-		pnReferencias2.add(lblFijoReg2);
-
-		fijoRef2 = new MdTextField(Color.BLACK, "Num Fijo", Color.WHITE, new Color(3, 155, 229), lblFijoReg2);
+		fijoRef2 = new MdTextField(Color.BLACK, "Teléfono", Color.white,s.blue,"Teléfono");
 		fijoRef2.setBounds(452, 351, 147, 32);
 		pnReferencias2.add(fijoRef2);
+		fijoRef2.setLblBounds();
 
-		lblRef1 = new JLabel("Referencia 1");
+		JLabel lblRef1 = new JLabel("Referencia 1");
 		lblRef1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRef1.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblRef1.setBounds(10, 11, 589, 31);
 		pnReferencias2.add(lblRef1);
 
-		lblRef2 = new JLabel("Referencia 2");
+		JLabel lblRef2 = new JLabel("Referencia 2");
 		lblRef2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRef2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblRef2.setBounds(10, 202, 589, 31);
@@ -820,16 +676,15 @@ public class Solicitud extends JFrame implements ActionListener {
 		pnCantidad.setLayout(null);
 		s.mdPanel(pnCantidad, Color.white);
 
-		lblCantidadReg = new JLabel("Tipo de Casa");
-		lblCantidadReg.setBounds(96, 58, 54, 20);
-		pnCantidad.add(lblCantidadReg);
-		txtCantidadReg = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, s.blue, lblCantidadReg);
-		txtCantidadReg.setBounds(64, 89, 120, 22);
+		txtCantidadReg = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, s.blue,"Cantidad");
+		txtCantidadReg.setBounds(10, 89, 210, 40);
 		pnCantidad.add(txtCantidadReg);
+		txtCantidadReg.setLblBounds();
+		
 		JLabel lblTipoCreditoReg = new JLabel("Tipo de Credito");
 		lblTipoCreditoReg.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTipoCreditoReg.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblTipoCreditoReg.setBounds(76, 122, 93, 20);
+		lblTipoCreditoReg.setBounds(10, 160, 210, 20);
 		pnCantidad.add(lblTipoCreditoReg);
 
 		cbTipoReg = new JComboBox();
@@ -839,10 +694,10 @@ public class Solicitud extends JFrame implements ActionListener {
 		});
 		cbTipoReg
 				.setModel(new DefaultComboBoxModel(new String[] { "", "13 Semanas", "14 Semanas", "Interes Mensual" }));
-		cbTipoReg.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		cbTipoReg.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 17));
 		s.mdCombo(cbTipoReg, Color.WHITE, s.blue);
 		s.mdCombo(cbTipoReg, Color.WHITE, s.blue);
-		cbTipoReg.setBounds(61, 153, 123, 26);
+		cbTipoReg.setBounds(10, 200, 210, 40);
 		pnCantidad.add(cbTipoReg);
 
 	}

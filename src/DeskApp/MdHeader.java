@@ -9,7 +9,7 @@ import javax.swing.SwingConstants;
 
 public class MdHeader extends JPanel{
 	IconButton btnBack,btnNext;
-	JLabel lblTitle,lblWarning;
+	JLabel lblTitle,lblWarning,lblSubTitle;
 	public MdHeader(Color back,Color fore) {
 		setBounds(0, 0, 1124, 151);
 		setLayout(null);
@@ -31,11 +31,19 @@ public class MdHeader extends JPanel{
 		add(lblWarning);
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		
+		
 		lblTitle= new JLabel("");
 		lblTitle.setForeground(fore);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setBounds(62, 10, 990, 45);
 		add(lblTitle);
 		lblTitle.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 20));
+		
+		lblSubTitle = new JLabel("");
+		lblSubTitle.setForeground(Color.WHITE);
+		lblSubTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSubTitle.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
+		lblSubTitle.setBounds(62, 54, 990, 32);
+		add(lblSubTitle);
 	}
 }

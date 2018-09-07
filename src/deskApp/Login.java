@@ -23,18 +23,20 @@ import javax.swing.JPasswordField;
 public class Login extends JFrame implements ActionListener,MouseListener{
 	
 	
-	private JPanel contentPane;
-	Style s =  new Style();
-	private JTextField txtUser;
 	
+	Style s =  new Style();	
+	MenuPrincipal mp = new MenuPrincipal();
 	Conexion c = new Conexion();
+	MenuUser mu =  new MenuUser();
+
+	private JPanel contentPane;
+	JTextField txtUser;
 	JLabel lblHeader,lblLook,lblWarning;
 	JButton btnIniciar;
 	JPasswordField txtPassword;
-	AdminMenuPrincipal mam = new AdminMenuPrincipal();
+	
 	int userType,idUser;
-	MenuUser mu =  new MenuUser();
-
+	
 	public Login() {
 		setBounds(100,100,1135,827);
 		setResizable(false);
@@ -50,12 +52,23 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		mainPanel.setLayout(null);
 		s.mdPanel(mainPanel,Color.white);
 		
+		//header 
 		
 		JPanel pnHeader = new JPanel();
 		pnHeader.setBounds(0, 0, 1124, 151);
 		mainPanel.add(pnHeader);
 		pnHeader.setLayout(null);
 		s.mdPanel(pnHeader, s.blue);
+		
+
+		lblHeader = new JLabel("");
+		lblHeader.setBounds(388, 11, 332, 129);
+		lblHeader.setIcon(new ImageIcon("views/gfgHeader.png"));
+		pnHeader.add(lblHeader);
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 20));
+		
+		// panel de entradas 
 		
 		JPanel logPanel = new JPanel();
 		logPanel.setBounds(390, 262, 332, 359);
@@ -81,11 +94,15 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		logPanel.add(lblLook);
 		lblLook.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.LIGHT_GRAY));
 		lblLook.setIcon(new ImageIcon("views/eyeBlue.png"));
+		lblLook.addMouseListener(this);		
+
 		btnIniciar = new JButton("Iniciar Sesi\u00F3n");
-		btnIniciar.setForeground(Color.WHITE);
 		btnIniciar.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		btnIniciar.setBounds(10, 294, 308, 54);
 		logPanel.add(btnIniciar);
+		btnIniciar.addActionListener(this);
+		s.mdButton(btnIniciar,s.blue);		
+		btnIniciar.addMouseListener(this);
 		
 		txtPassword = new JPasswordField();
 		txtPassword.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 18));
@@ -98,21 +115,18 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		tpPass.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 13));
 		tpPass.setForeground(Color.gray);
 		
-		s.mdButton(btnIniciar,s.blue);
-		
-		
 		JLabel lblUserIcon = new JLabel("");
 		lblUserIcon.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUserIcon.setBounds(10, 111, 45, 61);
+		lblUserIcon.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.LIGHT_GRAY));
+		lblUserIcon.setIcon(new ImageIcon("views/user.png"));
 		logPanel.add(lblUserIcon);
 		
 		JLabel lblPassIcon = new JLabel("");
 		lblPassIcon.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPassIcon.setBounds(10, 197, 45, 52);
 		logPanel.add(lblPassIcon);
-		lblUserIcon.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.LIGHT_GRAY));
 		lblPassIcon.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.LIGHT_GRAY));
-		lblUserIcon.setIcon(new ImageIcon("views/user.png"));
 		lblPassIcon.setIcon(new ImageIcon("views/key.png"));
 		
 		JLabel lblLogHeader = new JLabel("Inicia Sesi\u00F3n");
@@ -121,27 +135,14 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		lblLogHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 23));
 		lblLogHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		
 		lblWarning = new JLabel("");
 		lblWarning.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWarning.setForeground(Color.RED);
 		lblWarning.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 12));
 		lblWarning.setBounds(0, 257, 332, 26);
-		logPanel.add(lblWarning);
+		logPanel.add(lblWarning);		
 		
-		
-		
-		lblHeader = new JLabel("");
-		lblHeader.setBounds(388, 11, 332, 129);
-		lblHeader.setIcon(new ImageIcon("views/gfgHeader.png"));
-		pnHeader.add(lblHeader);
-		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.ITALIC, 20));
-		
-		btnIniciar.addActionListener(this);
-		lblLook.addMouseListener(this);
-		btnIniciar.addMouseListener(this);
-		mam.btnBack.addActionListener(this);
+		mp.pnHeader.btnBack.addActionListener(this);
 		mu.btnBack.addActionListener(this);
 	}
 	@Override
@@ -181,7 +182,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 		if(e.getSource()==btnIniciar) {
 			if(userExists()) {
 				if(userType == 1) {
-					mam.setVisible(true);
+					mp.setVisible(true);
 					this.setVisible(false);
 					cargarInteresesMensuales();
 					lblWarning.setText("");
@@ -191,8 +192,8 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 					lblWarning.setText("");
 				}
 			}
-		}else if(e.getSource() == mam.btnBack){
-			mam.setVisible(false);
+		}else if(e.getSource() == mp.pnHeader.btnBack){
+			mp.setVisible(false);
 			this.setVisible(true);
 		}else if(e.getSource() == mu.btnBack) {
 			this.setVisible(true);
@@ -208,7 +209,7 @@ public class Login extends JFrame implements ActionListener,MouseListener{
 
 			if(rs.next()){
 				userType = rs.getInt("tipo_usuario");
-				mam.idUser = rs.getInt("id");
+				mp.idUser = rs.getInt("id");
 				return true;
 				
 			}

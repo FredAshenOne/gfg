@@ -65,9 +65,12 @@ public class Pruebas extends JFrame {
 		lblCantidadReg = new JLabel("Tipo de Casa");
 		lblCantidadReg.setBounds(96, 58, 54, 20);
 		pnCantidad.add(lblCantidadReg);
-		txtCantidadReg = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, s.blue, lblCantidadReg);
+		
+		txtCantidadReg = new MdTextField(Color.BLACK, "Cantidad", Color.WHITE, s.blue,"Cantidad");
 		txtCantidadReg.setBounds(64, 89, 120, 22);
 		pnCantidad.add(txtCantidadReg);
+		txtCantidadReg.setLblBounds();
+		
 		JLabel lblTipoCreditoReg = new JLabel("Tipo de Credito");
 		lblTipoCreditoReg.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTipoCreditoReg.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));

@@ -31,7 +31,7 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	int idUser;
 	BuscarCliente sc = new BuscarCliente();
 	Alert alNewAval = new Alert();
-	Solicitud nc = new Solicitud();
+	Solicitud sol = new Solicitud();
 	
 	
 	public AdminClientes() {
@@ -41,17 +41,21 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1101, 695);
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
 		s.mdPanel(mainPanel,Color.white);
 		
-		JPanel pnHeader = new JPanel();
-		pnHeader.setBounds(0, 0, 1091, 151);
+		//header
+		
+		pnHeader = new MdHeader(s.blue,Color.WHITE);
+		
 		mainPanel.add(pnHeader);
-		pnHeader.setLayout(null);
-		s.mdPanel(pnHeader, s.blue);
+		
+		
+		//Menu
 		
 		pnNewClient = new JPanel();
 		pnNewClient.setLayout(null);
@@ -126,32 +130,11 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 		btnGrupo.addMouseListener(this);
 		s.btnIcon(btnGrupo, "views/group.png");
 		
-		btnBack = new JButton("");
-		btnBack.setBounds(10, 11, 32, 32);
-		pnHeader.add(btnBack);
-		btnBack.addActionListener(this);
-		btnBack.addMouseListener(this);
-		
-		s.btnIcon(btnBack, "views/back.png");
-		JLabel lblHeader = new JLabel("Clientes");
-		lblHeader.setForeground(Color.WHITE);
-		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblHeader.setBounds(52, 11, 489, 32);
-		pnHeader.add(lblHeader);
-		
-		JLabel lblHeader2 = new JLabel("Seleccione una opci\u00F3n");
-		lblHeader2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHeader2.setForeground(Color.WHITE);
-		lblHeader2.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 11));
-		lblHeader2.setBounds(52, 46, 489, 32);
-		pnHeader.add(lblHeader2);
-		
-//		nc.btnBack.addActionListener(this);
-		nc.alNewAval.btnCancel.addActionListener(this);
+		sol.headerPrincipal.btnBack.addActionListener(this);
+		sol.alNewAval.btnCancel.addActionListener(this);
 		btnQuery.addActionListener(this);
 		btnGrupo.addActionListener(this);
-		
+		sc.pnHeader.btnBack.addActionListener(this);
 		
 	}
 
@@ -205,23 +188,23 @@ public class AdminClientes extends JFrame implements ActionListener,MouseListene
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnNewClient) {
 //			nc.etiquetasInvisibles(false);
-			nc.limpiarCamposSolicitud();
-			nc.setVisible(true);
-			nc.idUser = idUser;
-		}else if(e.getSource() == nc.btnBack) {
+			sol.limpiarCamposSolicitud();
+			sol.setVisible(true);
+			sol.idUser = idUser;
+		}else if(e.getSource() == sol.headerPrincipal.btnBack) {
 			this.setVisible(true);
-			nc.setVisible(false);
-			nc.limpiarCamposSolicitud();
-		}else if(e.getSource() == nc.alNewAval.btnCancel) {
+			sol.setVisible(false);
+			sol.limpiarCamposSolicitud();
+		}else if(e.getSource() == sol.alNewAval.btnCancel) {
 			this.setVisible(true);
-			nc.alNewAval.setVisible(false);
-			nc.setVisible(false);
+			sol.alNewAval.setVisible(false);
+			sol.setVisible(false);
 		}else if(e.getSource() == btnQuery) {
 			sc.setVisible(true);
 			sc.idUser = idUser;
 			sc.fillTable();			
 			this.setVisible(false);
-		}else if(e.getSource() == sc.btnBack) {
+		}else if(e.getSource() == sc.pnHeader.btnBack) {
 			this.setVisible(true);
 			sc.setVisible(false);
 		}

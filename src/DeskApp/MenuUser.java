@@ -115,7 +115,7 @@ public class MenuUser extends JFrame implements ActionListener,MouseListener{
 		s.btnTransparent(btnCliente);
 		btnCliente.addMouseListener(this);
 		btnCliente.addActionListener(this);
-		bcred.btnBack.addActionListener(this);
+		bcred.pnHeader.btnBack.addActionListener(this);
 	
 	}
 
@@ -167,7 +167,7 @@ public void actionPerformed(ActionEvent e) {
 	if(e.getSource() == btnCredito) {
 		bcred.setVisible(true);
 		this.setVisible(false);
-	}else if(e.getSource() == bcred.btnBack) {
+	}else if(e.getSource() == bcred.pnHeader.btnBack) {
 		this.setVisible(true);
 		bcred.setVisible(false);
 	}

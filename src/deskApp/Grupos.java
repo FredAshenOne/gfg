@@ -32,18 +32,20 @@ import java.awt.event.KeyEvent;
 public class Grupos extends JFrame implements ActionListener, MouseListener {
 
 	Style s = new Style();
+	Conexion c = new Conexion();
+	Alert alRemoverGrupo = new Alert();
+	Alert alOk = new Alert();
+	Alert alEliminado = new Alert();
+	Alert alEditarNombre = new Alert();
+	
+	
 	JButton btnAsignar, btnRemover, btnEditarGrupo, btnRemoverGrupo;
 	JLabel lblHeader, lblClientesHeader, lblNombre, lblNombreWarning, lblEliminar, lblEdit, lblClientesEnGrupo;
 	JPanel contentPane, mainPanel;
 	JScrollPane scrollPane;
 	int idUser;
 	MdHeader pnHeader;
-	Conexion c = new Conexion();
-	Alert alRemoverGrupo = new Alert();
-	Alert alOk = new Alert();
 	Alert alOk2 = alOk;
-	Alert alEliminado = new Alert();
-	Alert alEditarNombre = new Alert();
 	JTextField txtNombre, txtBuscarDisponibles, txtBuscarAgregados, txtEditar;
 	String nombreActual;
 	JScrollPane spClientesExistentes, spClientesAgregados;
@@ -65,7 +67,7 @@ public class Grupos extends JFrame implements ActionListener, MouseListener {
 		contentPane.add(mainPanel);
 		mainPanel.setLayout(null);
 		s.mdPanel(mainPanel, Color.WHITE);
-
+		// pane header
 		pnHeader = new MdHeader(s.blue, Color.WHITE);
 		pnHeader.btnNext.setVisible(false);
 		pnHeader.lblWarning.setVisible(false);
@@ -260,8 +262,8 @@ public class Grupos extends JFrame implements ActionListener, MouseListener {
 		s.mdTextField(txtEditar, s.blue, Color.WHITE);
 		s.myTextPrompt(txtEditar, "Nuevo Nombre", Color.LIGHT_GRAY);
 
-		s.mdTable(tableClientesExistentes, Color.WHITE, Color.white);
-		s.mdTable(tableClientesAgregados, Color.WHITE, Color.white);
+		s.mdTable(tableClientesExistentes, Color.WHITE, s.blue,s.w);
+		s.mdTable(tableClientesAgregados, Color.WHITE, s.blue,s.w);
 
 		txtBuscarDisponibles = new JTextField();
 		txtBuscarDisponibles.setFont(new Font("Yu Gothic UI", Font.PLAIN, 20));

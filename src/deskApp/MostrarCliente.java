@@ -28,17 +28,13 @@ public class MostrarCliente extends JFrame implements ActionListener{
 
 	private JPanel contentPane, pnPersonal, pnInfoEmpleo;
 	int idUser, tipoUsuario = 1;
-	JButton btnInfoCliente, btnInfoEmpleo;
-
+	
 	// lbls txt para informacion personal
-	JLabel lblDomicilio, lblExterior, lblInterior, lblNacimiento, lblNombre, lblAp1, lblAp2, lblCelular, lblOcupacion,
-			lblColonia, lblResidencia, lblFijo, lblCiudad, lblEstadoCivil, lblSueldo, lblTipoCasa;
 	MdTextField txtNombre, txtAp1, txtAp2, txtDomicilio, txtExterior, txtInterior, txtNacimiento, txtOcupacion,
 			txtColonia, txtTiempo, txtCelular, txtNumFijo, txtSueldo, txtCiudad;
 	JComboBox cbTipoDom, cbEstadoCivil;
+	
 	// componentes para info de empleo
-	JLabel lblTelefonoEmpleo, lblDireccion, lblExteriorEmpleo, lblInteriorEmpleo, lblDescripcion, lblInfoEmpleo,
-			lblTiempoEmpleo;
 	MdTextField txtTelefonoEmpleo, txtDireccion, txtExteriorEmpleo, txtInteriorEmpleo, txtDescripcion, txtTiempoEmpleo;
 
 	NuevoAval ca = new NuevoAval();
@@ -76,27 +72,21 @@ public class MostrarCliente extends JFrame implements ActionListener{
 		pnHeader.setBounds(0, 0, 1123, 151);
 		mainPanel.add(pnHeader);
 		pnHeader.btnNext.setVisible(false);
+		pnHeader.lblTitle.setText("Datos del Cliente");
 
-		lblNombre = new JLabel();
-		lblNombre.setBounds(7, 101, 300, 14);
-		pnHeader.add(lblNombre);
-		txtNombre = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE, lblNombre);
+		txtNombre = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE,"Nombre(s)");
 		txtNombre.setBounds(7, 115, 300, 25);
 		pnHeader.add(txtNombre);
 
-		lblAp1 = new JLabel("Apellido Paterno");
-		lblAp1.setBounds(317, 101, 245, 14);
-		pnHeader.add(lblAp1);
-		txtAp1 = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE, lblAp1);
+		txtAp1 = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE,"A. Paterno");
 		txtAp1.setBounds(317, 115, 245, 25);
 		pnHeader.add(txtAp1);
+		txtAp1.setLblBounds();
 
-		lblAp2 = new JLabel("Apellido Materno");
-		lblAp2.setBounds(575, 101, 245, 14);
-		pnHeader.add(lblAp2);
-		txtAp2 = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE, lblAp2);
+		txtAp2 = new MdTextField(Color.WHITE, "Nombre(s)", s.blue, Color.WHITE,"A. Materno");
 		txtAp2.setBounds(575, 115, 245, 25);
 		pnHeader.add(txtAp2);
+		txtAp2.setLblBounds();
 
 		btnSave = new IconButton("views/saveWhite.png", Color.white);
 		btnSave.setBounds(1065, 108, 32, 32);
@@ -118,115 +108,99 @@ public class MostrarCliente extends JFrame implements ActionListener{
 		mainPanel.add(pnPersonal);
 		s.mdPanel(pnPersonal, Color.white);
 
-		lblNacimiento = new JLabel();
-		lblNacimiento.setBounds(57, 133, 179, 14);
-		pnPersonal.add(lblNacimiento);
-		txtNacimiento = new MdTextField(Color.BLACK, "AAAA-MM-DD", Color.white, s.blue, lblNacimiento);
-		lblNacimiento.setText("Fecha Nacimiento");
-		txtNacimiento.setBounds(57, 151, 179, 32);
+		txtNacimiento = new MdTextField(Color.BLACK, "AAAA-MM-DD", Color.white, s.blue,"Nacimiento");
+		txtNacimiento.setBounds(62, 181, 179, 32);
 		pnPersonal.add(txtNacimiento);
+		txtNacimiento.setLblBounds();
 
-		lblOcupacion = new JLabel();
-		lblOcupacion.setBounds(71, 406, 170, 14);
-		pnPersonal.add(lblOcupacion);
-		txtOcupacion = new MdTextField(Color.BLACK, "Ocupacion", Color.white, s.blue, lblOcupacion);
-		txtOcupacion.setBounds(71, 425, 170, 31);
+		txtOcupacion = new MdTextField(Color.BLACK, "Ocupacion", Color.white, s.blue,"Ocupacion");
+		txtOcupacion.setBounds(76, 455, 170, 31);
 		pnPersonal.add(txtOcupacion);
+		txtOcupacion.setLblBounds();
 
-		lblDomicilio = new JLabel();
-		lblDomicilio.setBounds(246, 133, 197, 14);
-		pnPersonal.add(lblDomicilio);
-		txtDomicilio = new MdTextField(Color.BLACK, "Domicilio", Color.white, s.blue, lblDomicilio);
-		txtDomicilio.setBounds(246, 151, 197, 32);
+		txtDomicilio = new MdTextField(Color.BLACK, "Domicilio", Color.white, s.blue,"Domicilio");
+		txtDomicilio.setBounds(251, 181, 197, 32);
 		pnPersonal.add(txtDomicilio);
+		txtDomicilio.setLblBounds();
 
-		lblExterior = new JLabel();
-		lblExterior.setBounds(87, 228, 95, 14);
-		pnPersonal.add(lblExterior);
-		txtExterior = new MdTextField(Color.BLACK, "No. Exterior", Color.white, s.blue, lblExterior);
-		txtExterior.setBounds(87, 246, 95, 32);
+		txtExterior = new MdTextField(Color.BLACK, "No. Exterior", Color.white, s.blue,"No. Exterior");
+		txtExterior.setBounds(92, 276, 95, 32);
 		pnPersonal.add(txtExterior);
+		txtExterior.setLblBounds();
 
-		lblInterior = new JLabel();
-		lblInterior.setBounds(192, 228, 95, 14);
-		pnPersonal.add(lblInterior);
-		txtInterior = new MdTextField(Color.BLACK, "No. Interior", Color.white, s.blue, lblInterior);
-		txtInterior.setBounds(192, 246, 95, 32);
+		txtInterior = new MdTextField(Color.BLACK, "No. Interior", Color.white, s.blue,"No. Interior");
+		txtInterior.setBounds(197, 276, 95, 32);
 		pnPersonal.add(txtInterior);
+		txtInterior.setLblBounds();
 
-		lblColonia = new JLabel("Colonia");
-		lblColonia.setBounds(260, 23, 238, 14);
-		pnPersonal.add(lblColonia);
-		txtColonia = new MdTextField(Color.BLACK, "Colonia", Color.white, s.blue, lblColonia);
-		txtColonia.setBounds(260, 42, 238, 32);
+		txtColonia = new MdTextField(Color.BLACK, "Colonia", Color.white, s.blue,"Colonia");
+		txtColonia.setBounds(265, 72, 238, 32);
 		pnPersonal.add(txtColonia);
+		txtColonia.setLblBounds();
 
-		lblResidencia = new JLabel("Tiempo Residencia");
-		lblResidencia.setBounds(297, 228, 115, 14);
-		pnPersonal.add(lblResidencia);
-		txtTiempo = new MdTextField(Color.BLACK, "Tiempo de Residencia", Color.white, s.blue, lblResidencia);
-		txtTiempo.setBounds(297, 246, 115, 32);
+		txtTiempo = new MdTextField(Color.BLACK, "Tiempo en residencia", Color.white, s.blue,"Tiempo en residencia");
+		txtTiempo.setBounds(302, 276, 115, 32);
 		pnPersonal.add(txtTiempo);
+		txtTiempo.setLblBounds();
 
-		lblCelular = new JLabel();
-		lblCelular.setBounds(71, 492, 170, 14);
-		pnPersonal.add(lblCelular);
-		txtCelular = new MdTextField(Color.BLACK, "Celular", Color.white, s.blue, lblCelular);
-		txtCelular.setBounds(71, 508, 170, 34);
+		txtCelular = new MdTextField(Color.BLACK, "Celular", Color.white, s.blue,"Celular");
+		txtCelular.setBounds(76, 538, 170, 34);
 		pnPersonal.add(txtCelular);
+		txtCelular.setLblBounds();
 
-		lblFijo = new JLabel();
-		lblFijo.setBounds(251, 492, 179, 14);
-		pnPersonal.add(lblFijo);
-		txtNumFijo = new MdTextField(Color.BLACK, "Num Fijo", Color.white, s.blue, lblFijo);
-		txtNumFijo.setBounds(246, 510, 184, 32);
+		txtNumFijo = new MdTextField(Color.BLACK, "Num Fijo", Color.white, s.blue,"Telefono");
+		txtNumFijo.setBounds(251, 540, 184, 32);
 		pnPersonal.add(txtNumFijo);
+		txtNumFijo.setLblBounds();
 
-		lblSueldo = new JLabel();
-		lblSueldo.setBounds(249, 405, 181, 14);
-		pnPersonal.add(lblSueldo);
-		txtSueldo = new MdTextField(Color.BLACK, "Sueldo", Color.white, s.blue, lblSueldo);
-		txtSueldo.setBounds(251, 424, 179, 32);
+		txtSueldo = new MdTextField(Color.BLACK, "Sueldo", Color.white, s.blue,"Sueldo Mensual");
+		txtSueldo.setBounds(256, 454, 179, 32);
 		pnPersonal.add(txtSueldo);
+		txtSueldo.setLblBounds();
 
-		lblCiudad = new JLabel();
-		lblCiudad.setBounds(10, 24, 240, 14);
-		pnPersonal.add(lblCiudad);
-		txtCiudad = new MdTextField(Color.BLACK, "Ciudad", Color.white, s.blue, lblCiudad);
-		txtCiudad.setBounds(10, 42, 238, 32);
+		txtCiudad = new MdTextField(Color.BLACK, "Ciudad", Color.white, s.blue,"Ciudad");
+		txtCiudad.setBounds(15, 72, 238, 32);
 		pnPersonal.add(txtCiudad);
+		txtCiudad.setLblBounds();
 
 		cbTipoDom = new JComboBox();
 		cbTipoDom.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbTipoDom.setModel(
 				new DefaultComboBoxModel(new String[] { "", "Propia", "Familiar", "Renta", "Hipoteca", "Otra" }));
-		cbTipoDom.setBounds(120, 337, 115, 34);
+		cbTipoDom.setBounds(125, 367, 115, 34);
 		pnPersonal.add(cbTipoDom);
 		s.mdCombo(cbTipoDom, Color.WHITE, s.blue);
 		cbTipoDom.setEditable(false);
 		s.mdCombo(cbTipoDom, Color.white, s.blue);
-		lblTipoCasa = new JLabel("Tipo de Casa");
+		JLabel lblTipoCasa = new JLabel("Tipo de Casa");
 		lblTipoCasa.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTipoCasa.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblTipoCasa.setBounds(120, 321, 115, 14);
+		lblTipoCasa.setBounds(125, 351, 115, 14);
 		pnPersonal.add(lblTipoCasa);
 
 		cbEstadoCivil = new JComboBox();
 		cbEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
 		cbEstadoCivil.setModel(new DefaultComboBoxModel(
 				new String[] { "", "Soltero", "Casado", "Viudo", "Divorciado", "Union Libre", "Otro" }));
-		cbEstadoCivil.setBounds(245, 337, 115, 34);
+		cbEstadoCivil.setBounds(250, 367, 115, 34);
 		pnPersonal.add(cbEstadoCivil);
 		cbEstadoCivil.setEditable(false);
 		s.mdCombo(cbEstadoCivil, Color.white, s.blue);
 		s.mdCombo(cbEstadoCivil, Color.WHITE, s.blue);
 
-		lblEstadoCivil = new JLabel();
+		JLabel lblEstadoCivil = new JLabel();
 		lblEstadoCivil.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEstadoCivil.setText("Estado Civil");
 		lblEstadoCivil.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 14));
-		lblEstadoCivil.setBounds(245, 321, 115, 14);
+		lblEstadoCivil.setBounds(250, 351, 115, 14);
 		pnPersonal.add(lblEstadoCivil);
+		
+		JLabel lblTituloPersonal = new JLabel("Informaci\u00F3n Personal");
+		lblTituloPersonal.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTituloPersonal.setForeground(Color.BLACK);
+		lblTituloPersonal.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
+		lblTituloPersonal.setBounds(10, 11, 493, 32);
+		pnPersonal.add(lblTituloPersonal);
 
 		alOk.btnCancel.setVisible(false);
 		alOk.btnOk.setBounds(97, alOk.btnOk.getY(), alOk.btnOk.getWidth(), alOk.btnOk.getHeight());
@@ -234,63 +208,52 @@ public class MostrarCliente extends JFrame implements ActionListener{
 		alOk.lblAlertIcon.setIcon(new ImageIcon("views/checked.png"));
 		alOk.btnOk.setText("Ok");
 		alOk.btnOk.addActionListener(this);
-// 	Panel para info de empleo
+		
+		// 	Panel para info de empleo
 
 		pnInfoEmpleo = new JPanel();
-		pnInfoEmpleo.setBounds(515, 150, 609, 217);
+		pnInfoEmpleo.setBounds(514, 150, 609, 650);
 		mainPanel.add(pnInfoEmpleo);
 		pnInfoEmpleo.setLayout(null);
 		s.mdPanel(pnInfoEmpleo, Color.white);
 		pnInfoEmpleo.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, s.blue));
 
-		lblInfoEmpleo = new JLabel("Informaci\u00F3n Laboral");
+		JLabel lblInfoEmpleo = new JLabel("Informaci\u00F3n Laboral");
 		lblInfoEmpleo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInfoEmpleo.setForeground(new Color(0, 0, 0));
 		lblInfoEmpleo.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 15));
 		lblInfoEmpleo.setBounds(10, 11, 589, 32);
 		pnInfoEmpleo.add(lblInfoEmpleo);
 
-		lblDireccion = new JLabel("");
-		lblDireccion.setBounds(20, 54, 222, 14);
-		pnInfoEmpleo.add(lblDireccion);
-		txtDireccion = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue, lblDireccion);
+		txtDireccion = new MdTextField(Color.BLACK, "Domicilio", Color.WHITE, s.blue,"Domicilio");
 		txtDireccion.setBounds(20, 71, 222, 32);
 		pnInfoEmpleo.add(txtDireccion);
+		txtDireccion.setLblBounds();
 
-		lblExteriorEmpleo = new JLabel("");
-		lblExteriorEmpleo.setBounds(307, 54, 95, 14);
-		pnInfoEmpleo.add(lblExteriorEmpleo);
-		txtExteriorEmpleo = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue, lblExteriorEmpleo);
+		txtExteriorEmpleo = new MdTextField(Color.BLACK, "No. Exterior", Color.WHITE, s.blue,"No. Exterior");
 		txtExteriorEmpleo.setBounds(307, 71, 95, 32);
 		pnInfoEmpleo.add(txtExteriorEmpleo);
+		txtExteriorEmpleo.setLblBounds();
 
-		lblInteriorEmpleo = new JLabel("");
-		lblInteriorEmpleo.setBounds(465, 54, 95, 14);
-		pnInfoEmpleo.add(lblInteriorEmpleo);
-		txtInteriorEmpleo = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue, lblInteriorEmpleo);
+		txtInteriorEmpleo = new MdTextField(Color.BLACK, "No. Interior", Color.WHITE, s.blue,"No. Interior");
 		txtInteriorEmpleo.setBounds(465, 71, 95, 32);
 		pnInfoEmpleo.add(txtInteriorEmpleo);
+		txtInteriorEmpleo.setLblBounds();
 
-		lblTelefonoEmpleo = new JLabel("");
-		lblTelefonoEmpleo.setBounds(20, 148, 177, 14);
-		pnInfoEmpleo.add(lblTelefonoEmpleo);
-		txtTelefonoEmpleo = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, s.blue, lblTelefonoEmpleo);
+		txtTelefonoEmpleo = new MdTextField(Color.BLACK, "Teléfono", Color.WHITE, s.blue,"Teléfono");
 		txtTelefonoEmpleo.setBounds(20, 169, 177, 31);
 		pnInfoEmpleo.add(txtTelefonoEmpleo);
+		txtTelefonoEmpleo.setLblBounds();
 
-		lblDescripcion = new JLabel("");
-		lblDescripcion.setBounds(207, 148, 183, 14);
-		pnInfoEmpleo.add(lblDescripcion);
-		txtDescripcion = new MdTextField(Color.BLACK, "Descripcion", Color.WHITE, s.blue, lblDescripcion);
+		txtDescripcion = new MdTextField(Color.BLACK, "Indicaciones", Color.WHITE, s.blue,"Indicaciones");
 		txtDescripcion.setBounds(209, 168, 181, 32);
 		pnInfoEmpleo.add(txtDescripcion);
+		txtDescripcion.setLblBounds();
 
-		lblTiempoEmpleo = new JLabel("");
-		lblTiempoEmpleo.setBounds(400, 148, 183, 14);
-		pnInfoEmpleo.add(lblTiempoEmpleo);
-		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Tiempo Empleo", Color.WHITE, s.blue, lblTiempoEmpleo);
+		txtTiempoEmpleo = new MdTextField(Color.BLACK, "Tiempo en Empleo", Color.WHITE, s.blue,"Tiempo en empleo");
 		txtTiempoEmpleo.setBounds(402, 168, 181, 32);
 		pnInfoEmpleo.add(txtTiempoEmpleo);
+		txtTiempoEmpleo.setLblBounds();
 
 		alUpdate.lblAlertIcon.setIcon(new ImageIcon("views/ask.png"));
 		alUpdate.lblMessage
@@ -448,14 +411,14 @@ public class MostrarCliente extends JFrame implements ActionListener{
 	}
 
 	public void etiquetasVisibles(Boolean flag) {
-		lblDomicilio.setVisible(flag);
-		lblExterior.setVisible(flag);
-		lblInterior.setVisible(flag);
-		lblNacimiento.setVisible(flag);
-		lblSueldo.setVisible(flag);
-		lblCelular.setVisible(flag);
-		lblNombre.setVisible(flag);
-		lblAp1.setVisible(flag);
-		lblAp2.setVisible(flag);
+		txtDomicilio.lbl.setVisible(flag);
+		txtExterior.lbl.setVisible(flag);
+		txtInterior.lbl.setVisible(flag);
+		txtNacimiento.lbl.setVisible(flag);
+		txtSueldo.lbl.setVisible(flag);
+		txtCelular.lbl.setVisible(flag);
+		txtNombre.lbl.setVisible(flag);
+		txtAp1.lbl.setVisible(flag);
+		txtAp2.lbl.setVisible(flag);
 	}
 }

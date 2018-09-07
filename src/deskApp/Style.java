@@ -20,6 +20,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -30,6 +31,7 @@ public class Style {
 	public Color blue = Color.decode("#039BE5");
 	public Color green = Color.decode("#26A69A");
 	public Color red = Color.decode("#C62828");
+	public Color w = Color.white;
 	public void btnPointer(JButton btn) {
 		btn.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
 		new ImageIcon("views/cursor.png").getImage(),
@@ -176,14 +178,18 @@ public class Style {
 	    }
 	}
 	
-	public void mdTable(JTable table,Color colBackView,Color colHeader) {
+	public void mdTable(JTable table,Color colBackView,Color colHeader,Color colForeHead) {
+		table.setRowHeight(30);
+		table.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 18));		
 		table.setBorder(null);
 		table.getTableHeader().setBackground(colHeader);
-		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
+		table.getTableHeader().setForeground(colForeHead);
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
 		table.setBackground(colBackView);
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 	}
 }

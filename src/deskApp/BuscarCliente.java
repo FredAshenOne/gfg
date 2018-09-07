@@ -30,21 +30,21 @@ import java.awt.event.KeyAdapter;
 
 public class BuscarCliente extends JFrame implements ActionListener{
 	Style s = new Style();
-	JButton btnBack,btnNext;
-	JLabel lblHeader;
-	private JPanel contentPane;
+	Conexion c = new Conexion();
+	MostrarCliente sc = new MostrarCliente();
+	
+	JPanel contentPane;
 	private JTextField txtSearch;
-	private JTable table;
+	JTable table;
 	JScrollPane scrollPane;
 	MdHeader pnHeader;
-	int idUser;
-	Conexion c = new Conexion();
-	private JLabel lblWarning;
-	MostrarCliente sc = new MostrarCliente();
+	int idUser;	
+	
 	public BuscarCliente() {
 		setBounds(100, 100, 1135, 827);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -61,6 +61,7 @@ public class BuscarCliente extends JFrame implements ActionListener{
 		pnHeader.lblTitle.setText("Buscar Cliente");
 		pnHeader.lblWarning.setBounds(10, 65, 1104, 32);
 		pnHeader.btnNext.addActionListener(this);
+		
 		txtSearch = new JTextField();
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
@@ -76,8 +77,7 @@ public class BuscarCliente extends JFrame implements ActionListener{
 		s.mdTextField(txtSearch, Color.white, s.blue);
 		txtSearch.setCaretColor(Color.white);
 		s.myTextPrompt(txtSearch, "Buscar: (id cliente o Nombre)", Color.WHITE);
-		txtSearch.setBorder(BorderFactory.createCompoundBorder(txtSearch.getBorder(),
-				BorderFactory.createEmptyBorder(7, 10, 10, 5)));
+		txtSearch.setBorder(BorderFactory.createCompoundBorder(txtSearch.getBorder(),BorderFactory.createEmptyBorder(7, 10, 10, 5)));
 
 		JLabel lblSearchIcon = new JLabel("");
 		lblSearchIcon.setBounds(54, 77, 46, 62);
@@ -99,6 +99,8 @@ public class BuscarCliente extends JFrame implements ActionListener{
 	                return false;               
 	        };
 		};		
+		table.setRowHeight(30);
+		table.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 18));
 		DefaultTableModel model = new DefaultTableModel(
 				new Object[][] {
 				},
@@ -106,25 +108,19 @@ public class BuscarCliente extends JFrame implements ActionListener{
 					"id", "Nombre", "Apellido Paterno", "Apellido Materno", "Direccion"
 				}
 			) {
-			 @Override
-			   public boolean isCellEditable(int row, int column) {
-			       return false;
-			   }
-			
 		};
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 		table.setBorder(null);
-		table.getTableHeader().setBackground(Color.WHITE);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
+		table.setDefaultRenderer(String.class, centerRenderer);
+		table.getTableHeader().setBackground(s.blue);
+		table.getTableHeader().setForeground(Color.white);
 		table.getTableHeader().setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 13));
 		table.getTableHeader().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setVisible(false);
-		
-		sc.pnHeader.btnBack.addActionListener(this);
-				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
-		table.setDefaultRenderer(String.class, centerRenderer);
 		pnHeader.btnNext.setEnabled(false);
 		
 		ListSelectionModel listSelectionModel = table.getSelectionModel();
@@ -134,6 +130,7 @@ public class BuscarCliente extends JFrame implements ActionListener{
 		            pnHeader.btnNext.setEnabled(!lsm.isSelectionEmpty());
 		        }
 		});
+		
 		sc.alUpdate.btnOk.addActionListener(this);
 		sc.pnHeader.btnBack.addActionListener(this);
 		sc.sad.btnBack.addActionListener(this);
@@ -146,8 +143,6 @@ public class BuscarCliente extends JFrame implements ActionListener{
 		if(e.getSource() == pnHeader.btnNext) {
 			int index = table.getSelectedRow();
 			sc.rs = c.query("SELECT * FROM clientes_personal cp LEFT JOIN clientes_empleo ce ON cp.id = ce.id_Cliente WHERE cp.id = "+Integer.parseInt(table.getModel().getValueAt(index,0).toString())+";");
-			
-//			sc.rs = getClientById(Integer.parseInt(table.getModel().getValueAt(index,0).toString()));
 			sc.sad.rs = sc.rs;
 			sc.fillFields();
 			sc.setEditableFields(false);
